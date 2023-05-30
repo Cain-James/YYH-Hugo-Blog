@@ -134,3 +134,6 @@ weight = 30
 
 [markup.highlight]
 noClasses = false
+
+[outputs]
+home = [ "HTML", "RSS", "JSON" ]
