@@ -12,8 +12,13 @@ buildExpired = false
 paginate = 15
 summaryLength = 140
 defaultContentLanguage = "en"
+ShowReadingTime = true
 defaultContentLanguageInSubdir = true
-
+canonifyURLs = true #启用将相对 URL 变为绝对 URL
+layoutDir = "layouts"
+logFile = "Log"
+pluralizeListTitles = true
+relativeURLs = false
 [minify]
 disableXML = true
 
@@ -51,10 +56,12 @@ weight = 50
 
 [outputs]
 home = [ "HTML", "RSS", "JSON" ]
+page = ['HTML']
 
 [params]
 env = "production"
-description = "lvbibir的个人博客, hugo, papermod, shell, python, linux, mysql, redis, k8s, docker, devops"
+description = ""
+
 author = "ChiAn Ye"
 draft = "flase"
 defaultTheme = "auto"
@@ -76,39 +83,47 @@ ShowToc = true
 TocOpen = true
 comments = true
 StartYear = 2_020
-FilingNo = "京ICP备2021023168号-1"
+FilingNo = ""
 Reward = true
 WechatPay = "img/wechat_pay.png"
 Alipay = "img/alipay.png"
+    [params.profileMode]
+    enabled = true
+    title = "Yuan's Blog"
+    subtitle = ""
+    imageUrl = "img/head.jpg"
+    imageTitle = "图片标题"
+    imageWidth = 120
+    imageHeight = 120
+    
+    [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/Cain-James"
 
-  [[params.socialIcons]]
-  name = "github"
-  url = "https://github.com/lvbibir"
+    [[params.socialIcons]]
+    name = "QQ"
+    url = "img/qq.png"
 
-  [[params.socialIcons]]
-  name = "QQ"
-  url = "img/qq.png"
+    [[params.socialIcons]]
+    name = "WeChat"
+    url = "img/wechat.png"
 
-  [[params.socialIcons]]
-  name = "WeChat"
-  url = "img/wechat.png"
+    [[params.socialIcons]]
+    name = "bilibili"
+    url = "https://space.bilibili.com/442037544"
 
-  [[params.socialIcons]]
-  name = "bilibili"
-  url = "https://space.bilibili.com/280428279"
+    [[params.socialIcons]]
+    name = "email"
+    url = "mailto:yuanyanghao2022@163.com"
 
-  [[params.socialIcons]]
-  name = "email"
-  url = "mailto:yuanyanghao2022@163.com"
+    [[params.socialIcons]]
+    name = "RSS"
+    url = "index.xml"
 
-  [[params.socialIcons]]
-  name = "RSS"
-  url = "index.xml"
-
-  [params.label]
-  text = "Ye's Blog"
-  icon = "img/avatar.gif"
-  iconHeight = 35
+    [params.label]
+    text = "Ye's Blog"
+    icon = "img/avatar.gif"
+    iconHeight = 35
 
 [params.analytics.google]
 SiteVerificationTag = ""
