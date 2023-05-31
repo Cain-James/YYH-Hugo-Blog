@@ -118,23 +118,42 @@ SiteVerificationTag = "XYZabc"
   minMatchCharLength = 0
   keys = [ "title", "permalink", "summary", "content" ]
 
-[[menu.main]]
-identifier = "categories"
-name = "categories"
-url = "/categories/"
-weight = 10
 
 [[menu.main]]
-identifier = "tags"
-name = "tags"
-url = "/tags/"
+identifier = "search"
+name = "🔍搜索"
+url = "search"
+weight = 1
+
+[[menu.main]]
+identifier = "home"
+name = "🏠主页"
+url = "/"
+weight = 2
+
+[[menu.main]]
+identifier = "posts"
+name = "📚文章"
+url = "/posts"
+weight = 3
+
+[[menu.main]]
+identifier = "archives"
+name = "⏱时间轴"
+url = "/archives"
 weight = 20
 
 [[menu.main]]
-identifier = "example"
-name = "example.org"
-url = "https://example.org"
-weight = 30
+identifier = "tags"
+name = "🔖标签"
+url = "/tags"
+weight = 40
+
+[[menu.main]]
+identifier = "about"
+name = "🙋🏻‍♂️关于"
+url = "/about"
+weight = 100
 
 [markup.highlight]
 noClasses = false
