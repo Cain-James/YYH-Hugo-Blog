@@ -21,36 +21,39 @@ minifyOutput = true
 
 [params]
 env = "production"
-title = "ExampleSite"
-description = "ExampleSite description"
+description = "这是一个纯粹的博客......"
 keywords = [ "Blog", "Portfolio", "PaperMod" ]
-author = "Me"
+author = "ChiAn Ye"
 images = [ "<link or path of image for opengraph, twitter-cards>" ]
-DateFormat = "January 2, 2006"
+DateFormat = "2006-01-02"
 defaultTheme = "auto"
+displayFullLangName = true
 disableThemeToggle = false
 ShowReadingTime = true
 ShowShareButtons = true
 ShowPostNavLinks = true
 ShowBreadCrumbs = true
-ShowCodeCopyButtons = false
+ShowCodeCopyButtons = true
+ShowLastMod = true
 ShowWordCount = true
 ShowRssButtonInSectionTermList = true
 UseHugoToc = true
 disableSpecial1stPost = false
 disableScrollToTop = false
-comments = false
+comments = true
 hidemeta = false
+hideFooter = false
 hideSummary = false
-showtoc = false
-tocopen = false
+showtoc = true
+tocopen = true
+VisitCount = true
 
   [params.assets]
-  favicon = "<link / abs url>"
-  favicon16x16 = "<link / abs url>"
-  favicon32x32 = "<link / abs url>"
-  apple_touch_icon = "<link / abs url>"
-  safari_pinned_tab = "<link / abs url>"
+  favicon = "img/images.jpg"
+  favicon16x16 = "img/images.jpg"
+  favicon32x32 = "img/images.jpg"
+  apple_touch_icon = "img/images.jpg"
+  safari_pinned_tab = "img/images.jpg"
 
   [params.label]
   text = "Home"
