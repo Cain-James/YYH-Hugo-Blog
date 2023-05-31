@@ -1,33 +1,69 @@
-baseURL = 'http://127.0.0.1'
-languageCode = 'zh-cn'
-title = "Yuan's Blog"
-theme = 'PaperMod'
-paginate = 5
-
+baseURL = "https://127.0.0.1"
+languageCode = "zh-cn"
+title = "Ye's Blog"
+theme = "PaperMod"
+enableInlineShortcodes = true
+enableEmoji = true
 enableRobotsTXT = true
+hasCJKLanguage = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
-googleAnalytics = "UA-123-45"
-pygmentsUseClasses = true
-enableEmoji = true #允许使用 Emoji 表情，建议 true
-hasCJKLanguage = true # 自动检测是否包含中文日文韩文,如果文章中使用了很多中文引号的话可以开启
-enableInlineShortcodes = true
+paginate = 15
+summaryLength = 140
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = true
 
-defaultContentLanguage = 'zh-cn'
 [minify]
 disableXML = true
-minifyOutput = true
+
+[permalinks]
+post = "/:title/"
+[languages]
+[languages.en]
+languageName = "English"
+weight = 1
+
+  [en.homeInfoParams]
+  Title = "欢迎光临小站🥂"
+  Content = """
+本站主要内容包括读书笔记、技术积累、生活感悟。如果能有哪些内容可以帮助到你，那也是极好的。</br> 精通 CSS JavaScript PHP C C++ C# java Ruby Perl Python 等单词的拼写</br> 熟悉 Windows Linux Mac Android IOS 等系统的开关机</br> 🏃‍♂️ 跑步 🎮️ 游戏 🎧 音乐 📺 动漫 
+"""
+
+[[languages.en.menu.main]]
+identifier = "search"
+name = "🔍 搜索"
+url = "search"
+weight = 10
+
+[[languages.en.menu.main]]
+identifier = "posts"
+name = "📚 文章"
+url = "posts"
+weight = 30
+
+[[languages.en.menu.main]]
+identifier = "archives"
+name = "📈 归档"
+url = "archives"
+weight = 50
+
+
+[outputs]
+home = [ "HTML", "RSS", "JSON" ]
 
 [params]
 env = "production"
-description = ""
-author = "Sulv"
+description = "lvbibir的个人博客, hugo, papermod, shell, python, linux, mysql, redis, k8s, docker, devops"
+author = "ChiAn Ye"
+draft = "flase"
 defaultTheme = "auto"
 disableThemeToggle = false
 DateFormat = "2006-01-02"
-ShowShareButtons = true
-ShowReadingTime = true
+disableShare = true
+ShowShareButtons = false
+ShowReadingTime = false
+disableSpecialistPost = true
 displayFullLangName = true
 ShowPostNavLinks = true
 ShowBreadCrumbs = true
@@ -40,80 +76,54 @@ ShowToc = true
 TocOpen = true
 comments = true
 StartYear = 2_020
-FilingNo = "填写自己的备案号"
-PublicSecurityIconLink = "填自己的公安图标链接"
-PublicNetworkSecurity = "填自己的公网安备"
+FilingNo = "京ICP备2021023168号-1"
 Reward = true
 WechatPay = "img/wechat_pay.png"
 Alipay = "img/alipay.png"
 
-  [params.assets]
-  favicon = "img/images.jpg"
-  favicon16x16 = "img/images.jpg"
-  favicon32x32 = "img/images.jpg"
-  apple_touch_icon = "img/images.jpg"
-  safari_pinned_tab = "img/images.jpg"
-
-  [params.label]
-  text = "Home"
-  icon = "/apple-touch-icon.png"
-  iconHeight = 35
-
-  [params.profileMode]
-  enabled = false
-  title = "ExampleSite"
-  subtitle = "This is subtitle"
-  imageUrl = "<img location>"
-  imageWidth = 120
-  imageHeight = 120
-  imageTitle = "my image"
-
-    [[params.profileMode.buttons]]
-    name = "👨🏻‍💻技术"
-    url = "posts/tech"
-
-    [[params.profileMode.buttons]]
-    name = "📕阅读"
-    url = "posts/read"
-
-    [[params.profileMode.buttons]]
-    name = "🏖生活"
-    url = "posts/life"
-
-  [params.homeInfoParams]
-  Title = "Hi there 👋"
-  Content = "Welcome to my blog"
-
-  [[params.socialIcons]]
-  name = "twitter"
-  url = "https://twitter.com/"
-
-  [[params.socialIcons]]
-  name = "stackoverflow"
-  url = "https://stackoverflow.com"
-
   [[params.socialIcons]]
   name = "github"
-  url = "https://github.com/"
+  url = "https://github.com/lvbibir"
+
+  [[params.socialIcons]]
+  name = "QQ"
+  url = "img/qq.png"
+
+  [[params.socialIcons]]
+  name = "WeChat"
+  url = "img/wechat.png"
+
+  [[params.socialIcons]]
+  name = "bilibili"
+  url = "https://space.bilibili.com/280428279"
+
+  [[params.socialIcons]]
+  name = "email"
+  url = "mailto:yuanyanghao2022@163.com"
+
+  [[params.socialIcons]]
+  name = "RSS"
+  url = "index.xml"
+
+  [params.label]
+  text = "Ye's Blog"
+  icon = "img/avatar.gif"
+  iconHeight = 35
 
 [params.analytics.google]
-SiteVerificationTag = "XYZabc"
+SiteVerificationTag = ""
 
-[params.analytics.bing]
-SiteVerificationTag = "XYZabc"
-
-[params.analytics.yandex]
-SiteVerificationTag = "XYZabc"
+  [params.assets]
+  favicon = "img/avatar.gif"
+  favicon16x16 = "img/avatar.gif"
+  favicon32x32 = "img/avatar.gif"
+  apple_touch_icon = "img/avatar.gif"
+  safari_pinned_tab = "img/avatar.gif"
 
   [params.cover]
-  hidden = true
-  hiddenInList = true
+  hidden = false
+  hiddenInList = false
   hiddenInSingle = true
-
-  [params.editPost]
-  URL = "https://github.com/<path_to_repo>/content"
-  Text = "Suggest Changes"
-  appendFilePath = true
 
   [params.fuseOpts]
   isCaseSensitive = false
@@ -122,51 +132,23 @@ SiteVerificationTag = "XYZabc"
   distance = 1_000
   threshold = 0.4
   minMatchCharLength = 0
-  keys = [ "title", "permalink", "summary", "content" ]
+  keys = [ "title", "permalink", "summary" ]
 
+[taxonomies]
+category = "categories"
+tag = "tags"
+series = "series"
 
-[[menu.main]]
-identifier = "search"
-name = "🔍搜索"
-url = "search"
-weight = 1
-
-[[menu.main]]
-identifier = "home"
-name = "🏠主页"
-url = "/"
-weight = 2
-
-[[menu.main]]
-identifier = "posts"
-name = "📚文章"
-url = "/posts"
-weight = 3
-
-[[menu.main]]
-identifier = "archives"
-name = "⏱时间轴"
-url = "/archives"
-weight = 20
-
-[[menu.main]]
-identifier = "tags"
-name = "🔖标签"
-url = "/tags"
-weight = 40
-
-[[menu.main]]
-identifier = "about"
-name = "🙋🏻‍♂️关于"
-url = "/about"
-weight = 100
+[markup.goldmark.renderer]
+unsafe = true
 
 [markup.highlight]
 codeFences = true
 guessSyntax = true
-lineNos = true
-style = "darcula"
-noClasses = false
+lineNos = false
+noClasses = true
+tabWidth = 4
+style = "paraiso-dark"
 
 [privacy.vimeo]
 disabled = false
@@ -190,6 +172,3 @@ disableInlineCSS = true
 
 [services.twitter]
 disableInlineCSS = true
-
-[outputs]
-home = [ "HTML", "RSS", "JSON" ]
