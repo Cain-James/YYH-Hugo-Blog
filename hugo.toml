@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "https://yyh-hugo-blog.pages.dev"
 languageCode = "zh-cn"
 title = "Ye's Blog"
 theme = "PaperMod"
