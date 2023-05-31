@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://127.0.0.1/archives/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/search/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/categories/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/series/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/tags/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/tech/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/blog/</loc>
+  </url><url>
+    <loc>https://127.0.0.1/life/</loc>
+  </url>
+</urlset>
