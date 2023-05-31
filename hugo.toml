@@ -21,32 +21,31 @@ minifyOutput = true
 
 [params]
 env = "production"
-description = "这是一个纯粹的博客......"
-keywords = [ "Blog", "Portfolio", "PaperMod" ]
-author = "ChiAn Ye"
-images = [ "<link or path of image for opengraph, twitter-cards>" ]
-DateFormat = "2006-01-02"
+description = ""
+author = "Sulv"
 defaultTheme = "auto"
-displayFullLangName = true
 disableThemeToggle = false
-ShowReadingTime = true
+DateFormat = "2006-01-02"
 ShowShareButtons = true
+ShowReadingTime = true
+displayFullLangName = true
 ShowPostNavLinks = true
 ShowBreadCrumbs = true
 ShowCodeCopyButtons = true
-ShowLastMod = true
-ShowWordCount = true
-ShowRssButtonInSectionTermList = true
-UseHugoToc = true
-disableSpecial1stPost = false
-disableScrollToTop = false
-comments = true
-hidemeta = false
 hideFooter = false
-hideSummary = false
-showtoc = true
-tocopen = true
+ShowWordCounts = true
 VisitCount = true
+ShowLastMod = true
+ShowToc = true
+TocOpen = true
+comments = true
+StartYear = 2_020
+FilingNo = "填写自己的备案号"
+PublicSecurityIconLink = "填自己的公安图标链接"
+PublicNetworkSecurity = "填自己的公网安备"
+Reward = true
+WechatPay = "img/wechat_pay.png"
+Alipay = "img/alipay.png"
 
   [params.assets]
   favicon = "img/images.jpg"
@@ -70,12 +69,16 @@ VisitCount = true
   imageTitle = "my image"
 
     [[params.profileMode.buttons]]
-    name = "Posts"
-    url = "posts"
+    name = "👨🏻‍💻技术"
+    url = "posts/tech"
 
     [[params.profileMode.buttons]]
-    name = "Tags"
-    url = "tags"
+    name = "📕阅读"
+    url = "posts/read"
+
+    [[params.profileMode.buttons]]
+    name = "🏖生活"
+    url = "posts/life"
 
   [params.homeInfoParams]
   Title = "Hi there 👋"
@@ -159,7 +162,34 @@ url = "/about"
 weight = 100
 
 [markup.highlight]
+codeFences = true
+guessSyntax = true
+lineNos = true
+style = "darcula"
 noClasses = false
+
+[privacy.vimeo]
+disabled = false
+simple = true
+
+[privacy.twitter]
+disabled = false
+enableDNT = true
+simple = true
+
+[privacy.instagram]
+disabled = false
+simple = true
+
+[privacy.youtube]
+disabled = false
+privacyEnhanced = true
+
+[services.instagram]
+disableInlineCSS = true
+
+[services.twitter]
+disableInlineCSS = true
 
 [outputs]
 home = [ "HTML", "RSS", "JSON" ]
