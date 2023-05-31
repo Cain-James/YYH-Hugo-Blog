@@ -1,4 +1,4 @@
-baseURL = "https://yyh-hugo-blog.pages.dev"
+baseURL = "https://seu-yuan.top/"
 languageCode = "zh-cn"
 title = "Ye's Blog"
 theme = "PaperMod"
@@ -14,7 +14,6 @@ summaryLength = 140
 defaultContentLanguage = "en"
 ShowReadingTime = true
 defaultContentLanguageInSubdir = true
-canonifyURLs = true #启用将相对 URL 变为绝对 URL
 layoutDir = "layouts"
 logFile = "Log"
 pluralizeListTitles = true
