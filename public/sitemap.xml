@@ -2,22 +2,29 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://127.0.0.1/archives/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/posts/my-first-post/</loc>
+    <lastmod>2023-05-31T07:15:16+08:00</lastmod>
   </url><url>
-    <loc>https://127.0.0.1/search/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/posts/</loc>
+    <lastmod>2023-05-31T07:15:16+08:00</lastmod>
   </url><url>
-    <loc>https://127.0.0.1/categories/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/</loc>
+    <lastmod>2023-05-31T07:15:16+08:00</lastmod>
   </url><url>
-    <loc>https://127.0.0.1/series/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/archives/</loc>
   </url><url>
-    <loc>https://127.0.0.1/tags/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/search/</loc>
   </url><url>
-    <loc>https://127.0.0.1/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/categories/</loc>
   </url><url>
-    <loc>https://127.0.0.1/tech/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/series/</loc>
   </url><url>
-    <loc>https://127.0.0.1/blog/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/tags/</loc>
   </url><url>
-    <loc>https://127.0.0.1/life/</loc>
+    <loc>https://yyh-hugo-blog.pages.dev/tech/</loc>
+  </url><url>
+    <loc>https://yyh-hugo-blog.pages.dev/blog/</loc>
+  </url><url>
+    <loc>https://yyh-hugo-blog.pages.dev/life/</loc>
   </url>
 </urlset>

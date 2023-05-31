@@ -2,9 +2,9 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>随笔 on Ye&#39;s Blog</title>
-    <link>https://127.0.0.1/life/</link>
+    <link>https://yyh-hugo-blog.pages.dev/life/</link>
     <description>Recent content in 随笔 on Ye&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language><atom:link href="https://127.0.0.1/life/index.xml" rel="self" type="application/rss+xml" />
+    <language>en</language><atom:link href="https://yyh-hugo-blog.pages.dev/life/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
