@@ -1,4 +1,4 @@
-baseURL = "https://127.0.0.1"
+baseURL = "/"
 languageCode = "zh-cn"
 title = "Ye's Blog"
 theme = "PaperMod"
@@ -21,6 +21,7 @@ pluralizeListTitles = true
 relativeURLs = false
 [minify]
 disableXML = true
+minifyOutput = false
 
 [permalinks]
 post = "/:title/"
