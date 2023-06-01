@@ -35,9 +35,21 @@ weight = 1
     url = "search"
     weight = 10
 
+    # [[languages.zh.menu.main]]
+    # identifier = "posts"
+    # name = "📚 文章"
+    # url = "posts"
+    # weight = 30
+
     [[languages.zh.menu.main]]
-    identifier = "posts"
-    name = "📚 文章"
+    identifier = "posts/tech"
+    name = "🔨 技术"
+    url = "posts"
+    weight = 30
+
+    [[languages.zh.menu.main]]
+    identifier = "posts/life"
+    name = "📸 生活"
     url = "posts"
     weight = 30
 
@@ -103,11 +115,11 @@ Alipay = "img/alipay.png"
     imageHeight = 120
     [[params.profileMode.buttons]]
     name = "💻 技术"
-    url = "/posts"
+    url = "/posts/tech"
 
     [[params.profileMode.buttons]]
     name = "📸 生活"
-    url = "/life"
+    url = "/posts/life"
     
     [[params.socialIcons]]
     name = "github"
