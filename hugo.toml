@@ -11,48 +11,55 @@ buildFuture = false
 buildExpired = false
 paginate = 15
 summaryLength = 140
-defaultContentLanguage = "en"
+defaultContentLanguage = "zh"
 ShowReadingTime = true
 defaultContentLanguageInSubdir = true
 layoutDir = "layouts"
 logFile = "Log"
 pluralizeListTitles = true
 relativeURLs = false
+googleAnalytics = "UA-123-45"
+Copyright = "Yuan"
 [minify]
 disableXML = true
 minifyOutput = false
 
-[permalinks]
-post = "/:title/"
 [languages]
-[languages.en]
-languageName = "English"
+
+[languages.zh]
+languageName = "简体中文"
 weight = 1
+    [[languages.zh.menu.main]]
+    identifier = "search"
+    name = "🔍 搜索"
+    url = "search"
+    weight = 10
 
-  [en.homeInfoParams]
-  Title = "欢迎光临小站🥂"
-  Content = """
-本站主要内容包括读书笔记、技术积累、生活感悟。如果能有哪些内容可以帮助到你，那也是极好的。</br> 精通 CSS JavaScript PHP C C++ C# java Ruby Perl Python 等单词的拼写</br> 熟悉 Windows Linux Mac Android IOS 等系统的开关机</br> 🏃‍♂️ 跑步 🎮️ 游戏 🎧 音乐 📺 动漫 
-"""
+    [[languages.zh.menu.main]]
+    identifier = "posts"
+    name = "📚 文章"
+    url = "posts"
+    weight = 30
 
-[[languages.en.menu.main]]
-identifier = "search"
-name = "🔍 搜索"
-url = "search"
-weight = 10
+    [[languages.zh.menu.main]]
+    identifier = "archives"
+    name = "📈 归档"
+    url = "archives"
+    weight = 31
 
-[[languages.en.menu.main]]
-identifier = "posts"
-name = "📚 文章"
-url = "posts"
-weight = 30
+    [[languages.zh.menu.main]]
+    identifier = "about"
+    name = "👩‍💻 关于"
+    url = "about"
+    weight = 32
 
-[[languages.en.menu.main]]
-identifier = "archives"
-name = "📈 归档"
-url = "archives"
-weight = 50
+# [languages.en]
+# languageName = "English"
+# weight = 2
 
+# [languages.jp]
+# languageName = "日本語"
+# weight = 3
 
 [outputs]
 home = [ "HTML", "RSS", "JSON" ]
@@ -60,7 +67,7 @@ page = ['HTML']
 
 [params]
 env = "production"
-description = ""
+description = "这是我的第一个基于Hugo搭建的博客网站"
 
 author = "ChiAn Ye"
 draft = "flase"
@@ -85,16 +92,22 @@ comments = true
 StartYear = 2_020
 FilingNo = ""
 Reward = true
-WechatPay = "img/wechat_pay.png"
 Alipay = "img/alipay.png"
     [params.profileMode]
     enabled = true
     title = "Yuan's Blog"
-    subtitle = ""
+    subtitle = "🧨学而时习之，不亦说乎？有朋自远方来，不亦乐乎？</br>👏🏼欢迎来到我的博客</br>👇联系方式"
     imageUrl = "img/head.jpg"
     imageTitle = "图片标题"
     imageWidth = 120
     imageHeight = 120
+    [[params.profileMode.buttons]]
+    name = "💻 技术"
+    url = "/posts"
+
+    [[params.profileMode.buttons]]
+    name = "📸 生活"
+    url = "/life"
     
     [[params.socialIcons]]
     name = "github"
@@ -105,7 +118,7 @@ Alipay = "img/alipay.png"
     url = "img/qq.png"
 
     [[params.socialIcons]]
-    name = "WeChat"
+    name = "Weixin"
     url = "img/wechat.png"
 
     [[params.socialIcons]]
@@ -122,18 +135,19 @@ Alipay = "img/alipay.png"
 
     [params.label]
     text = "Ye's Blog"
-    icon = "img/avatar.gif"
+    icon = "img/logo.gif"
     iconHeight = 35
+
 
 [params.analytics.google]
 SiteVerificationTag = ""
 
   [params.assets]
-  favicon = "img/avatar.gif"
-  favicon16x16 = "img/avatar.gif"
-  favicon32x32 = "img/avatar.gif"
-  apple_touch_icon = "img/avatar.gif"
-  safari_pinned_tab = "img/avatar.gif"
+  favicon = "img/logo.gif"
+  favicon16x16 = "img/logo.gif"
+  favicon32x32 = "img/logo.gif"
+  apple_touch_icon = "img/logo.gif"
+  safari_pinned_tab = "img/logo.gif"
 
   [params.cover]
   hidden = false
