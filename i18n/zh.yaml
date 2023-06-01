@@ -31,3 +31,9 @@
 
 - id: code_copied
   translation: "已复制！"
+  
+- id: prev_post
+  translation: "上一篇"
+
+- id: next_post
+  translation: "下一篇"

@@ -7,6 +7,9 @@
 {{- if not .IsHome | and .Title }}
 <header class="page-header">
   {{- partial "breadcrumbs.html" . }}
+  {{- if (.Param "ShowStatInSectionTermList" | default true) }}
+  <sup class="archive-count">&nbsp;&nbsp;{{- partial "stat.html" . }}</sup>
+  {{- end }}
   <h1>
     {{ .Title }}
     {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}

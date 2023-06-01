@@ -1,5 +1,7 @@
 {{- if not (.Param "hideFooter") }}
 <footer class="footer">
+    <span>全站文章统计: &nbsp;{{- partial "stat.html" (dict "Kind" "total") }}</span>
+    <br>
     {{- if site.Copyright }}
     <span>{{ site.Copyright | markdownify }}</span>
     {{- else }}
@@ -132,4 +134,5 @@
         }
     });
 </script>
+
 {{- end }}

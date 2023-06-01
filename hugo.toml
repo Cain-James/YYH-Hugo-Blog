@@ -19,7 +19,7 @@ logFile = "Log"
 pluralizeListTitles = true
 relativeURLs = false
 googleAnalytics = "UA-123-45"
-Copyright = "Yuan"
+Copyright = ""
 [minify]
 disableXML = true
 minifyOutput = false
@@ -133,6 +133,8 @@ comments = true
 StartYear = 2_020
 FilingNo = ""
 Reward = true
+ShowStatInSectionTermList = false # 列表页统计文章篇数和字数
+ShowStatInArchive = false # 归档页统计文章篇数和字数
 Alipay = "img/alipay.png"
     [params.profileMode]
     enabled = true
@@ -156,10 +158,11 @@ Alipay = "img/alipay.png"
 
     [[params.socialIcons]]
     name = "QQ"
+    icon = ""
     url = "img/qq.png"
 
     [[params.socialIcons]]
-    name = "Weixin"
+    name = "wechat"
     url = "img/wechat.png"
 
     [[params.socialIcons]]
@@ -174,7 +177,7 @@ Alipay = "img/alipay.png"
     name = "RSS"
     url = "index.xml"
 
-    [params.label]
+    [params.label] # 顶部左侧的文字图片
     text = "Ye's Blog"
     icon = "img/logo.gif"
     iconHeight = 35
@@ -219,26 +222,3 @@ lineNos = false
 noClasses = true
 tabWidth = 4
 style = "paraiso-dark"
-
-[privacy.vimeo]
-disabled = false
-simple = true
-
-[privacy.twitter]
-disabled = false
-enableDNT = true
-simple = true
-
-[privacy.instagram]
-disabled = false
-simple = true
-
-[privacy.youtube]
-disabled = false
-privacyEnhanced = true
-
-[services.instagram]
-disableInlineCSS = true
-
-[services.twitter]
-disableInlineCSS = true
