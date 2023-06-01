@@ -1,7 +1,7 @@
 ---
-title: "👩‍💻 关于我"
-date: 2023-06-01T13:31:45+08:00
-lastmod: 2023-06-01T13:31:45+08:00
+title: "{{ replace .Name "-" " " | title }}"
+date: {{ .Date }}
+lastmod: {{ .Date }}
 author: ["作者"]
 categories:
 - 分类1
@@ -9,9 +9,6 @@ categories:
 tags:
 - 标签1
 - 标签2
-layout: "about"
-url: "/about/"
-summary: about
 # summary->在列表页展现的摘要内容，自动生成，内容默认前70个字符，可通过此参数自定义，一般无需专门设置
 summary: ""
 # description->需要自己编写的文章描述，是搜索引擎呈现在搜索结果链接下方的网页简介，建议设置
@@ -31,3 +28,9 @@ cover:
     alt: ""
     relative: false
 ---
+
+摘要
+
+<!--more-->
+
+正文
