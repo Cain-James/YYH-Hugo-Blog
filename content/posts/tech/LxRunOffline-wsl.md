@@ -287,7 +287,7 @@ lxrunoffline ur -n <WSL名称>
 lxrunoffline rg -n <WSL名称> -d <WSL路径> -c <配置文件路径>.xml
 ```
 
-# <center>参考资料</center>
+# 参考资料
 
-> [1]. [想安装更多 Linux 发行版？LxRunOffline 让 WSL 更好用](https://sspai.com/post/61634)-by 化学心情下 2
+> [1]. [想安装更多 Linux 发行版？LxRunOffline 让 WSL 更好用](https://sspai.com/post/61634)-by 化学心情下 2\
 > [2]. [LxRunOffline 使用教程 - WSL 自定义安装、备份](https://p3terx.com/archives/manage-wsl-with-lxrunoffline.html)-by P3TERX
