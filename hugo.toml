@@ -42,20 +42,26 @@ weight = 1
     # weight = 30
 
     [[languages.zh.menu.main]]
+    identifier = ""
+    name = "🏠主页"
+    url = "/"
+    weight = 11
+
+    [[languages.zh.menu.main]]
     identifier = "posts/tech"
     name = "🔨 技术"
-    url = "posts"
-    weight = 30
+    url = "posts/tech"
+    weight = 29
 
     [[languages.zh.menu.main]]
     identifier = "posts/life"
     name = "📸 生活"
-    url = "posts"
+    url = "posts/life"
     weight = 30
 
     [[languages.zh.menu.main]]
     identifier = "archives"
-    name = "📈 归档"
+    name = "⏱️ 时间轴"
     url = "archives"
     weight = 31
 
