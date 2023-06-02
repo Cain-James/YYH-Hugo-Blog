@@ -138,7 +138,7 @@ ShowStatInArchive = false # 归档页统计文章篇数和字数
 Alipay = "img/alipay.png"
     [params.profileMode]
     enabled = true
-    title = "Yuan's Blog"
+    title = "百叶沉秋"
     subtitle = "🧨学而时习之，不亦说乎？有朋自远方来，不亦乐乎？</br>👏🏼欢迎来到我的博客</br>👇联系方式"
     imageUrl = "img/head.jpg"
     imageTitle = "图片标题"

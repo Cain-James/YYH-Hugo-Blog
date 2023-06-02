@@ -5,12 +5,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Categories | Ye&#39;s Blog</title>
+<title>🔨 技术 | Ye&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="这是我的第一个基于Hugo搭建的博客网站">
+<meta name="description" content="🔨 技术 - Ye&#39;s Blog">
 <meta name="author" content="
-作者:&nbsp;ChiAn Ye">
-<link rel="canonical" href="https://seu-yuan.top/categories/">
+作者:&nbsp;ChiAn">
+<link rel="canonical" href="https://seu-yuan.top/posts/tech/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.4a218b31d298c203f9f10882c0d271e6a7a7f0902d5e5425be578abfaf4686f0.css" integrity="sha256-SiGLMdKYwgP58QiCwNJx5qen8JAtXlQlvleKv69GhvA=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://seu-yuan.top/img/logo.gif">
 <link rel="icon" type="image/png" sizes="16x16" href="https://seu-yuan.top/img/logo.gif">
@@ -19,7 +19,7 @@
 <link rel="mask-icon" href="https://seu-yuan.top/img/logo.gif">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="https://seu-yuan.top/categories/index.xml">
+<link rel="alternate" type="application/rss+xml" href="https://seu-yuan.top/posts/tech/index.xml">
 <noscript>
     <style>
         #theme-toggle,
@@ -57,6 +57,8 @@
 
     </style>
 </noscript>
+<script defer src="https://unpkg.com/mermaid@8.8.1/dist/mermaid.min.js"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
 <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <meta name="referrer" content="no-referrer-when-downgrade">
@@ -84,15 +86,36 @@ if (!doNotTrack) {
 	
 	ga('send', 'pageview');
 }
-</script><meta property="og:title" content="Categories" />
+</script><meta property="og:title" content="🔨 技术" />
 <meta property="og:description" content="这是我的第一个基于Hugo搭建的博客网站" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://seu-yuan.top/categories/" />
+<meta property="og:url" content="https://seu-yuan.top/posts/tech/" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Categories"/>
+<meta name="twitter:title" content="🔨 技术"/>
 <meta name="twitter:description" content="这是我的第一个基于Hugo搭建的博客网站"/>
 
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "📚 博客",
+      "item": "https://seu-yuan.top/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "🔨 技术",
+      "item": "https://seu-yuan.top/posts/tech/"
+    }
+  ]
+}
+</script>
 </head>
 
 <body class="list" id="top">
@@ -149,7 +172,7 @@ if (!doNotTrack) {
             </li>
             <li>
                 <a href="https://seu-yuan.top/posts/tech" title="🔨 技术">
-                    <span>🔨 技术</span>
+                    <span class="active">🔨 技术</span>
                 </a>
             </li>
             <li>
@@ -175,16 +198,145 @@ if (!doNotTrack) {
         </ul>
     </nav>
 </header>
-<main class="main">
-<header class="page-header">
-    <h1>🧩Categories</h1>
-    
+<main class="main"> 
+<header class="page-header"><div class="breadcrumbs"><a href="https://seu-yuan.top/">🏠主页</a>&nbsp;»&nbsp;<a href="https://seu-yuan.top/posts/">📚 博客</a></div>
+  <h1>
+    🔨 技术
+  </h1>
 </header>
 
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>使用 LxRunOffline 实现 WSL 自定义安装、备份
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>本文初衷是想在非默认目录下安装 WSL，查阅资料后用 LxRunOffline 了解并实现了 WSL 自定义安装 前言 虽说目前的 WSL 在 Windows 10 生态中已经越发成熟，但在实际使用中依旧存在一些不足之处，比如目前 WSL 的 Linux 发行版必须通过 Windows Store 或者旁加载安装包的形式安装到系统中。另外市面上 WSL 发行版也只有寥寥几款，且 WSL 只能默认安装到系统盘...</p>
+  </div>
+  <footer class="entry-footer">
 
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
 
-<ul class="terms-tags">
-</ul>
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-06-01
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>3292字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>7分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>
+作者:&nbsp;ChiAn Ye
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span></footer>
+  <a class="entry-link" aria-label="post link to 使用 LxRunOffline 实现 WSL 自定义安装、备份" href="https://seu-yuan.top/posts/tech/lxrunoffline-wsl/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
+    <h2>My First Post
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>Introduction This is bold text, and this is emphasized text.
+Visit the Hugo website!</p>
+  </div>
+  <footer class="entry-footer">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-05-31
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>14字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>1分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>
+作者:&nbsp;ChiAn Ye
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+        </span>
+    </span>
+</span></footer>
+  <a class="entry-link" aria-label="post link to My First Post" href="https://seu-yuan.top/posts/tech/my-first-post/"></a>
+</article>
     </main>
     
 <footer class="footer">

@@ -1,30 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on Ye&#39;s Blog</title>
-    <link>https://yyh-hugo-blog.pages.dev/posts/</link>
-    <description>Recent content in Posts on Ye&#39;s Blog</description>
+    <title>📚 博客 on Ye&#39;s Blog</title>
+    <link>https://seu-yuan.top/posts/</link>
+    <description>Recent content in 📚 博客 on Ye&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en</language>
-    <lastBuildDate>Thu, 01 Jun 2023 06:12:38 +0800</lastBuildDate><atom:link href="https://yyh-hugo-blog.pages.dev/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>使用 LxRunOffline 实现 WSL 自定义安装、备份</title>
-      <link>https://yyh-hugo-blog.pages.dev/posts/lxrunoffline-wsl/</link>
-      <pubDate>Thu, 01 Jun 2023 06:12:38 +0800</pubDate>
-      
-      <guid>https://yyh-hugo-blog.pages.dev/posts/lxrunoffline-wsl/</guid>
-      <description>本文初衷是想在非默认目录下安装 WSL，查阅资料后用 LxRunOffline 了解并实现了 WSL 自定义安装 前言 虽说目前的 WSL 在 Windows 10 生态中已经越发成熟，但在实际使用中依旧存在一些不足之处，比如目前 WSL 的 Linux 发行版必须通过 Windows Store 或者旁加载安装包的形式安装到系统中。另外市面上 WSL 发行版也只有寥寥几款，且 WSL 只能默认安装到系统盘</description>
-    </item>
-    
-    <item>
-      <title>My First Post</title>
-      <link>https://yyh-hugo-blog.pages.dev/posts/my-first-post/</link>
-      <pubDate>Wed, 31 May 2023 07:15:16 +0800</pubDate>
-      
-      <guid>https://yyh-hugo-blog.pages.dev/posts/my-first-post/</guid>
-      <description>Introduction This is bold text, and this is emphasized text.
-Visit the Hugo website!</description>
-    </item>
-    
+    <language>zh</language>
+    <lastBuildDate>Thu, 01 Jun 2023 06:12:38 +0800</lastBuildDate><atom:link href="https://seu-yuan.top/posts/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>
