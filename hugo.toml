@@ -108,7 +108,7 @@ page = ['HTML']
 
 [params]
 env = "production"
-description = "这是我的第一个基于Hugo搭建的博客网站"
+description = "ChiAn Ye的博客,基于Hugo搭建的博客网站，关于Hugo、Papermod、c++、golang、ICPC、CCPC、ACM，刷题主要在leetcode,codeforces,atcoder等"
 
 author = "ChiAn Ye"
 draft = "flase"
