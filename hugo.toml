@@ -160,11 +160,11 @@ Alipay = "img/alipay.png"
     [[params.socialIcons]]
     name = "QQ"
     icon = ""
-    url = "img/qq.png"
+    # url = "img/qq.png"
 
     [[params.socialIcons]]
     name = "wechat"
-    url = "img/wechat.png"
+    # url = "img/wechat.png"
 
     [[params.socialIcons]]
     name = "bilibili"
