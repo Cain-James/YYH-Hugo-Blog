@@ -2,7 +2,6 @@
 title: "Hugo博客图床解决方案：Github+jsDelivr CDN 加速 + PicGo实现图片水印和压缩"
 date: 2023-06-02T12:54:52+08:00
 lastmod: 2023-06-02T12:54:52+08:00
-author: ["作者"]
 categories:
 # - 分类1
 # - 分类2
