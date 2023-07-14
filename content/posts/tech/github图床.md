@@ -63,9 +63,8 @@ GitHub 在稳定性、可控性方面的优势无需多言，但国内访问总�
 ## Github + JsDelivr 解决方案的实施
 
 1. 创建一个可公开访问的 Github 仓库
-   ![](https://cdn.jsdelivr.net/gh/Cain-James/HugoBlog-Images/Images/P1001592.jpg)
 
-其中 @发布的版本号 是非必需的，如果不带默认取的是仓库主分支的最新文件。
+   其中 @发布的版本号 是非必需的，如果不带默认取的是仓库主分支的最新文件。
 
 2. 上传图片
    将你的图片上传到 GitHub 仓库即可
