@@ -1,3 +1,4 @@
 # YYH-Hugo-Blog
+
 Use Hugo to build a quickly Blog site. \
-site： seu-yuan.top
+site： [seu-yuan.top](www.seu-yuan.top)
