@@ -1,10 +1,10 @@
 ---
-title: "{{ replace .Name "-" " " | title }}"
-date: {{ .Date }}
-lastmod: {{ .Date }}
+title: "Ubuntu键盘输入中文延迟卡顿解决方法"
+date: 2023-08-22T13:33:10+08:00
+lastmod: 2023-08-22T13:33:10+08:00
 author: ChiAn Ye
 categories:
-# - 分类1
+  - Linux
 # - 分类2
 tags:
 # - 标签1
@@ -27,14 +27,32 @@ ShowWordCounts: true
 ShowReadingTime: true
 ShowLastMod: true
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
-摘要
+解决 Ubuntu 中文输入法卡顿的问题
 
 <!--more-->
 
-正文
+# 问题描述
+
+- 用键盘输入后，需要过至少 1 分钟屏幕上才会显示
+- 不限于场景，网页、聊天框、表格等均会发生
+- 键盘输入的是中文、或者中文输入法 shift 后的英文
+- 输入法系统为 ibus（ubuntu 自带的输入法）
+
+# 解决方法
+
+1. 安装 ccsm 工具 ：
+   sudo apt-get install compizconfig-settings-manager
+
+2. disable “Sync To VBlank”
+   方法：终端输入 ccsm 打开界面
+   选择 General -> OpenGL，然后取消勾选“Sync To VBlank”即可。
+
+# 推测原理
+
+可能是屏幕不能及时刷新中文的问题，关掉垂直同步就好了。

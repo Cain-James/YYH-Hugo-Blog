@@ -2,7 +2,6 @@
 title: "Hugo博客图床解决方案：Github+jsDelivr CDN 加速 + PicGo实现图片水印和压缩"
 date: 2023-06-02T12:54:52+08:00
 lastmod: 2023-06-02T12:54:52+08:00
-author: ["作者"]
 categories:
 # - 分类1
 # - 分类2
@@ -19,7 +18,7 @@ draft: false # 是否为草稿
 comments: true
 showToc: true # 显示目录
 TocOpen: true # 自动展开目录
-hidemeta: true # 是否隐藏文章的元信息，如发布日期、作者等
+hidemeta: false # 是否隐藏文章的元信息，如发布日期、作者等
 disableShare: false # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示当前路径
 DateFormat: "2006-01-02"
@@ -64,9 +63,8 @@ GitHub 在稳定性、可控性方面的优势无需多言，但国内访问总�
 ## Github + JsDelivr 解决方案的实施
 
 1. 创建一个可公开访问的 Github 仓库
-   ![](https://cdn.jsdelivr.net/gh/Cain-James/HugoBlog-Images/Images/P1001592.jpg)
 
-其中 @发布的版本号 是非必需的，如果不带默认取的是仓库主分支的最新文件。
+   其中 @发布的版本号 是非必需的，如果不带默认取的是仓库主分支的最新文件。
 
 2. 上传图片
    将你的图片上传到 GitHub 仓库即可
