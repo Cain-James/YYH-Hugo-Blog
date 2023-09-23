@@ -1,15 +1,13 @@
 ---
-title: "{{ replace .Name "-" " " | title }}"
-date: {{ .Date }}
-lastmod: {{ .Date }}
+title: "Hugo添加不蒜子Busuanzi页面浏览次数与阅读数据统计"
+date: 2023-09-23T11:19:08+08:00
+lastmod: 2023-09-23T11:19:08+08:00
 author: ChiAn Ye
 categories:
-# categories暂时不用
 # - 分类1
 # - 分类2
 tags:
-# 现在都先使用tags
-# - 标签1
+  - 建站
 # - 标签2
 # summary->在列表页展现的摘要内容，自动生成，内容默认前70个字符，可通过此参数自定义，一般无需专门设置
 summary: " "
@@ -29,13 +27,13 @@ ShowWordCounts: true
 ShowReadingTime: true
 ShowLastMod: true
 cover:
-    image: ""
-    caption: ""
-    alt: ""
-    relative: false
+  image: ""
+  caption: ""
+  alt: ""
+  relative: false
 ---
 
-摘要
+为本站提供浏览统计功能
 
 <!--more-->
 

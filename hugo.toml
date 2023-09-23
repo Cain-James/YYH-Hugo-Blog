@@ -67,13 +67,13 @@ weight = 1
     [[languages.zh.menu.main]]
     identifier = "posts/tech"
     name = "🔨 技术"
-    url = "posts/tech"
+    url = "./posts/tech"
     weight = 29
 
     [[languages.zh.menu.main]]
     identifier = "posts/life"
     name = "📸 生活"
-    url = "posts/life"
+    url = "./posts/life"
     weight = 30
 
     [[languages.zh.menu.main]]
@@ -97,6 +97,53 @@ weight = 1
 # [languages.en]
 # languageName = "English"
 # weight = 2
+#   [[languages.en.menu.main]]
+#       identifier = "search"
+#       name = "🔍 search"
+#       url = "search"
+#       weight = 10
+
+#       # [[languages.en.menu.main]]
+#       # identifier = "posts"
+#       # name = "📚 文章"
+#       # url = "posts"
+#       # weight = 30
+
+#       [[languages.en.menu.main]]
+#       identifier = ""
+#       name = "🏠home"
+#       url = "/"
+#       weight = 11
+
+#       [[languages.en.menu.main]]
+#       identifier = "posts/tech"
+#       name = "🔨 tech"
+#       url = "./posts/tech"
+#       weight = 29
+
+#       [[languages.en.menu.main]]
+#       identifier = "posts/life"
+#       name = "📸 life"
+#       url = "./posts/life"
+#       weight = 30
+
+#       [[languages.en.menu.main]]
+#       identifier = "tags"
+#       name = "📌 tags"
+#       url = "tags"
+#       weight = 31
+
+#       [[languages.en.menu.main]]
+#       identifier = "archives"
+#       name = "⏱️ archives"
+#       url = "archives"
+#       weight = 32
+
+#       [[languages.en.menu.main]]
+#       identifier = "about"
+#       name = "👩‍💻 about"
+#       url = "about"
+#       weight = 33
 
 # [languages.jp]
 # languageName = "日本語"
