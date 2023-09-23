@@ -37,4 +37,71 @@ cover:
 
 <!--more-->
 
-正文
+【统计平台】：[不蒜子](http://busuanzi.ibruce.info/)
+
+# .head
+
+打开项目根目录找到主题安装的目录中 head.html 文件，添加不蒜子统计引入文件。
+`head.html`文件目录路径：`$PATH:\myblog\themes\hugo-theme-mini\layouts\partials\head.html`
+
+添加如下代码块：
+
+```html
+<!-- busuanzi -->
+{{- if .Site.Params.busuanzi.enable -}}
+<script
+  async
+  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"
+></script>
+<meta name="referrer" content="no-referrer-when-downgrade" />
+{{- end -}}
+```
+
+# .footer
+
+站点底部公共位置显示用户总访问量和总访客数，`footer.html`文件一般和`head.html`文件处在同一个目录中。
+
+`footer.html`文件目录路径：`$PATH:\myblog\themes\hugo-theme-mini\layouts\partials\footer.html`
+
+添加如下代码块：
+
+```html
+<!-- busuanzi -->
+{{ if .Site.Params.busuanzi.enable -}}
+<div class="busuanzi-footer">
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+  </span>
+  <span id="busuanzi_container_site_uv">
+    本站访客数<span id="busuanzi_value_site_uv"></span>人次
+  </span>
+</div>
+```
+
+# .single
+
+在文章详情页中增加文章阅读量。
+`single.html`文件目录路径：`$PATH:\myblog\themes\hugo-theme-mini\layouts\_default\single.html`
+
+添加如下代码块：
+
+```html
+<span class="split"> · </span>
+<span>
+  <span id="busuanzi_container_page_pv"
+    >本文阅读量<span id="busuanzi_value_page_pv"></span>次</span
+  >
+</span>
+```
+
+# .config.yaml 配置
+
+打开项目根目录`config.yaml`文件，配置网站统计属性，`enable: true`打开访问量统计，`enable: false`关闭访问量统计。
+
+```yaml
+# Site parameters
+params:
+  #网站统计
+  busuanzi:
+    enable: true
+```

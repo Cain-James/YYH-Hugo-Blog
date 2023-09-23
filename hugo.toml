@@ -184,6 +184,8 @@ Reward = true
 ShowStatInSectionTermList = false # 列表页统计文章篇数和字数
 ShowStatInArchive = false # 归档页统计文章篇数和字数
 Alipay = "img/alipay.png"
+    [params.busuanzi]
+    enable = true
     [params.profileMode]
     enabled = true
     title = "百叶沉秋"
@@ -229,6 +231,8 @@ Alipay = "img/alipay.png"
     text = "Ye's Blog"
     icon = "img/logo.gif"
     iconHeight = 35
+
+
 
 
 [params.analytics.google]
