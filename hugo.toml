@@ -11,7 +11,7 @@ buildFuture = false
 buildExpired = false
 paginate = 15
 summaryLength = 140
-defaultContentLanguage = "zh"
+defaultContentLanguage = "zh-cn"
 ShowReadingTime = true
 defaultContentLanguageInSubdir = true
 layoutDir = "layouts"
@@ -43,107 +43,112 @@ minifyOutput = false
 # 🪪 📇 🗃 🗳 🗄 📋 📁 📂 🗂 🗞 📰 📓 📔 📒 📕 
 # 📗 📘 📙 📚 📖 🔖 🧷 🔗 📎 🖇 📐 📏 🧮 📌 
 # 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝 ✏️ 🔍 🔎 🔏 🔐 🔒 🔓
-[languages.zh]
+[languages.zh-cn]
 languageName = "简体中文"
 weight = 1
-    [[languages.zh.menu.main]]
+contentDir = 'content/zh-cn'
+languageCode = "zh-CN"
+    [[languages.zh-cn.menu.main]]
     identifier = "search"
     name = "🔍 搜索"
     url = "search"
     weight = 10
 
-    # [[languages.zh.menu.main]]
+    # [[languages.zh-cn.menu.main]]
     # identifier = "posts"
     # name = "📚 文章"
     # url = "posts"
     # weight = 30
 
-    [[languages.zh.menu.main]]
+    [[languages.zh-cn.menu.main]]
     identifier = ""
     name = "🏠主页"
     url = "/"
     weight = 11
 
-    [[languages.zh.menu.main]]
+    [[languages.zh-cn.menu.main]]
     identifier = "posts/tech"
     name = "🔨 技术"
     url = "./posts/tech"
     weight = 29
 
-    [[languages.zh.menu.main]]
+    [[languages.zh-cn.menu.main]]
     identifier = "posts/life"
     name = "📸 生活"
     url = "./posts/life"
     weight = 30
 
-    [[languages.zh.menu.main]]
+    [[languages.zh-cn.menu.main]]
     identifier = "tags"
     name = "📌 标签"
     url = "tags"
     weight = 31
 
-    [[languages.zh.menu.main]]
+    [[languages.zh-cn.menu.main]]
     identifier = "archives"
     name = "⏱️ 时间轴"
     url = "archives"
     weight = 32
 
-    [[languages.zh.menu.main]]
+    [[languages.zh-cn.menu.main]]
     identifier = "about"
     name = "👩‍💻 关于"
     url = "about"
     weight = 33
 
-# [languages.en]
-# languageName = "English"
-# weight = 2
-#   [[languages.en.menu.main]]
-#       identifier = "search"
-#       name = "🔍 search"
-#       url = "search"
-#       weight = 10
 
-#       # [[languages.en.menu.main]]
-#       # identifier = "posts"
-#       # name = "📚 文章"
-#       # url = "posts"
-#       # weight = 30
+[languages.en]
+languageName = "English"
+contentDir = 'content/en'
+languageCode = 'en-US'
+weight = 2
+  [[languages.en.menu.main]]
+      identifier = "search"
+      name = "🔍 Search"
+      url = "search"
+      weight = 10
 
-#       [[languages.en.menu.main]]
-#       identifier = ""
-#       name = "🏠home"
-#       url = "/"
-#       weight = 11
+      # [[languages.en.menu.main]]
+      # identifier = "posts"
+      # name = "📚 文章"
+      # url = "posts"
+      # weight = 30
 
-#       [[languages.en.menu.main]]
-#       identifier = "posts/tech"
-#       name = "🔨 tech"
-#       url = "./posts/tech"
-#       weight = 29
+      [[languages.en.menu.main]]
+      identifier = ""
+      name = "🏠Home"
+      url = "/"
+      weight = 11
 
-#       [[languages.en.menu.main]]
-#       identifier = "posts/life"
-#       name = "📸 life"
-#       url = "./posts/life"
-#       weight = 30
+      [[languages.en.menu.main]]
+      identifier = "posts/tech"
+      name = "🔨 Tech"
+      url = "./posts/tech"
+      weight = 29
 
-#       [[languages.en.menu.main]]
-#       identifier = "tags"
-#       name = "📌 tags"
-#       url = "tags"
-#       weight = 31
+      [[languages.en.menu.main]]
+      identifier = "posts/life"
+      name = "📸 Life"
+      url = "./posts/life"
+      weight = 30
 
-#       [[languages.en.menu.main]]
-#       identifier = "archives"
-#       name = "⏱️ archives"
-#       url = "archives"
-#       weight = 32
+      [[languages.en.menu.main]]
+      identifier = "tags"
+      name = "📌 Tags"
+      url = "tags"
+      weight = 31
 
-#       [[languages.en.menu.main]]
-#       identifier = "about"
-#       name = "👩‍💻 about"
-#       url = "about"
-#       weight = 33
+      [[languages.en.menu.main]]
+      identifier = "archives"
+      name = "⏱️ Archives"
+      url = "archives"
+      weight = 32
+
+      [[languages.en.menu.main]]
+      identifier = "about"
+      name = "👩‍💻 About"
+      url = "about"
+      weight = 33
 
 # [languages.jp]
 # languageName = "日本語"
@@ -153,11 +158,11 @@ weight = 1
 home = [ "HTML", "RSS", "JSON" ]
 page = ['HTML']
 
+[author]
+name = "ChiAn Ye"
 [params]
 env = "production"
 description = "ChiAn Ye的博客,基于Hugo搭建的博客网站，关于Hugo、Papermod、c++、golang、ICPC、CCPC、ACM，刷题主要在leetcode,codeforces,atcoder等"
-
-author = "ChiAn Ye"
 draft = "flase"
 defaultTheme = "auto"
 disableThemeToggle = false
@@ -184,8 +189,7 @@ Reward = true
 ShowStatInSectionTermList = false # 列表页统计文章篇数和字数
 ShowStatInArchive = false # 归档页统计文章篇数和字数
 Alipay = "img/alipay.png"
-    [params.busuanzi]
-    enable = true
+    
     [params.profileMode]
     enabled = true
     title = "百叶沉秋"
@@ -231,7 +235,13 @@ Alipay = "img/alipay.png"
     text = "Ye's Blog"
     icon = "img/logo.gif"
     iconHeight = 35
-
+    [params.busuanzi_count]
+    enable = false
+    site_uv = true
+    site_pv = true
+    page_pv = true
+    [params.busuanzi]
+    enable = true
 
 
 

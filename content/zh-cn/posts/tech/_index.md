@@ -4,7 +4,7 @@ date: 2022-05-05T00:18:23+08:00
 lastmod: 2022-05-05T00:18:23+08:00
 author: ["ChiAn"]
 layout: "tech" # is necessary
-url: "/posts/tech"
+url: "/zh-cn/posts/tech"
 # description: "Description for Search"
 # summary: "tech" 会在标题下方写一行小字
 placeholder: " "

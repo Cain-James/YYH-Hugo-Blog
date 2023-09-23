@@ -4,7 +4,7 @@ date: 2022-05-05T00:18:23+08:00
 lastmod: 2022-05-05T00:18:23+08:00
 author: ["ChiAn"]
 layout: "life" # is necessary
-url: "/posts/life"
+url: "/zh-cn/posts/life"
 # description: "Description for Search"
 # summary: "life" 会在标题下方写一行小字
 placeholder: " "
