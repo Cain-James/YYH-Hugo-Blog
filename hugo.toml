@@ -237,9 +237,6 @@ Alipay = "img/alipay.png"
     iconHeight = 35
     [params.busuanzi_count]
     enable = false
-    site_uv = true
-    site_pv = true
-    page_pv = true
     [params.busuanzi]
     enable = true
 
