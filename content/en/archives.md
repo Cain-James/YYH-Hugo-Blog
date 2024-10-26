@@ -1,6 +1,6 @@
 ---
 title: "⏱ Timeline"
 layout: "archives"
-url: "/zh-cn/archives/"
+url: "archives"
 summary: archives
 ---

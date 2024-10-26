@@ -11,7 +11,7 @@ buildFuture = false
 buildExpired = false
 paginate = 15
 summaryLength = 140
-defaultContentLanguage = "zh-cn"
+defaultContentLanguage = 'zh-cn'
 ShowReadingTime = true
 defaultContentLanguageInSubdir = true
 layoutDir = "layouts"
@@ -45,110 +45,17 @@ minifyOutput = false
 # 📍 ✂️ 🖊 🖋 ✒️ 🖌 🖍 📝 ✏️ 🔍 🔎 🔏 🔐 🔒 🔓
 [languages.zh-cn]
 languageName = "简体中文"
-weight = 1
+weight = 2
 contentDir = 'content/zh-cn'
 languageCode = "zh-CN"
-[[languages.zh-cn.menu.main]]
-identifier = "search"
-name = "🔍 搜索"
-url = "search"
-weight = 10
-
-# [[languages.zh-cn.menu.main]]
-# identifier = "posts"
-# name = "📚 文章"
-# url = "posts"
-# weight = 30
-
-[[languages.zh-cn.menu.main]]
-identifier = ""
-name = "🏠主页"
-url = "/"
-weight = 11
-
-[[languages.zh-cn.menu.main]]
-identifier = "posts/tech"
-name = "🔨 技术"
-url = "./posts/tech"
-weight = 29
-
-[[languages.zh-cn.menu.main]]
-identifier = "posts/life"
-name = "📸 生活"
-url = "./posts/life"
-weight = 30
-
-[[languages.zh-cn.menu.main]]
-identifier = "tags"
-name = "📌 标签"
-url = "tags"
-weight = 31
-
-[[languages.zh-cn.menu.main]]
-identifier = "archives"
-name = "⏱️ 时间轴"
-url = "archives"
-weight = 32
-
-[[languages.zh-cn.menu.main]]
-identifier = "about"
-name = "👩‍💻 关于"
-url = "about"
-weight = 33
 
 
 [languages.en]
 languageName = "English"
 contentDir = 'content/en'
 languageCode = 'en-US'
-weight = 2
-[[languages.en.menu.main]]
-identifier = "search"
-name = "🔍 Search"
-url = "search"
-weight = 10
+weight = 1
 
-# [[languages.en.menu.main]]
-# identifier = "posts"
-# name = "📚 文章"
-# url = "posts"
-# weight = 30
-
-[[languages.en.menu.main]]
-identifier = ""
-name = "🏠Home"
-url = "/"
-weight = 11
-
-[[languages.en.menu.main]]
-identifier = "posts/tech"
-name = "🔨 Tech"
-url = "./posts/tech"
-weight = 29
-
-[[languages.en.menu.main]]
-identifier = "posts/life"
-name = "📸 Life"
-url = "./posts/life"
-weight = 30
-
-[[languages.en.menu.main]]
-identifier = "tags"
-name = "📌 Tags"
-url = "tags"
-weight = 31
-
-[[languages.en.menu.main]]
-identifier = "archives"
-name = "⏱️ Archives"
-url = "archives"
-weight = 32
-
-[[languages.en.menu.main]]
-identifier = "about"
-name = "👩‍💻 About"
-url = "about"
-weight = 33
 
 # [languages.jp]
 # languageName = "日本語"

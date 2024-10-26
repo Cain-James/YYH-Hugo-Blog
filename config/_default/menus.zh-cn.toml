@@ -1,0 +1,47 @@
+[[main]]
+identifier = "search"
+name = "🔍 搜索"
+pageRef = "search"
+weight = 10
+
+# [[main]]
+# identifier = "posts"
+# name = "📚 文章"
+# pageRef = "posts"
+# weight = 30
+
+[[main]]
+identifier = ""
+name = "🏠主页"
+pageRef = "/"
+weight = 11
+
+[[main]]
+identifier = "posts/tech"
+name = "🔨 技术"
+pageRef = "/posts/tech"
+weight = 29
+
+[[main]]
+identifier = "posts/life"
+name = "📸 生活"
+pageRef = "/posts/life"
+weight = 30
+
+[[main]]
+identifier = "tags"
+name = "📌 标签"
+pageRef = "/tags"
+weight = 31
+
+[[main]]
+identifier = "archives"
+name = "⏱️ 时间轴"
+pageRef = "/archives"
+weight = 32
+
+[[main]]
+identifier = "about"
+name = "👩‍💻 关于"
+pageRef = "/about"
+weight = 33
