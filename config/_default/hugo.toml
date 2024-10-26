@@ -144,9 +144,11 @@ text = "Ye's Blog"
 icon = "img/logo.gif"
 iconHeight = 35
 [params.busuanzi_count]
-enable = false
+enable = true
 [params.busuanzi]
 enable = true
+# [params.busuanzi_value_page_pv]
+# enable = true
 
 
 [params.analytics.google]
