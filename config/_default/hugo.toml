@@ -19,7 +19,7 @@ logFile = "Log"
 pluralizeListTitles = true
 relativeURLs = false
 # googleAnalytics = "G-KGBJNWLV3J"      # 谷歌统计，在运行 hugo server （测试）时不加载谷歌代码
-Copyright = ""
+Copyright = "Copyright © 2021 - 2024 ChiAn Ye · [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) · [RSS](/index.xml) · Made with ♥ in 🇨🇦"
 [minify]
 disableXML = true
 minifyOutput = false
@@ -84,6 +84,7 @@ ShowPostNavLinks = true
 ShowBreadCrumbs = true
 ShowCodeCopyButtons = true
 ShowWordCounts = true
+
 ShowDescription = false
 ShowToc = true
 hideFooter = false
@@ -93,9 +94,9 @@ comments = true
 StartYear = 2023
 FilingNo = ""
 Reward = true
-ShowStatInSectionTermList = false                                                                                    # 列表页统计文章篇数和字数
+ShowStatInSectionTermList = false # 列表页统计文章篇数和字数
 ShowStatInArchive = false
-hideMeta = false                                                                                                     # 归档页统计文章篇数和字数
+hideMeta = false                  # 归档页统计文章篇数和字数
 Alipay = "img/alipay.png"
 
 [params.profileMode]
@@ -108,11 +109,11 @@ imageWidth = 120
 imageHeight = 120
 [[params.profileMode.buttons]]
 name = "💻 技术"
-url = "/posts/tech"
+url = "./posts/tech"
 
 [[params.profileMode.buttons]]
 name = "📸 生活"
-url = "/posts/life"
+url = "./posts/life"
 
 [[params.socialIcons]]
 name = "github"

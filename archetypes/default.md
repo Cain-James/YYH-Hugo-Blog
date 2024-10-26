@@ -26,6 +26,7 @@ disableShare: false # 底部不显示分享栏
 showbreadcrumbs: true #顶部显示当前路径
 DateFormat: "2006-01-02"
 ShowWordCounts: true
+ShowWordCount : true
 ShowReadingTime: true
 ShowLastMod: true
 cover:
