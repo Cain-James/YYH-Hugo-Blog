@@ -28,7 +28,7 @@ cover:
 
 ## 关于我
 
-我 2000 年出生于江西某小山村，2018 年开始在沈阳东北大学学习，本科期间专业为物联网工程，主要致力于 XCPC 竞赛，2022 年保研至东南大学（南京），研究生阶段不善科研，不善项目，目前正在寻找 C++后端相关实习，你可以向我发邮件联系到我，邮箱地址：yuanyanghao2022@163.com
+我 2000 年出生于江西某小山村，2018 年开始在沈阳东北大学学习，本科期间专业为物联网工程，主要致力于 XCPC 竞赛，2022 年保研至东南大学（南京），硕士阶段无实质性产出，跟进某横向项目，2025.01 签约某互联网金融公司，base 上海，如果你有任何 C++/数据结构与算法等技术问题，高考/保研/求职等规划问题，你可以向我发邮件联系到我，我很乐意与你交流，希望能产生一些价值，邮箱地址：yuanyanghao2022@163.com
 
 ---
 
@@ -38,6 +38,62 @@ cover:
 
 本站基于 Go 语言的开源静态框架[Hugo](https://gohugo.io/)搭建，使用[PaperMod](https://github.com/adityatelange/hugo-PaperMod)主题，参考[sglv](https://www.sulvblog.cn/)的博客和教程进一步完善，过程中参考的博客、资料还有[Hugo 的官方文档](https://gohugo.io/getting-started/configuration/)、[Cloudflare: Deploy a Hugo site](https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/)等等。过程中也遇到了一些问题，感谢各位乐于分享的网友，才使得本站得以顺利完成。
 
+得益于 AI 技术的飞快发展，我可以在较短的时间内以较低的学习成本完成以往同样量级的工作，本站基于 cursor(clude 3.5/3.7)进一步开发。
+
+### 本站流量
+
+<div class="site-stats">
+    <div class="stat-item">
+        <span class="stat-label">总访问量：</span>
+        <span id="busuanzi_value_site_pv" class="stat-value">0</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-label">总访问人数：</span>
+        <span id="busuanzi_value_site_uv" class="stat-value">0</span>
+    </div>
+    <div id="chartContainer" class="chart-container" style="display: none;">
+        <canvas id="busuanziChart"></canvas>
+    </div>
+</div>
+
+<style>
+.site-stats {
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--entry);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.stat-label {
+    color: var(--secondary);
+    margin-right: 10px;
+}
+
+.stat-value {
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.chart-container {
+    margin-top: 20px;
+    height: 300px;
+    width: 100%;
+}
+
+.dark .site-stats {
+    background: var(--entry);
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/busuanzi-chart.js" defer></script>
+
 |            功能            |  完成日期  |
 | :------------------------: | :--------: |
 |        基本结构完善        | 2023.05.30 |
@@ -45,8 +101,8 @@ cover:
 | 基于卜算子的访问量统计功能 | 2023.06.01 |
 |       谷歌 seo 优化        | 2023.06.01 |
 |  为全站添加卜算子浏览统计  | 2023.09.23 |
-|          图片上传          |   待完成   |
-|          评论功能          |   待完成   |
+|          图片上传          | 2024.04.20 |
+|          评论功能          | 2025.03.20 |
 |          相册功能          |   待完成   |
 
 <!-- 性能监控入口 -->
@@ -82,4 +138,3 @@ cover:
   - 高性能 Mysql
   - Redis 设计与实现
   - 高性能服务器编程
-- Go 语言学习

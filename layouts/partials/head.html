@@ -36,9 +36,8 @@
 <meta name="naver-site-verification" content="{{ site.Params.analytics.naver.SiteVerificationTag }}">
 {{- end }}
 <!-- busuanzi -->
-{{- if .Site.Params.busuanzi.enable -}}
-  <script async src="/assets/js/busuanzi.pure.mini.js"></script>
-  <meta name="referrer" content="no-referrer-when-downgrade">
+{{- if .Site.Params.busuanzi -}}
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 {{- end -}}
 
 {{- /* Styles */}}
@@ -176,3 +175,12 @@
 
 {{- /* 性能监控脚本 */ -}}
 <script src="{{ "js/performance.js" | relURL }}" defer></script>
+
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KGBJNWLV3J"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KGBJNWLV3J');
+</script>
