@@ -99,6 +99,22 @@ ShowStatInArchive = false
 hideMeta = false                  # 归档页统计文章篇数和字数
 Alipay = "img/alipay.png"
 
+# Giscus 评论系统配置
+[params.giscus]
+enable = true
+repo = "Cain-James/YYH-Hugo-Blog"
+repoId = "R_kgDOJpljfQ"
+category = "General"
+categoryId = "DIC_kwDOJpljfc4CoOtn"
+mapping = "title"
+strict = 0
+reactionsEnabled = 1
+emitMetadata = 0
+inputPosition = "top"
+theme = "preferred_color_scheme"
+lang = "zh-CN"
+loading = "lazy"
+
 [params.profileMode]
 enabled = true
 title = "百叶沉秋"

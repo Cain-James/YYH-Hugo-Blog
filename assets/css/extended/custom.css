@@ -1,0 +1,38 @@
+/* 修复导航栏滚动条问题 */
+.nav {
+    overflow: visible !important;
+    max-height: none !important;
+}
+
+.nav ul {
+    overflow: visible !important;
+    max-height: none !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.nav li {
+    margin: 0;
+    padding: 0;
+}
+
+/* 确保导航项不会换行 */
+.nav-item {
+    white-space: nowrap;
+}
+
+/* 移除任何可能导致滚动的样式 */
+.nav-scroll {
+    overflow: visible !important;
+    max-height: none !important;
+}
+
+/* 确保导航栏容器不会产生滚动条 */
+.nav-container {
+    overflow: visible !important;
+    max-height: none !important;
+} 

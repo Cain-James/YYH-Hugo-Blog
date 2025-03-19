@@ -49,6 +49,22 @@ cover:
 |          评论功能          |   待完成   |
 |          相册功能          |   待完成   |
 
+<!-- 性能监控入口 -->
+<div style="position: fixed; bottom: 20px; left: 20px; z-index: 9999;">
+    <a href="/zh-cn/pages/performance/" style="display: block; width: 40px; height: 40px; background: rgba(0,0,0,0.1); border-radius: 50%; position: relative; transition: all 0.3s ease;">
+        <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; fill: #666;" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+            <path d="M7 12h2v5H7zm4-7h2v12h-2zm4 3h2v9h-2z"/>
+        </svg>
+    </a>
+    <style>
+        a:hover {
+            background: rgba(0,0,0,0.2) !important;
+            transform: scale(1.1);
+        }
+    </style>
+</div>
+
 ---
 
 ## 学习计划
