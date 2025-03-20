@@ -45,14 +45,14 @@ cover:
 <div class="site-stats">
     <div class="stat-item">
         <span class="stat-label">总访问量：</span>
-        <span id="busuanzi_value_site_pv" class="stat-value">0</span>
+        <span id="cf-pageviews" class="stat-value">加载中...</span>
     </div>
     <div class="stat-item">
         <span class="stat-label">总访问人数：</span>
-        <span id="busuanzi_value_site_uv" class="stat-value">0</span>
+        <span id="cf-visitors" class="stat-value">加载中...</span>
     </div>
-    <div id="chartContainer" class="chart-container" style="display: none;">
-        <canvas id="busuanziChart"></canvas>
+    <div id="chartContainer" class="chart-container">
+        <canvas id="cfChart"></canvas>
     </div>
 </div>
 
@@ -92,15 +92,14 @@ cover:
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="/js/busuanzi-chart.js" defer></script>
+<script src="/js/cf-analytics.js" defer></script>
 
 |            功能            |  完成日期  |
 | :------------------------: | :--------: |
 |        基本结构完善        | 2023.05.30 |
 |     托管于 Cloudflare      | 2023.05.31 |
-| 基于卜算子的访问量统计功能 | 2023.06.01 |
+| 基于 Cloudflare 的访问统计 | 2024.04.21 |
 |       谷歌 seo 优化        | 2023.06.01 |
-|  为全站添加卜算子浏览统计  | 2023.09.23 |
 |          图片上传          | 2024.04.20 |
 |          评论功能          | 2025.03.20 |
 |          相册功能          |   待完成   |

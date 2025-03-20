@@ -1,35 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>https://seu-yuan.top/posts/</loc>
-    <lastmod>2023-06-01T06:12:38+08:00</lastmod>
-  </url><url>
-    <loc>https://seu-yuan.top/</loc>
-    <lastmod>2023-06-01T06:12:38+08:00</lastmod>
-  </url><url>
-    <loc>https://seu-yuan.top/posts/tech/lxrunoffline-wsl/</loc>
-    <lastmod>2023-06-01T06:12:38+08:00</lastmod>
-  </url><url>
-    <loc>https://seu-yuan.top/posts/tech/my-first-post/</loc>
-    <lastmod>2023-05-31T07:15:16+08:00</lastmod>
-  </url><url>
-    <loc>https://seu-yuan.top/posts/tech/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
-  </url><url>
-    <loc>https://seu-yuan.top/posts/life/</loc>
-    <lastmod>2022-05-05T00:18:23+08:00</lastmod>
-  </url><url>
-    <loc>https://seu-yuan.top/archives/</loc>
-  </url><url>
-    <loc>https://seu-yuan.top/about/</loc>
-  </url><url>
-    <loc>https://seu-yuan.top/tags/</loc>
-  </url><url>
-    <loc>https://seu-yuan.top/categories/</loc>
-  </url><url>
-    <loc>https://seu-yuan.top/series/</loc>
-  </url><url>
-    <loc>https://seu-yuan.top/search/</loc>
-  </url>
-</urlset>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <sitemap>
+    <loc>https://seu-yuan.top/en/sitemap.xml</loc>
+    
+      <lastmod>2022-05-05T00:18:23+08:00</lastmod>
+    
+  </sitemap>
+  
+  <sitemap>
+    <loc>https://seu-yuan.top/zh-cn/sitemap.xml</loc>
+    
+      <lastmod>2025-03-19T22:22:32+08:00</lastmod>
+    
+  </sitemap>
+  
+</sitemapindex>
