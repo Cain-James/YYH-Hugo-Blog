@@ -65,8 +65,27 @@ async function getPostViews(url) {
 
         // 生产环境使用不蒜子
         if (window.busuanzi) {
-            const views = parseInt(window.busuanzi.getPagePV()) || 0;
-            console.log('Using Busuanzi views:', views);
+            // 等待一段时间确保不蒜子数据已加载
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // 先触发一次统计
+            try {
+                window.busuanzi.getPagePV();
+                // 等待一段时间让数据更新
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (e) {
+                console.log('Error triggering page view:', e);
+            }
+
+            // 尝试获取浏览量
+            let views = 0;
+            try {
+                views = parseInt(window.busuanzi.getPagePV()) || 0;
+                console.log('Using Busuanzi views:', views);
+            } catch (e) {
+                console.log('getPagePV failed:', e);
+            }
+
             return views;
         }
 
@@ -80,6 +99,9 @@ async function getPostViews(url) {
 // 更新文章浏览量
 async function updatePostViews() {
     try {
+        // 等待不蒜子初始化完成
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
         // 获取所有浏览量元素
         const viewElements = document.querySelectorAll('.post-views');
         console.log('Found view elements:', viewElements.length);
@@ -160,5 +182,5 @@ function formatNumber(num) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded, updating views...');
     // 延迟执行以确保不蒜子脚本加载完成
-    setTimeout(updatePostViews, 1000);
+    setTimeout(updatePostViews, 2000);
 }); 
