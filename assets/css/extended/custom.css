@@ -35,4 +35,67 @@
 .nav-container {
     overflow: visible !important;
     max-height: none !important;
+}
+
+.entry-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--secondary);
+    line-height: 1.5;
+}
+
+.parent-post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--secondary);
+    line-height: 1.5;
+    align-items: center;
+}
+
+.parent-post-meta span[id^="post_meta_style"] {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.parent-post-meta .fa {
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+#busuanzi_container_page_pv {
+    display: inline-flex !important;
+    align-items: center;
+    white-space: nowrap;
+}
+
+#busuanzi_container_page_pv i {
+    margin-right: 4px;
+}
+
+#busuanzi_value_page_pv {
+    font-size: inherit;
+    color: inherit;
+}
+
+.split {
+    color: var(--secondary);
+}
+
+.fa {
+    opacity: 0.8;
+}
+
+.post-tags-meta a {
+    color: var(--secondary);
+    text-decoration: none;
+}
+
+.post-tags-meta a:hover {
+    text-decoration: underline;
 } 

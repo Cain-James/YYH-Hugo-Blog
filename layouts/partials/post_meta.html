@@ -69,18 +69,11 @@
             &nbsp;&nbsp;
         </span>
     </span>
-    {{/* hugo中不要直接使用 HTML 注释来注释 GO 模板 引擎默认先编译 Go 模板代码，如果HTML注释中代码出错，编译就会失败。
-    <!-- 访问量-->
-        <!--也可以用twikoo评论带的访问方式，如下：-->
-        <!--   <span id="twikoo_visitors"></span>    -->
-        <!--如下是使用busuanzi的方式，记得引入busuanzi的js，如果在其他文件引入了，这里可以不用引入-->
-        
-    <!-- <span id="post_meta_style_7">
-        <span class="fa fa-clock-o"></span>
-            浏览: {{- .busuanzi_value_page_pv }}
-            <span id="busuanzi_value_page_pv"></span>
-    </span> -->
-  
-    <!-- 根据这个修改的：https://www.sulvblog.cn/posts/blog/hugo_postmeta/ -->
-    */}}
+    <span id="post_meta_style_7">
+        <span id="busuanzi_container_page_pv" style="display: none;">
+            <span class="fa fa-eye"></span>
+            <span>&nbsp;&nbsp;</span>
+            <span id="busuanzi_value_page_pv">0</span>
+        </span>
+    </span>
 </span>

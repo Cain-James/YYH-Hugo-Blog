@@ -43,13 +43,31 @@ cover:
 ### 本站流量
 
 <div class="site-stats">
-    <div class="stat-item">
-        <span class="stat-label">总访问量：</span>
-        <span id="cf-pageviews" class="stat-value">加载中...</span>
+    <div class="stat-header">
+        <div class="stat-title">访问统计</div>
+        <div class="date-range-selector">
+            <div class="quick-ranges">
+                <button class="range-btn" data-days="7">7天</button>
+                <button class="range-btn active" data-days="30">30天</button>
+                <button class="range-btn" data-days="180">半年</button>
+                <button class="range-btn" data-days="365">1年</button>
+            </div>
+            <div class="custom-range">
+                <input type="date" id="startDate" class="date-input" disabled>
+                <span class="date-separator">至</span>
+                <input type="date" id="endDate" class="date-input" disabled>
+            </div>
+        </div>
     </div>
-    <div class="stat-item">
-        <span class="stat-label">总访问人数：</span>
-        <span id="cf-visitors" class="stat-value">加载中...</span>
+    <div class="stat-items">
+        <div class="stat-item">
+            <span class="stat-label">总访问量：</span>
+            <span id="cf-pageviews" class="stat-value">加载中...</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">总访问人数：</span>
+            <span id="cf-visitors" class="stat-value">加载中...</span>
+        </div>
     </div>
     <div id="chartContainer" class="chart-container">
         <canvas id="cfChart"></canvas>
@@ -59,25 +77,99 @@ cover:
 <style>
 .site-stats {
     margin: 20px 0;
-    padding: 15px;
+    padding: 20px;
     background: var(--entry);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-header {
+    margin-bottom: 20px;
+}
+
+.stat-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: var(--primary);
+}
+
+.date-range-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+
+.quick-ranges {
+    display: flex;
+    gap: 8px;
+}
+
+.range-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    background: var(--entry);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.range-btn:hover {
+    background: var(--border);
+}
+
+.range-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.custom-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+}
+
+.date-input {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--entry);
+    font-size: 0.9em;
+    color: var(--secondary);
+    cursor: not-allowed;
+}
+
+.date-separator {
+    color: var(--secondary);
+}
+
+.stat-items {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 .stat-item {
-    margin: 10px 0;
-    font-size: 1.1em;
+    padding: 15px;
+    background: var(--code-bg);
+    border-radius: 8px;
+    flex: 1;
 }
 
 .stat-label {
     color: var(--secondary);
-    margin-right: 10px;
+    font-size: 0.9em;
 }
 
 .stat-value {
     color: var(--primary);
+    font-size: 1.2em;
     font-weight: bold;
+    margin-left: 8px;
 }
 
 .chart-container {
@@ -86,12 +178,31 @@ cover:
     width: 100%;
 }
 
-.dark .site-stats {
+/* 深色模式适配 */
+.dark .date-input {
     background: var(--entry);
+    color: var(--secondary);
+}
+
+.dark .range-btn {
+    background: var(--entry);
+    color: var(--primary);
+}
+
+.dark .range-btn:hover {
+    background: var(--border);
+}
+
+.dark .range-btn.active {
+    background: var(--primary);
+    color: white;
 }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
 <script src="/js/cf-analytics.js" defer></script>
 
 |            功能            |  完成日期  |

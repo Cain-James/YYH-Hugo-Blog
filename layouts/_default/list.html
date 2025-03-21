@@ -72,20 +72,24 @@
   <header class="entry-header">
     <h2>
       {{- .Title }}
-      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>{{- end }}
+      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[草稿]</span></sup>{{- end }}
     </h2>
+    {{- if (ne (.Param "hideMeta") true) }}
+    <div class="entry-meta">
+      {{- partial "post_meta.html" . -}}
+    </div>
+    {{- end }}
   </header>
   {{- if (ne (.Param "hideSummary") true) }}
   <div class="entry-content">
     <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
   </div>
   {{- end }}
-  {{- if not (.Param "hideMeta") }}
+  {{- if not (.Param "hideReadMore") }}
   <footer class="entry-footer">
-    {{- partial "post_meta.html" . -}}
+    <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
   </footer>
   {{- end }}
-  <a class="entry-link" aria-label="post link to {{ .Title | plainify }}" href="{{ .Permalink }}"></a>
 </article>
 {{- end }}
 
@@ -113,5 +117,17 @@
 {{- end }}
 
 {{- end }}{{/* end profileMode */}}
+
+<!-- 添加样式 -->
+<style>
+.post-views {
+  display: inline-flex;
+  align-items: center;
+  color: var(--secondary);
+}
+</style>
+
+<!-- 添加脚本 -->
+<script src="/js/post-analytics.js"></script>
 
 {{- end }}{{- /* end main */ -}}

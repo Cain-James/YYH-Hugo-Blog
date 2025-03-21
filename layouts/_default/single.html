@@ -5,20 +5,32 @@
     {{ partial "breadcrumbs.html" . }}
     <h1 class="post-title">
       {{ .Title }}
-      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>{{- end }}
+      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[草稿]</span></sup>{{- end }}
     </h1>
-    <!-- 不在文章页面显示描述 -->
-    <!-- {{- if .Description }}
+    {{- if .Description }}
     <div class="post-description">
       {{ .Description }}
     </div>
-    {{- end }} -->
+    {{- end }}
     {{- if not (.Param "hideMeta") }}
     <div class="post-meta">
-        {{- partial "post_meta.html" . -}}
-        {{- partial "translation_list.html" . -}}
-        {{- partial "edit_post.html" . -}}
-        {{- partial "post_canonical.html" . -}}
+      {{- partial "post_meta.html" . -}}
+      {{- if .IsTranslated -}}
+      <ul class="i18n_list">
+        {{- i18n "translations" | default "Translations"}}:
+        {{- range .Translations }}
+        <li>
+          <a href="{{ .Permalink }}">
+            {{- if (and $.Site.Params.displayFullLangName (.Language.LanguageName)) }}
+            {{- .Language.LanguageName | emojify -}}
+            {{- else }}
+            {{- .Lang | upper -}}
+            {{- end -}}
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+      {{- end }}
     </div>
     {{- end }}
   </header>
@@ -55,5 +67,71 @@
   {{- partial "comments.html" . }}
   {{- end }}
 </article>
+
+<!-- 添加热门文章排行 -->
+<aside class="popular-posts-section">
+  <h2>热门文章</h2>
+  <div id="popular-posts">
+    <p>加载中...</p>
+  </div>
+</aside>
+
+<!-- 添加样式 -->
+<style>
+.post-views {
+  display: inline-flex;
+  align-items: center;
+  color: var(--secondary);
+}
+
+.popular-posts-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--entry);
+  border-radius: var(--radius);
+}
+
+.popular-posts-section h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.popular-posts-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.popular-post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.popular-post-item:last-child {
+  border-bottom: none;
+}
+
+.popular-post-link {
+  color: var(--primary);
+  text-decoration: none;
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.popular-post-link:hover {
+  text-decoration: underline;
+}
+
+.popular-post-views {
+  color: var(--secondary);
+  font-size: 0.9rem;
+}
+</style>
+
+<!-- 添加脚本 -->
+<script src="/js/post-analytics.js"></script>
 
 {{- end }}{{/* end main */}}
