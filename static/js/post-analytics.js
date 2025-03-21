@@ -66,16 +66,38 @@ async function getPostViews(url) {
         // 生产环境使用不蒜子
         if (window.busuanzi) {
             console.log('Busuanzi object:', window.busuanzi);
-            const views = parseInt(window.busuanzi.getPagePV(url)) || 0;
-            console.log('Using Busuanzi views:', views);
-            return views;
+            // 等待一段时间确保不蒜子数据已加载
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // 尝试多种方式获取浏览量
+            let views = 0;
+            try {
+                views = parseInt(window.busuanzi.getPagePV(url)) || 0;
+                console.log('Using Busuanzi getPagePV:', views);
+            } catch (e) {
+                console.log('getPagePV failed, trying alternative method');
+                try {
+                    views = parseInt(window.busuanzi.getPagePV()) || 0;
+                    console.log('Using Busuanzi getPagePV without URL:', views);
+                } catch (e) {
+                    console.log('Alternative method failed');
+                }
+            }
+
+            // 如果获取到浏览量，保存到localStorage
+            if (views > 0) {
+                localStorage.setItem(`views_${url}`, views.toString());
+                return views;
+            }
         }
 
-        console.log('Busuanzi not available, using fallback method');
+        console.log('Busuanzi not available or returned 0, using fallback method');
         // 如果都不行，尝试从localStorage获取
         const storedViews = localStorage.getItem(`views_${url}`);
         if (storedViews) {
-            return parseInt(storedViews);
+            const views = parseInt(storedViews);
+            console.log('Using stored views:', views);
+            return views;
         }
 
         // 如果localStorage也没有，返回0
@@ -131,8 +153,6 @@ async function updatePostViews() {
                 if (viewsSpan) {
                     viewsSpan.textContent = formattedViews;
                     console.log('Updated views for:', article.url, formattedViews);
-                    // 保存到localStorage
-                    localStorage.setItem(`views_${article.url}`, article.views.toString());
                 }
             }
         });
