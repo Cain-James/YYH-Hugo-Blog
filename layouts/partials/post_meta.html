@@ -12,39 +12,48 @@
         flex-wrap: wrap;
         opacity: 0.8;
     }
+    
+    /* 确保图标正确显示 */
+    .fa {
+        display: inline-block !important;
+        width: auto !important;
+        height: auto !important;
+        font-size: 14px !important;
+        line-height: 1 !important;
+    }
 </style>
 
 <div class="parent-post-meta">
     <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
+        <i class="fa fa-calendar-check-o"></i>
         <span>
             &nbsp;创建:&nbsp;{{- (.Date.Format (default "January 2, 2006" .Site.Params.DateFormat)) }}
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_2">
-        <span class="fa fa-calendar-plus-o"></span>
+        <i class="fa fa-calendar-plus-o"></i>
         <span>
             &nbsp;更新:&nbsp;{{- (.Lastmod.Format (.Site.Params.dateFormat | default "2006-01-02")) }}
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
+        <i class="fa fa-file-word-o"></i>
         <span>
             {{- .WordCount }}字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
+        <i class="fa fa-clock-o"></i>
         <span>
             {{- .ReadingTime }}分钟
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
+        <i class="fa fa-user-o"></i>
         <span>
             {{- with (partial "author.html" .) }}
             {{- . }}
@@ -53,7 +62,7 @@
         </span>
     </span>
     <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <i class="fa fa-tags" style="opacity: 0.8"></i>
         <span>
             {{- if .Params.tags }}
             <span class="post-tags-meta">
@@ -70,21 +79,12 @@
         </span>
     </span>
     {{ if eq .Kind "page" }}
-    <!-- 文章详情页使用不蒜子默认方式 -->
+    <!-- 只在文章详情页显示浏览量 -->
     <span class="post-views" data-is-single="true">
         <i class="fa fa-eye"></i>
         <span id="busuanzi_container_page_pv">
             <span id="busuanzi_value_page_pv">0</span>
         </span>
-    </span>
-    {{ else }}
-    <!-- 列表页面使用自定义计数器 -->
-    <span class="post-views-list" 
-          data-url="{{ .Permalink }}" 
-          data-id="{{ if .File }}{{ .File.Path | md5 }}{{ else }}list-{{ .Title | md5 }}{{ end }}" 
-          data-title="{{ .Title }}">
-        <i class="fa fa-eye"></i>
-        <span class="view-count">0</span>
     </span>
     {{ end }}
 </div>

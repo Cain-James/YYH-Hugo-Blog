@@ -61,13 +61,15 @@
                         {{- end }}
                     {{- end }}
                     <img src="{{ $img.Permalink }}" alt="" aria-label="logo"
-                        height="{{- site.Params.label.iconHeight | default "30" -}}">
+                        height="{{- site.Params.label.iconHeight | default "30" -}}" style="max-height: 30px; width: auto;">
                 {{- else }}
                 <img src="{{- site.Params.label.icon | absURL -}}" alt="" aria-label="logo"
-                    height="{{- site.Params.label.iconHeight | default "30" -}}">
+                    height="{{- site.Params.label.iconHeight | default "30" -}}" style="max-height: 30px; width: auto;">
                 {{- end -}}
                 {{- else if hasPrefix site.Params.label.iconSVG "<svg" }}
-                    {{ site.Params.label.iconSVG | safeHTML }}
+                    <span style="display: inline-block; height: 30px; width: auto; vertical-align: middle;">
+                        {{ site.Params.label.iconSVG | safeHTML }}
+                    </span>
                 {{- end -}}
                 {{- $label_text -}}
             </a>
@@ -147,3 +149,24 @@
         </ul>
     </nav>
 </header>
+
+<style>
+/* 修复logo图标尺寸 */
+.logo a {
+    display: inline-flex;
+    align-items: center;
+}
+
+.logo img, .logo svg {
+    max-height: 30px !important;
+    width: auto !important;
+    height: auto !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+.logo svg {
+    height: 30px !important;
+    width: 30px !important;
+}
+</style>

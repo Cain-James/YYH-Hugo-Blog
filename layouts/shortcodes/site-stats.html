@@ -1,0 +1,138 @@
+<!-- 实时站点统计数据 (不蒜子) -->
+<div class="site-stats-container">
+    <div class="site-stats-header">实时访问统计</div>
+    <div class="site-stat-item">
+        <i class="fa fa-eye"></i>
+        <span>总访问量：</span>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv">0</span>
+        </span>
+    </div>
+    <div class="site-stat-item">
+        <i class="fa fa-user"></i>
+        <span>访问人数：</span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv">0</span>
+        </span>
+    </div>
+</div>
+
+<!-- Cloudflare Worker 历史访问统计将在下方显示 -->
+
+<style>
+    .site-stats-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin: 20px 0;
+        padding: 15px;
+        background: var(--entry);
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .site-stats-header {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 5px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 5px;
+    }
+
+    .site-stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1rem;
+    }
+
+    .site-stat-item i {
+        display: inline-block !important;
+        width: auto !important;
+        height: auto !important;
+        font-size: 16px !important;
+        color: var(--primary);
+    }
+
+    .site-stat-item span:last-child {
+        font-weight: 600;
+        color: var(--primary);
+    }
+    
+    #busuanzi_container_site_pv,
+    #busuanzi_container_site_uv {
+        display: inline !important;
+        visibility: visible !important;
+    }
+    
+    #busuanzi_value_site_pv,
+    #busuanzi_value_site_uv {
+        display: inline !important;
+        visibility: visible !important;
+        color: var(--primary);
+        font-weight: 600;
+    }
+</style>
+
+<!-- 确保不蒜子计数器在此页面显示 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 检查是否已加载不蒜子脚本
+    if (typeof loadBusuanziScript === 'function') {
+        console.log('加载不蒜子脚本');
+        loadBusuanziScript()
+            .then(() => {
+                console.log('不蒜子脚本加载成功');
+                setTimeout(() => {
+                    // 强制显示统计元素
+                    const siteUvContainer = document.getElementById('busuanzi_container_site_uv');
+                    const sitePvContainer = document.getElementById('busuanzi_container_site_pv');
+                    const siteUvValue = document.getElementById('busuanzi_value_site_uv');
+                    const sitePvValue = document.getElementById('busuanzi_value_site_pv');
+                    
+                    if (siteUvContainer) siteUvContainer.style.display = 'inline';
+                    if (sitePvContainer) sitePvContainer.style.display = 'inline';
+                    if (siteUvValue) siteUvValue.style.display = 'inline';
+                    if (sitePvValue) sitePvValue.style.display = 'inline';
+                    
+                    console.log('站点统计显示状态已更新');
+                }, 1000);
+            })
+            .catch(error => {
+                console.error('不蒜子脚本加载失败', error);
+                // 显示错误信息
+                const elements = document.querySelectorAll('#busuanzi_value_site_pv, #busuanzi_value_site_uv');
+                elements.forEach(el => {
+                    el.textContent = '获取失败';
+                });
+            });
+    } else {
+        // 直接加载不蒜子脚本
+        console.log('直接加载不蒜子脚本');
+        const script = document.createElement('script');
+        script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
+        script.async = true;
+        script.onload = function() {
+            console.log('不蒜子脚本加载完成');
+            setTimeout(() => {
+                // 强制显示统计元素
+                const elements = document.querySelectorAll('#busuanzi_container_site_pv, #busuanzi_container_site_uv, #busuanzi_value_site_pv, #busuanzi_value_site_uv');
+                elements.forEach(el => {
+                    el.style.display = 'inline';
+                    el.style.visibility = 'visible';
+                });
+                console.log('站点统计显示状态已更新');
+            }, 1000);
+        };
+        script.onerror = function() {
+            console.error('不蒜子脚本加载失败');
+            const elements = document.querySelectorAll('#busuanzi_value_site_pv, #busuanzi_value_site_uv');
+            elements.forEach(el => {
+                el.textContent = '获取失败';
+            });
+        };
+        document.head.appendChild(script);
+    }
+});
+</script> 

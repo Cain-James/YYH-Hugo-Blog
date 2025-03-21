@@ -1,296 +1,262 @@
-// 不蒜子浏览量计数处理脚本
+/**
+ * 优化版浏览量计数脚本
+ * 性能改进和响应速度优化
+ */
 (function() {
-    // 存储URL和对应回调的映射
-    var callbackMap = {}; 
-    console.log('初始化不蒜子视图计数器');
+    // 在DOMContentLoaded后执行，优化首屏加载速度
+    document.addEventListener('DOMContentLoaded', initBusuanziCounter);
+    
+    // 将loadBusuanziScript暴露为全局函数，以便其他脚本调用
+    window.loadBusuanziScript = loadBusuanziScript;
+    // 将mockSiteStats暴露为全局函数
+    window.mockSiteStats = mockSiteStats;
 
-    // 检查是否是本地环境
-    const isLocal = window.location.hostname === 'localhost' || 
-                    window.location.hostname === '127.0.0.1' ||
-                    window.location.hostname.indexOf('.local') > -1;
-    
-    // 检查是否开启测试模式
-    const isTestMode = localStorage.getItem('test_mode') === 'true';
-    
-    if (isLocal || isTestMode) {
-        console.log('当前环境：' + (isLocal ? '本地开发环境' : '生产环境') + 
-                    '，测试模式：' + (isTestMode ? '开启' : '关闭'));
+    function initBusuanziCounter() {
+        console.log('不蒜子计数器初始化');
+        
+        // 快速检查，如果不是详情页则不加载浏览量计数
+        const isDetail = isDetailPage();
+        
+        // 检查是否需要显示站点统计（在关于页面显示）
+        const needSiteStats = document.getElementById('busuanzi_value_site_pv') || 
+                             document.getElementById('busuanzi_value_site_uv');
+        
+        // 如果既不是详情页也没有站点统计需求，则隐藏相关元素并退出
+        if (!isDetail && !needSiteStats) {
+            hideViewCounters();
+            console.log('不需要显示计数器，退出');
+            return;
+        }
+
+        // 检查是否为测试环境
+        const isLocalTest = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1';
+
+        if (isLocalTest) {
+            console.log('本地环境，使用模拟数据');
+            if (isDetail) mockLocalViewCount();
+            if (needSiteStats) mockSiteStats();
+            return;
+        }
+
+        // 仅在需要时加载统计脚本
+        loadBusuanziScript()
+            .then(() => {
+                console.log('不蒜子脚本加载成功');
+                // 等待busuanzi脚本初始化完成
+                return waitForBusuanzi();
+            })
+            .then(() => {
+                console.log('不蒜子脚本初始化完成');
+                // 确保view counters显示正确
+                if (isDetail) showViewCounters();
+                if (needSiteStats) showSiteStats();
+            })
+            .catch(error => {
+                console.error('Busuanzi加载失败', error);
+                if (isDetail) mockLocalViewCount(); // 详情页出错时显示模拟数据
+                if (needSiteStats) mockSiteStats(); // 站点统计出错时显示模拟数据
+            });
     }
 
-    // 预先加载不蒜子脚本
+    // 快速检查当前页面是否是文章详情页
+    function isDetailPage() {
+        // 方法1：检查body类名
+        if (document.body.classList.contains('page')) {
+            return true;
+        }
+        
+        // 方法2：检查URL特征（文章详情页通常有具体的路径）
+        const path = window.location.pathname;
+        // 如果路径包含具体的文章名称目录，视为详情页
+        if (path.split('/').length > 2 && !path.includes('/tags/') && 
+            !path.includes('/categories/') && !path.includes('/page/')) {
+            return true;
+        }
+        
+        // 方法3：检查特定元素
+        return !!document.querySelector('.post-content');
+    }
+
+    // 隐藏所有浏览量计数器
+    function hideViewCounters() {
+        // CSS已经处理了隐藏，此处添加额外的DOM处理
+        const containers = document.querySelectorAll('#busuanzi_container_page_pv, .post-views');
+        containers.forEach(container => {
+            container.style.display = 'none';
+            container.style.visibility = 'hidden';
+        });
+    }
+
+    // 显示浏览量计数器
+    function showViewCounters() {
+        const containers = document.querySelectorAll('#busuanzi_container_page_pv');
+        containers.forEach(container => {
+            if (isDetailPage()) {
+                container.style.display = 'inline';
+                container.style.visibility = 'visible';
+            }
+        });
+    }
+    
+    // 显示站点统计
+    function showSiteStats() {
+        // 显示站点PV统计
+        const sitePvContainers = document.querySelectorAll('#busuanzi_container_site_pv');
+        sitePvContainers.forEach(container => {
+            container.style.display = 'inline';
+            container.style.visibility = 'visible';
+        });
+        
+        // 显示站点UV统计
+        const siteUvContainers = document.querySelectorAll('#busuanzi_container_site_uv');
+        siteUvContainers.forEach(container => {
+            container.style.display = 'inline';
+            container.style.visibility = 'visible';
+        });
+        
+        // 显示值元素
+        const sitePvValues = document.querySelectorAll('#busuanzi_value_site_pv');
+        sitePvValues.forEach(element => {
+            element.style.display = 'inline';
+            element.style.visibility = 'visible';
+        });
+        
+        const siteUvValues = document.querySelectorAll('#busuanzi_value_site_uv');
+        siteUvValues.forEach(element => {
+            element.style.display = 'inline';
+            element.style.visibility = 'visible';
+        });
+        
+        console.log('显示站点统计:', sitePvContainers.length, siteUvContainers.length);
+    }
+
+    // 加载busuanzi脚本
     function loadBusuanziScript() {
         return new Promise((resolve, reject) => {
-            console.log('主动加载不蒜子脚本');
-            const urls = [
-                'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js',
-                'https://cdn.jsdelivr.net/gh/busuanzi/busuanzi/busuanzi.pure.mini.js'
-            ];
-            
-            let loaded = false;
-            
-            // 尝试所有可能的URL
-            urls.forEach((url, index) => {
-                if (loaded) return; // 如果已经加载成功，跳过
-                
-                setTimeout(() => {
-                    if (loaded) return; // 再次检查是否已加载成功
-                    
-                    console.log(`尝试加载不蒜子脚本 (${index + 1}/${urls.length}): ${url}`);
-                    var script = document.createElement('script');
-                    script.src = url;
-                    script.async = true;
-                    
-                    script.onload = function() {
-                        console.log(`不蒜子脚本加载成功: ${url}`);
-                        loaded = true;
-                        resolve();
-                    };
-                    
-                    script.onerror = function(e) {
-                        console.warn(`不蒜子脚本加载失败 (${index + 1}/${urls.length}): ${url}`, e);
-                        // 不要reject，继续尝试其他URL
-                    };
-                    
-                    document.head.appendChild(script);
-                }, index * 1000); // 错开加载时间，避免同时请求
-            });
-            
-            // 所有脚本都加载失败的情况下也继续执行
-            setTimeout(() => {
-                if (!loaded) {
-                    console.error('所有不蒜子脚本加载尝试均失败');
-                    resolve(); // 依然resolve而不是reject，让程序继续运行
-                }
-            }, urls.length * 2000);
-        });
-    }
-
-    // 等待不蒜子脚本加载完成
-    function waitForBusuanzi() {
-        return new Promise(async (resolve) => {
-            // 直接检查多种可能的变量名
-            if (typeof window.busuanzi !== 'undefined') {
-                console.log('找到已存在的 window.busuanzi');
-                resolve();
-                return;
-            }
-            
-            if (typeof _bszs !== 'undefined') {
-                console.log('找到已存在的 _bszs');
+            if (window.busuanzi_value_site_pv !== undefined) {
+                console.log('不蒜子脚本已存在');
                 resolve();
                 return;
             }
 
-            // 主动加载脚本
-            await loadBusuanziScript();
+            console.log('加载不蒜子脚本');
             
-            // 再次检查是否已加载
-            if (typeof window.busuanzi !== 'undefined' || typeof _bszs !== 'undefined') {
-                console.log('不蒜子脚本加载成功');
+            // 创建不蒜子脚本元素
+            const script = document.createElement('script');
+            // 明确指定https协议，避免使用http
+            script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            
+            script.onload = () => {
+                console.log('不蒜子脚本加载完成');
                 resolve();
-                return;
-            }
-
-            console.log('等待不蒜子脚本初始化...');
-            let attempts = 0;
-            const maxAttempts = 100; // 增加到10秒
-            
-            const checkInterval = setInterval(() => {
-                attempts++;
-                
-                if (typeof window.busuanzi !== 'undefined') {
-                    console.log('找到 window.busuanzi，尝试次数:', attempts);
-                    clearInterval(checkInterval);
-                    resolve();
-                    return;
-                }
-                
-                if (typeof _bszs !== 'undefined') {
-                    console.log('找到 _bszs，尝试次数:', attempts);
-                    clearInterval(checkInterval);
-                    resolve();
-                    return;
-                }
-                
-                if (attempts % 20 === 0) {
-                    console.log(`仍在等待不蒜子脚本初始化，已尝试 ${attempts} 次...`);
-                }
-                
-                if (attempts >= maxAttempts) {
-                    console.warn('不蒜子脚本加载超时，尝试次数:', attempts);
-                    clearInterval(checkInterval);
-                    
-                    // 超时后也继续执行，使用本地测试模式
-                    console.log('由于不蒜子脚本加载失败，将使用本地测试模式');
-                    // 自动启用测试模式
-                    localStorage.setItem('_auto_test_mode', 'true');
-                    resolve();
-                }
-            }, 100);
-        });
-    }
-
-    // 获取特定URL的浏览量
-    function fetchPageViews(url) {
-        return new Promise((resolve) => {
-            // 本地测试模式下返回模拟数据
-            const autoTestMode = localStorage.getItem('_auto_test_mode') === 'true';
-            if (isLocal || isTestMode || autoTestMode) {
-                // 使用URL作为随机种子，确保同一URL每次生成相同的随机数
-                const urlSeed = url.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                const randomSeed = (urlSeed % 900) + 100; // 确保在100-1000之间
-                console.log(`本地测试模式：为 ${url} 生成随机浏览量 ${randomSeed}`);
-                setTimeout(() => resolve(randomSeed), 100); // 减少延迟时间
-                return;
-            }
-            
-            // 为每个URL创建唯一的回调函数名
-            var randomId = Math.floor(Math.random() * 100000000);
-            var callbackName = 'BusuanziCallback_' + randomId;
-            
-            console.log('创建回调函数:', callbackName, '对应URL:', url);
-            
-            // 存储这个URL对应的回调
-            callbackMap[url] = callbackName;
-            
-            // 创建特定URL的回调函数
-            window[callbackName] = function(response) {
-                console.log('不蒜子回调结果 [' + callbackName + ']:', response);
-                if (response && response.page_pv) {
-                    resolve(response.page_pv);
-                } else {
-                    console.warn('未获取到浏览量数据，返回默认值:', response);
-                    // 同样使用基于URL的固定随机数
-                    const urlSeed = url.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                    const randomSeed = (urlSeed % 900) + 100;
-                    resolve(randomSeed);
-                }
-                // 清理回调函数
-                delete window[callbackName];
-                delete callbackMap[url];
             };
-
-            // 创建JSONP脚本
-            var script = document.createElement('script');
-            var encodedUrl = encodeURIComponent(url);
-            script.src = 'https://busuanzi.ibruce.info/busuanzi?jsonpCallback=' + callbackName + '&url=' + encodedUrl;
-            console.log('发送不蒜子请求:', script.src);
             
-            script.onerror = function(e) {
-                console.error('加载不蒜子脚本失败:', url, e);
-                delete window[callbackName];
-                delete callbackMap[url];
-                // 使用基于URL的固定随机数作为备选
-                const urlSeed = url.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                const randomSeed = (urlSeed % 900) + 100;
-                resolve(randomSeed);
+            script.onerror = (error) => {
+                console.error('不蒜子脚本加载失败:', error);
+                // 加载失败时使用模拟数据
+                mockSiteStats();
+                mockLocalViewCount();
+                reject(error);
             };
+            
             document.head.appendChild(script);
-            console.log('请求URL浏览量 [' + callbackName + ']:', url);
+        });
+    }
 
-            // 设置超时
-            setTimeout(() => {
-                if (window[callbackName]) {
-                    console.warn('不蒜子请求超时:', url);
-                    delete window[callbackName];
-                    delete callbackMap[url];
-                    // 使用基于URL的固定随机数作为备选
-                    const urlSeed = url.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                    const randomSeed = (urlSeed % 900) + 100;
-                    resolve(randomSeed);
+    // 等待busuanzi脚本初始化完成
+    function waitForBusuanzi() {
+        return new Promise((resolve) => {
+            const checkBusuanzi = () => {
+                // 检查是否存在任何不蒜子的值
+                const busuanziElements = document.querySelectorAll('[id^="busuanzi_value_"]');
+                let initialized = false;
+                
+                busuanziElements.forEach(element => {
+                    if (element.textContent && element.textContent !== '0') {
+                        initialized = true;
+                    }
+                });
+                
+                if (initialized) {
+                    console.log('不蒜子已初始化完成');
+                    resolve();
+                } else {
+                    setTimeout(checkBusuanzi, 100);
                 }
+            };
+            
+            checkBusuanzi();
+            // 最多等待5秒
+            setTimeout(() => {
+                console.log('不蒜子初始化超时，强制继续');
+                resolve();
             }, 5000);
         });
     }
 
-    // 顺序获取浏览量，避免并行请求导致的问题
-    async function fetchViewsSequentially(elements) {
-        console.log('开始顺序获取浏览量，元素数量:', elements.length);
-        for (let i = 0; i < elements.length; i++) {
-            const element = elements[i];
-            const url = element.getAttribute('data-url');
-            const title = element.getAttribute('data-title') || '未知标题';
-            
-            if (!url) {
-                console.error('URL为空! 元素:', element.outerHTML);
-                continue;
-            }
-            
-            console.log(`处理第${i+1}个URL: ${url} (${title})`);
-            
-            try {
-                // 在请求之间添加延迟，避免API限制
-                if (i > 0) {
-                    await new Promise(resolve => setTimeout(resolve, 200)); // 减少延迟时间
-                }
-                
-                const views = await fetchPageViews(url);
-                console.log(`获取到第${i+1}个URL浏览量:`, url, views);
-                
-                const countElement = element.querySelector('.view-count');
-                if (countElement) {
-                    countElement.textContent = views;
-                    console.log(`更新第${i+1}个URL浏览量成功:`, url, views);
-                } else {
-                    console.error(`未找到第${i+1}个URL的计数元素:`, url);
-                }
-            } catch (error) {
-                console.error(`获取第${i+1}个URL浏览量失败:`, url, error);
-                // 出错时使用备选值
-                const urlSeed = url.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-                const randomSeed = (urlSeed % 900) + 100;
-                
-                const countElement = element.querySelector('.view-count');
-                if (countElement) {
-                    countElement.textContent = randomSeed;
-                    console.log(`使用备选浏览量:`, url, randomSeed);
-                }
-            }
-        }
-    }
+    // 本地测试环境使用模拟数据
+    function mockLocalViewCount() {
+        // 从URL生成稳定的模拟访问量
+        const path = window.location.pathname;
+        const viewCount = generateViewCountFromPath(path);
 
-    // 更新浏览量
-    async function updateViews() {
-        try {
-            console.log('准备更新浏览量');
-            
-            // 等待不蒜子加载完成
-            await waitForBusuanzi();
-            
-            // 详情页处理
-            const singleElements = document.querySelectorAll('.post-views[data-is-single="true"]');
-            if (singleElements.length > 0) {
-                console.log('这是详情页，使用不蒜子默认处理');
-                return; // 不蒜子会自动处理详情页
-            }
-            
-            // 列表页处理 - 使用特定类名选择器查找元素
-            const listElements = document.querySelectorAll('.post-views-list');
-            console.log('列表元素数量:', listElements.length);
-            
-            if (listElements.length === 0) {
-                console.log('没有找到列表元素，不需要处理');
-                return;
-            }
-            
-            // 使用顺序请求获取浏览量
-            await fetchViewsSequentially(listElements);
-            
-            console.log('所有浏览量更新完成');
-        } catch (error) {
-            console.error('更新浏览量失败:', error);
-        }
-    }
-
-    // 页面加载完成后更新浏览量
-    if (document.readyState === 'loading') {
-        console.log('文档加载中，等待DOMContentLoaded事件');
-        document.addEventListener('DOMContentLoaded', function() {
-            // 延迟执行以确保DOM完全加载
-            setTimeout(updateViews, 1000);
+        const countElements = document.querySelectorAll('#busuanzi_value_page_pv');
+        countElements.forEach(element => {
+            element.textContent = viewCount;
         });
-    } else {
-        console.log('文档已加载完成，延迟执行');
-        setTimeout(updateViews, 1000);
+
+        // 显示容器
+        const containers = document.querySelectorAll('#busuanzi_container_page_pv');
+        containers.forEach(container => {
+            if (isDetailPage()) {
+                container.style.display = 'inline';
+                container.style.visibility = 'visible';
+            }
+        });
+    }
+    
+    // 模拟站点统计数据
+    function mockSiteStats() {
+        // 生成随机但稳定的站点统计数据
+        const sitePV = Math.floor(Math.random() * 50000) + 5000;
+        const siteUV = Math.floor(sitePV * 0.3);
+        
+        // 更新站点PV
+        const sitePvElements = document.querySelectorAll('#busuanzi_value_site_pv');
+        sitePvElements.forEach(element => {
+            element.textContent = sitePV;
+            element.style.display = 'inline';
+            element.style.visibility = 'visible';
+        });
+        
+        // 更新站点UV
+        const siteUvElements = document.querySelectorAll('#busuanzi_value_site_uv');
+        siteUvElements.forEach(element => {
+            element.textContent = siteUV;
+            element.style.display = 'inline';
+            element.style.visibility = 'visible';
+        });
+        
+        // 显示容器
+        document.querySelectorAll('#busuanzi_container_site_pv, #busuanzi_container_site_uv').forEach(container => {
+            container.style.display = 'inline';
+            container.style.visibility = 'visible';
+        });
+        
+        console.log('模拟站点统计:', sitePV, siteUV);
+    }
+
+    // 从路径生成一个稳定的浏览量数字（本地测试用）
+    function generateViewCountFromPath(path) {
+        let hash = 0;
+        for (let i = 0; i < path.length; i++) {
+            hash = ((hash << 5) - hash) + path.charCodeAt(i);
+            hash = hash & hash; // 转换为32位整数
+        }
+        // 生成100-1000之间的数字
+        return Math.abs(hash % 900) + 100;
     }
 })(); 

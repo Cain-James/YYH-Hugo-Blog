@@ -7,6 +7,13 @@
 <meta name="robots" content="noindex, nofollow">
 {{- end }}
 
+<!-- 性能优化：预连接和DNS预取 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://busuanzi.ibruce.info">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+
 {{- /* Title */}}
 <title>{{ if .IsHome }}{{ else }}{{ if .Title }}{{ .Title }} | {{ end }}{{ end }}{{ site.Title }}</title>
 
@@ -35,9 +42,18 @@
 {{- if site.Params.analytics.naver.SiteVerificationTag }}
 <meta name="naver-site-verification" content="{{ site.Params.analytics.naver.SiteVerificationTag }}">
 {{- end }}
+
+<!-- 预加载关键资源 -->
+<link rel="preload" href="{{ "assets/css/stylesheet.css" | absURL }}" as="style">
+<link rel="preload" href="{{ "js/busuanzi-view-counter.js" | absURL }}" as="script">
+
+<!-- 预加载字体 -->
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ "fonts/noto-serif-sc-v22-chinese-simplified-regular.woff2" | absURL }}" as="font" type="font/woff2" crossorigin>
+
 <!-- busuanzi -->
 {{- if .Site.Params.busuanzi -}}
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 {{- end -}}
 
 {{- /* Styles */}}
@@ -72,7 +88,7 @@
 {{- $stylesheet := (slice $license_css $core $extended) | resources.Concat "assets/css/stylesheet.css"  }}
 
 {{- if not site.Params.assets.disableFingerprinting }}
-{{- $stylesheet := $stylesheet | fingerprint }}
+{{- $stylesheet = $stylesheet | fingerprint }}
 <link crossorigin="anonymous" href="{{ $stylesheet.RelPermalink }}" integrity="{{ $stylesheet.Data.Integrity }}" rel="preload stylesheet" as="style">
 {{- else }}
 <link crossorigin="anonymous" href="{{ $stylesheet.RelPermalink }}" rel="preload stylesheet" as="style">
@@ -173,14 +189,42 @@
 {{- template "partials/templates/schema_json.html" . }}
 {{- end -}}
 
-{{- /* 性能监控脚本 */ -}}
-<script src="{{ "js/performance.js" | relURL }}" defer></script>
+<!-- 性能优化：关键CSS内联 -->
+<style>
+/* 关键渲染路径CSS - 核心样式内联以提高首屏渲染速度 */
+body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+/* 只在详情页之外隐藏浏览量 */
+body:not(.page) .post-views,
+body:not(.page) #busuanzi_container_page_pv,
+body:not(.page) #busuanzi_value_page_pv {
+    display: none !important;
+    visibility: hidden !important;
+}
+/* 延迟加载图片和非关键内容的淡入效果 */
+.lazyload {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.lazyloaded {
+    opacity: 1;
+}
+</style>
 
-<!-- Google Analytics -->
+<!-- 性能监控脚本 -->
+<script src="{{ "js/performance.js" | absURL }}" defer></script>
+
+<!-- Google Analytics 异步加载 -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KGBJNWLV3J"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-KGBJNWLV3J');
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-KGBJNWLV3J', { 'anonymize_ip': true, 'send_page_view': false });
+// 延迟发送页面浏览量，优先加载页面内容
+setTimeout(function() {
+    gtag('event', 'page_view');
+}, 2000);
 </script>

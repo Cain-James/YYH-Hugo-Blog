@@ -1,6 +1,145 @@
 {{- /* Head custom content area start */ -}}
 {{- /*     Insert any custom code (web-analytics, resources, etc.) - it will appear in the <head></head> section of every page. */ -}}
 {{- /*     Can be overwritten by partial with the same name in the global layouts. */ -}}
+
+<!-- 字体优化：预加载关键字体 -->
+<link rel="preload" href="{{ "fonts/noto-serif-sc-v22-chinese-simplified-regular.woff2" | absURL }}" as="font" type="font/woff2" crossorigin>
+
+<!-- 预加载字体图标 -->
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- 图标字体修复 -->
+<style>
+/* 确保Font Awesome图标正确显示 */
+.fa {
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    font-size: inherit !important;
+    line-height: 1 !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    font-family: FontAwesome !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+}
+
+/* 重置SVG图标尺寸 */
+svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+}
+
+/* 站点logo尺寸 */
+.logo svg, .logo img {
+    max-height: 30px !important;
+    width: auto !important;
+}
+</style>
+
+<!-- 优化字体加载 -->
+<script>
+// 检查字体是否已加载过
+if (sessionStorage.getItem('fontsLoaded')) {
+  document.documentElement.classList.add('fonts-loaded');
+} else {
+  // 如果浏览器支持FontFaceObserver，使用它来检测字体加载完成
+  if ('FontFace' in window) {
+    // 页面加载完毕后再加载非关键字体
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        const fontLink = document.createElement('link');
+        fontLink.href = '{{ "css/fonts.css" | absURL }}';
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+        
+        // 标记字体已加载
+        document.documentElement.classList.add('fonts-stage-1');
+        // 全部字体加载后标记
+        document.fonts.ready.then(function() {
+          document.documentElement.classList.add('fonts-loaded');
+          sessionStorage.setItem('fontsLoaded', 'true');
+        });
+      }, 500);  // 延迟加载字体，优先渲染页面内容
+    });
+  }
+}
+</script>
+
+<!-- 增强内容安全策略，提高安全性和性能 -->
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://busuanzi.ibruce.info http://busuanzi.ibruce.info https://www.googletagmanager.com https://cdn.jsdelivr.net;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;
+  img-src 'self' data: https: blob:;
+  font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
+  connect-src 'self' https://busuanzi.ibruce.info http://busuanzi.ibruce.info https://www.google-analytics.com https://blog-analytics.finderyyh.workers.dev;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+">
+
+<!-- 设置资源提示，加速资源发现和加载 -->
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
+<link rel="preconnect" href="https://busuanzi.ibruce.info" crossorigin>
+
+<!-- 页面渲染优化 -->
+<meta name="renderer" content="webkit">
+<meta name="force-rendering" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<!-- 响应式设计改进 -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+<meta name="format-detection" content="telephone=no">
+
+<!-- PWA支持 -->
+<meta name="theme-color" content="#ffffff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<!-- 优化关键CSS -->
+<style>
+/* 最重要的基础样式内联，避免CSS阻塞渲染 */
+:root {
+  --gap: 24px;
+  --content-gap: 20px;
+  --nav-width: 1024px;
+  --main-width: 720px;
+  --header-height: 60px;
+  --footer-height: 60px;
+  --radius: 8px;
+}
+
+@media screen and (max-width: 500px) {
+  :root {
+    --gap: 16px;
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: var(--theme);
+  transition: background 0.1s;
+  margin: 0;
+  padding: 0;
+}
+
+.fonts-loaded body {
+  font-family: 'Noto Serif SC', 'Noto Serif', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+}
+
+/* 提高图片加载体验 */
+img {
+  max-width: 100%;
+  height: auto;
+}
+</style>
+
 {{- /* Head custom content area end */ -}}
 
 {{ if (.Params.mermaid) }}
@@ -11,7 +150,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 
 <!-- 不蒜子视图计数器 -->
-<script defer src="{{ "js/busuanzi-view-counter.js" | relURL }}"></script>
+<script defer src="{{ "js/busuanzi-view-counter.js" | absURL }}"></script>
 
 <!-- 百度分析 -->
 <script>

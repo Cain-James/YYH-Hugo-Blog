@@ -5,7 +5,7 @@
     {{ partial "breadcrumbs.html" . }}
     <h1 class="post-title">
       {{ .Title }}
-      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[草稿]</span></sup>{{- end }}
+      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>{{- end }}
     </h1>
     {{- if .Description }}
     <div class="post-description">
@@ -15,22 +15,9 @@
     {{- if not (.Param "hideMeta") }}
     <div class="post-meta">
       {{- partial "post_meta.html" . -}}
-      {{- if .IsTranslated -}}
-      <ul class="i18n_list">
-        {{- i18n "translations" | default "Translations"}}:
-        {{- range .Translations }}
-        <li>
-          <a href="{{ .Permalink }}">
-            {{- if (and $.Site.Params.displayFullLangName (.Language.LanguageName)) }}
-            {{- .Language.LanguageName | emojify -}}
-            {{- else }}
-            {{- .Lang | upper -}}
-            {{- end -}}
-          </a>
-        </li>
-        {{- end }}
-      </ul>
-      {{- end }}
+      {{- partial "translation_list.html" . -}}
+      {{- partial "edit_post.html" . -}}
+      {{- partial "post_canonical.html" . -}}
     </div>
     {{- end }}
   </header>
@@ -39,14 +26,34 @@
   {{- if (.Param "ShowToc") }}
   {{- partial "toc.html" . }}
   {{- end }}
+  
+  <!-- 添加性能优化：标记为详情页，有助于JavaScript识别页面类型 -->
+  <script>
+    // 立即添加页面类型标记，提高页面识别准确性
+    document.body.classList.add('page', 'single-page');
+    // 预加载评论组件资源（如果页面有评论）
+    if (document.querySelector('#comments')) {
+      const commentScripts = document.querySelectorAll('script[data-comment]');
+      if (commentScripts.length > 0) {
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            commentScripts.forEach(script => {
+              if (script.dataset.src) {
+                script.src = script.dataset.src;
+                script.removeAttribute('data-src');
+              }
+            });
+          }, 1500); // 延迟加载评论脚本，优先加载核心内容
+        });
+      }
+    }
+  </script>
 
-  {{- if .Content }}
   <div class="post-content">
     {{- if not (.Param "disableAnchoredHeadings") }}
     {{- partial "anchored_headings.html" .Content -}}
     {{- else }}{{ .Content }}{{ end }}
   </div>
-  {{- end }}
 
   <footer class="post-footer">
     {{- $tags := .Language.Params.Taxonomies.tag | default "tags" }}
@@ -67,6 +74,54 @@
   {{- partial "comments.html" . }}
   {{- end }}
 </article>
+
+<!-- 优化文章图片延迟加载 -->
+<script>
+  // 检查是否支持IntersectionObserver API
+  if ('IntersectionObserver' in window) {
+    // 设置图片懒加载
+    const imgObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          const src = img.getAttribute('data-src');
+          if (src) {
+            img.src = src;
+            img.classList.add('lazyloaded');
+            observer.unobserve(img);
+          }
+        }
+      });
+    });
+
+    // 选择所有文章内的图片
+    const postImages = document.querySelectorAll('.post-content img');
+    postImages.forEach(img => {
+      // 保存原始src到data-src属性
+      if (!img.classList.contains('no-lazy') && !img.dataset.src) {
+        const src = img.getAttribute('src');
+        if (src) {
+          img.setAttribute('data-src', src);
+          img.setAttribute('src', 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2"%3E%3C/svg%3E');
+          img.classList.add('lazyload');
+          imgObserver.observe(img);
+        }
+      }
+    });
+  }
+
+  // 优化代码块高亮渲染
+  document.addEventListener('DOMContentLoaded', function() {
+    const codeBlocks = document.querySelectorAll('pre code');
+    if (window.hljs && codeBlocks.length > 0) {
+      codeBlocks.forEach(block => {
+        if (!block.classList.contains('hljs')) {
+          hljs.highlightElement(block);
+        }
+      });
+    }
+  });
+</script>
 
 <!-- 添加热门文章排行 -->
 <aside class="popular-posts-section">
@@ -130,8 +185,5 @@
   font-size: 0.9rem;
 }
 </style>
-
-<!-- 添加脚本 -->
-<script src="/js/post-analytics.js"></script>
 
 {{- end }}{{/* end main */}}

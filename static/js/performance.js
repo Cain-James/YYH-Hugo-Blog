@@ -1,247 +1,168 @@
-// 性能监控
-class PerformanceMonitor {
-    constructor() {
-        this.metrics = {
-            fcp: null,
-            lcp: null,
-            fid: null,
-            cls: null,
-            dnsTime: null,
-            tcpTime: null,
-            responseTime: null,
-            domLoadTime: null,
-            loadTime: null,
-            resources: [],
-            errors: []
-        };
+/**
+ * 性能监控与优化脚本
+ * 收集性能指标并应用页面加载优化
+ */
+(function() {
+    // 性能监控
+    function collectPerformanceMetrics() {
+        if (performance && performance.timing) {
+            // 页面完全加载后收集指标
+            window.addEventListener('load', function() {
+                // 给浏览器一点时间完成所有计算
+                setTimeout(function() {
+                    const t = performance.timing;
+                    const interactive = t.domInteractive - t.navigationStart;
+                    const dcl = t.domContentLoadedEventEnd - t.navigationStart;
+                    const complete = t.domComplete - t.navigationStart;
+                    
+                    // 仅在开发环境或测试模式记录到控制台
+                    const isDebug = localStorage.getItem('debug_mode') === 'true' || 
+                                  window.location.hostname === 'localhost';
+                    
+                    if (isDebug) {
+                        console.log('性能指标:', {
+                            '首次可交互 (ms)': interactive,
+                            'DOM内容加载完成 (ms)': dcl,
+                            '页面完全加载 (ms)': complete
+                        });
+                    }
 
-        // 检查是否已加载 GA4
-        if (typeof gtag === 'undefined') {
-            console.warn('Google Analytics 4 not loaded');
-        }
-
-        this.init();
-    }
-
-    init() {
-        // 监听页面加载性能
-        this.observePageLoad();
-        
-        // 监听核心 Web 指标
-        this.observeCoreWebVitals();
-        
-        // 监听资源加载
-        this.observeResources();
-        
-        // 监听错误
-        this.observeErrors();
-
-        // 计算页面加载性能指标
-        this.calculatePageLoadMetrics();
-
-        // 定期更新性能指标
-        setInterval(() => this.updateMetrics(), 5000);
-    }
-
-    observePageLoad() {
-        if (window.performance) {
-            const timing = window.performance.timing;
-            
-            // DNS 解析时间
-            this.metrics.dnsTime = timing.domainLookupEnd - timing.domainLookupStart;
-            
-            // TCP 连接时间
-            this.metrics.tcpTime = timing.connectEnd - timing.connectStart;
-            
-            // 服务器响应时间
-            this.metrics.responseTime = timing.responseEnd - timing.requestStart;
-            
-            // DOM 加载时间
-            this.metrics.domLoadTime = timing.domComplete - timing.domLoading;
-            
-            // 页面完全加载时间
-            this.metrics.loadTime = timing.loadEventEnd - timing.navigationStart;
-
-            // 发送页面加载指标到 GA4
-            this.sendToGA4('page_load', {
-                dns_time: this.metrics.dnsTime,
-                tcp_time: this.metrics.tcpTime,
-                response_time: this.metrics.responseTime,
-                dom_load_time: this.metrics.domLoadTime,
-                total_load_time: this.metrics.loadTime
+                    // 发送到 Google Analytics 进行监控
+                    if (typeof gtag === 'function') {
+                        gtag('event', 'performance', {
+                            'event_category': 'timing',
+                            'event_label': '首次可交互',
+                            'value': interactive,
+                            'non_interaction': true
+                        });
+                        
+                        gtag('event', 'performance', {
+                            'event_category': 'timing',
+                            'event_label': '页面完全加载',
+                            'value': complete,
+                            'non_interaction': true
+                        });
+                    }
+                }, 0);
             });
         }
     }
 
-    observeCoreWebVitals() {
-        // FCP (First Contentful Paint)
-        new PerformanceObserver((entryList) => {
-            const entries = entryList.getEntries();
-            if (entries.length > 0) {
-                this.metrics.fcp = entries[0].startTime;
-                this.sendToGA4('web_vital', {
-                    metric_name: 'FCP',
-                    value: this.metrics.fcp
-                });
-            }
-        }).observe({ entryTypes: ['paint'] });
-        
-        // LCP (Largest Contentful Paint)
-        new PerformanceObserver((entryList) => {
-            const entries = entryList.getEntries();
-            if (entries.length > 0) {
-                this.metrics.lcp = entries[entries.length - 1].startTime;
-                this.sendToGA4('web_vital', {
-                    metric_name: 'LCP',
-                    value: this.metrics.lcp
-                });
-            }
-        }).observe({ entryTypes: ['largest-contentful-paint'] });
-        
-        // FID (First Input Delay)
-        new PerformanceObserver((entryList) => {
-            const entries = entryList.getEntries();
-            if (entries.length > 0) {
-                this.metrics.fid = entries[0].processingStart - entries[0].startTime;
-                this.sendToGA4('web_vital', {
-                    metric_name: 'FID',
-                    value: this.metrics.fid
-                });
-            }
-        }).observe({ entryTypes: ['first-input'] });
-        
-        // CLS (Cumulative Layout Shift)
-        let clsValue = 0;
-        new PerformanceObserver((entryList) => {
-            for (const entry of entryList.getEntries()) {
-                if (!entry.hadRecentInput) {
-                    clsValue += entry.value;
+    // 图片延迟加载
+    function setupLazyLoading() {
+        if ('loading' in HTMLImageElement.prototype) {
+            // 浏览器原生支持延迟加载
+            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                img.classList.add('lazyload');
+                img.onload = function() {
+                    this.classList.add('lazyloaded');
+                };
+            });
+        } else {
+            // 对于不支持原生延迟加载的浏览器，可以添加自定义实现或加载库
+            // 这里简化处理，仅添加类
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.hasAttribute('loading')) {
+                    img.setAttribute('loading', 'lazy');
                 }
-            }
-            this.metrics.cls = clsValue;
-            this.sendToGA4('web_vital', {
-                metric_name: 'CLS',
-                value: this.metrics.cls
+                img.classList.add('lazyload');
+                img.onload = function() {
+                    this.classList.add('lazyloaded');
+                };
             });
-        }).observe({ entryTypes: ['layout-shift'] });
+        }
     }
 
-    observeResources() {
-        const observer = new PerformanceObserver((entryList) => {
-            for (const entry of entryList.getEntries()) {
-                if (entry.initiatorType !== 'xmlhttprequest' && entry.initiatorType !== 'fetch') {
-                    this.metrics.resources.push({
-                        name: entry.name,
-                        size: entry.transferSize / 1024, // 转换为 KB
-                        loadTime: entry.duration
+    // 优化页面资源加载
+    function optimizePageLoad() {
+        // 延迟加载非关键JavaScript
+        const deferScripts = document.querySelectorAll('script[defer-load]');
+        if (deferScripts.length > 0) {
+            // 页面交互后延迟加载非关键脚本
+            const loadDeferredScripts = function() {
+                deferScripts.forEach(script => {
+                    const src = script.getAttribute('defer-load');
+                    if (src) {
+                        const newScript = document.createElement('script');
+                        newScript.src = src;
+                        document.body.appendChild(newScript);
+                    }
+                });
+                
+                // 移除事件监听器
+                document.removeEventListener('mousemove', loadDeferredScripts);
+                document.removeEventListener('scroll', loadDeferredScripts);
+                document.removeEventListener('keydown', loadDeferredScripts);
+                document.removeEventListener('click', loadDeferredScripts);
+            };
+            
+            // 用户交互时加载
+            document.addEventListener('mousemove', loadDeferredScripts, {once: true});
+            document.addEventListener('scroll', loadDeferredScripts, {once: true});
+            document.addEventListener('keydown', loadDeferredScripts, {once: true});
+            document.addEventListener('click', loadDeferredScripts, {once: true});
+            
+            // 如果用户没有交互，30秒后也加载
+            setTimeout(loadDeferredScripts, 30000);
+        }
+        
+        // 预渲染可能会被访问的页面（仅对首页起作用）
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const links = Array.from(document.querySelectorAll('.first-entry a[href], .post-entry a[href]'))
+                        .slice(0, 3); // 只预处理前3个链接
+                    
+                    links.forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href && href.startsWith('/') && !href.includes('#')) {
+                            const prerender = document.createElement('link');
+                            prerender.rel = 'prerender';
+                            prerender.href = href;
+                            document.head.appendChild(prerender);
+                        }
                     });
-                }
-            }
-        });
-        
-        observer.observe({ entryTypes: ['resource'] });
-    }
-
-    observeErrors() {
-        // 监听 JavaScript 错误
-        window.addEventListener('error', (event) => {
-            const error = {
-                type: 'JavaScript Error',
-                message: event.message,
-                stack: event.stack,
-                timestamp: Date.now()
-            };
-            this.metrics.errors.push(error);
-            this.sendToGA4('error', error);
-        });
-
-        // 监听 Promise 错误
-        window.addEventListener('unhandledrejection', (event) => {
-            const error = {
-                type: 'Promise Error',
-                message: event.reason,
-                timestamp: Date.now()
-            };
-            this.metrics.errors.push(error);
-            this.sendToGA4('error', error);
-        });
-    }
-
-    // 发送数据到 GA4
-    sendToGA4(eventName, params) {
-        if (typeof gtag !== 'undefined') {
-            gtag('event', eventName, {
-                ...params,
-                page_location: window.location.href,
-                page_title: document.title,
-                timestamp: new Date().toISOString()
+                }, 5000); // 主页加载5秒后预加载
             });
         }
     }
-
-    // 更新性能指标显示
-    updateMetrics() {
-        // 更新页面上的指标显示
-        const updateElement = (id, value) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.textContent = value !== null ? value.toFixed(2) : 'N/A';
+    
+    // 优化字体加载
+    function optimizeFontLoading() {
+        // 检测是否是重复访问
+        const fontLoadedBefore = localStorage.getItem('fonts-loaded') === 'true';
+        
+        if (fontLoadedBefore) {
+            // 字体已经缓存，直接使用字体
+            document.documentElement.classList.add('fonts-loaded');
+        } else {
+            // 首次访问，使用系统字体，字体加载完成后再切换
+            if ('fonts' in document) {
+                Promise.all([
+                    document.fonts.load('1em noto_serif'),
+                    document.fonts.load('700 1em noto_serif'),
+                    document.fonts.load('italic 1em noto_serif'),
+                    document.fonts.load('italic 700 1em noto_serif')
+                ]).then(function () {
+                    document.documentElement.classList.add('fonts-loaded');
+                    localStorage.setItem('fonts-loaded', 'true');
+                });
             }
-        };
-
-        // 更新核心 Web 指标
-        updateElement('fcp-value', this.metrics.fcp);
-        updateElement('lcp-value', this.metrics.lcp);
-        updateElement('fid-value', this.metrics.fid);
-        updateElement('cls-value', this.metrics.cls);
-
-        // 更新页面加载性能
-        updateElement('dns-time', this.metrics.dnsTime);
-        updateElement('tcp-time', this.metrics.tcpTime);
-        updateElement('response-time', this.metrics.responseTime);
-        updateElement('dom-load-time', this.metrics.domLoadTime);
-        updateElement('total-load-time', this.metrics.loadTime);
-
-        // 更新资源加载性能
-        const resourcesList = document.getElementById('resources-list');
-        if (resourcesList) {
-            resourcesList.innerHTML = this.metrics.resources
-                .map(resource => `
-                    <div class="resource-item">
-                        <span class="resource-name">${resource.name}</span>
-                        <span class="resource-size">${resource.size.toFixed(2)} KB</span>
-                        <span class="resource-time">${resource.loadTime.toFixed(2)} ms</span>
-                    </div>
-                `)
-                .join('');
-        }
-
-        // 更新错误日志
-        const errorsList = document.getElementById('errors-list');
-        if (errorsList) {
-            errorsList.innerHTML = this.metrics.errors
-                .map(error => `
-                    <div class="error-item">
-                        <span class="error-type">${error.type}</span>
-                        <span class="error-message">${error.message}</span>
-                        <span class="error-time">${new Date(error.timestamp).toLocaleString()}</span>
-                    </div>
-                `)
-                .join('');
         }
     }
 
-    calculatePageLoadMetrics() {
-        const navigation = performance.getEntriesByType('navigation')[0];
-        if (navigation) {
-            this.metrics.dnsTime = navigation.domainLookupEnd - navigation.domainLookupStart;
-            this.metrics.tcpTime = navigation.connectEnd - navigation.connectStart;
-            this.metrics.responseTime = navigation.responseEnd - navigation.responseStart;
-            this.metrics.domLoadTime = navigation.domContentLoadedEventEnd - navigation.navigationStart;
-            this.metrics.loadTime = navigation.loadEventEnd - navigation.navigationStart;
-        }
+    // 初始化
+    function init() {
+        collectPerformanceMetrics();
+        setupLazyLoading();
+        optimizePageLoad();
+        optimizeFontLoading();
     }
-}
 
-// 初始化性能监控
-window.performanceMonitor = new PerformanceMonitor(); 
+    // 当DOM准备就绪时运行
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})(); 

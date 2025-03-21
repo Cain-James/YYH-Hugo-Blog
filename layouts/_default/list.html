@@ -1,16 +1,10 @@
 {{- define "main" }}
 
-<!-- 添加列表页标识，方便JavaScript识别 -->
-<script>
-  document.body.classList.add('list-page');
-  console.log('这是列表页 - 已添加list-page类');
-</script>
-
 {{- if (and site.Params.profileMode.enabled .IsHome) }}
 {{- partial "index_profile.html" . }}
 {{- else }} {{/* if not profileMode */}}
 
-{{- if not .IsHome | and .Title }}
+{{- if .Title }}
 <header class="page-header">
   {{- partial "breadcrumbs.html" . }}
   {{- if (.Param "ShowStatInSectionTermList" | default true) }}
@@ -19,8 +13,7 @@
   <h1>
     {{ .Title }}
     {{- if and (or (eq .Kind `term`) (eq .Kind `section`)) (.Param "ShowRssButtonInSectionTermList") }}
-    {{- with .OutputFormats.Get "rss" }}
-    <a href="{{ .RelPermalink }}" title="RSS" aria-label="RSS">
+    <a href="{{ with .OutputFormats.Get `rss` }}{{ .RelPermalink }}{{ end }}" title="RSS" aria-label="RSS">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
         stroke-linecap="round" stroke-linejoin="round" height="23">
         <path d="M4 11a9 9 0 0 1 9 9" />
@@ -28,7 +21,6 @@
         <circle cx="5" cy="19" r="1" />
       </svg>
     </a>
-    {{- end }}
     {{- end }}
   </h1>
   {{- if .Description }}
@@ -38,6 +30,36 @@
   {{- end }}
 </header>
 {{- end }}
+
+<!-- 添加页面类型标记，提高页面识别准确性 -->
+<script>
+  document.body.classList.add('list-page');
+  // 预加载图片以提高滚动性能
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      const postEntries = document.querySelectorAll('.post-entry');
+      if ('IntersectionObserver' in window) {
+        const lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              const postEntry = entry.target;
+              const lazyImages = postEntry.querySelectorAll('img[loading="lazy"]');
+              lazyImages.forEach(function(img) {
+                img.src = img.dataset.src || img.src;
+                img.classList.add('lazyloaded');
+              });
+              observer.unobserve(postEntry);
+            }
+          });
+        });
+
+        postEntries.forEach(function(postEntry) {
+          lazyImageObserver.observe(postEntry);
+        });
+      }
+    }, 300);
+  });
+</script>
 
 {{- if .Content }}
 <div class="post-content">
@@ -78,9 +100,8 @@
   <header class="entry-header">
     <h2>
       {{- .Title }}
-      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[草稿]</span></sup>{{- end }}
+      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[draft]</span></sup>{{- end }}
     </h2>
-    <!-- 调试: {{ .Title }} | {{ .Permalink }} -->
     {{- if (ne (.Param "hideMeta") true) }}
     <div class="entry-meta">
       {{- partial "post_meta.html" . -}}
@@ -123,15 +144,27 @@
 </footer>
 {{- end }}
 
-{{- end }}{{/* end profileMode */}}
+<!-- 性能优化：使用requestIdleCallback优先处理重要动作 -->
+<script>
+  // 处理列表页图片加载优化
+  function optimizeImages() {
+    // 将所有图片转为懒加载
+    const images = document.querySelectorAll('.post-entry img:not([loading])');
+    images.forEach(img => {
+      img.setAttribute('loading', 'lazy');
+      img.classList.add('lazyload');
+    });
+  }
 
-<!-- 添加样式 -->
-<style>
-.post-views {
-  display: inline-flex;
-  align-items: center;
-  color: var(--secondary);
-}
-</style>
+  // 使用requestIdleCallback在浏览器空闲时执行
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(optimizeImages);
+  } else {
+    // 降级处理
+    setTimeout(optimizeImages, 200);
+  }
+</script>
+
+{{- end }}{{/* end profileMode */}}
 
 {{- end }}{{- /* end main */ -}}
