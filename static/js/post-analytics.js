@@ -29,12 +29,15 @@ async function fetchPostAnalytics() {
 function waitForBusuanzi() {
     return new Promise((resolve) => {
         if (window.busuanzi) {
+            console.log('Busuanzi already initialized');
             resolve();
             return;
         }
 
+        console.log('Waiting for Busuanzi to initialize...');
         const checkBusuanzi = setInterval(() => {
             if (window.busuanzi) {
+                console.log('Busuanzi initialized successfully');
                 clearInterval(checkBusuanzi);
                 resolve();
             }
@@ -42,6 +45,7 @@ function waitForBusuanzi() {
 
         // 设置超时
         setTimeout(() => {
+            console.log('Busuanzi initialization timeout');
             clearInterval(checkBusuanzi);
             resolve();
         }, 5000);
@@ -61,12 +65,20 @@ async function getPostViews(url) {
 
         // 生产环境使用不蒜子
         if (window.busuanzi) {
+            console.log('Busuanzi object:', window.busuanzi);
             const views = parseInt(window.busuanzi.getPagePV(url)) || 0;
             console.log('Using Busuanzi views:', views);
             return views;
         }
 
-        // 如果都不行，返回0
+        console.log('Busuanzi not available, using fallback method');
+        // 如果都不行，尝试从localStorage获取
+        const storedViews = localStorage.getItem(`views_${url}`);
+        if (storedViews) {
+            return parseInt(storedViews);
+        }
+
+        // 如果localStorage也没有，返回0
         return 0;
     } catch (error) {
         console.error('Error getting views:', error);
@@ -77,15 +89,19 @@ async function getPostViews(url) {
 // 更新文章浏览量
 async function updatePostViews() {
     try {
+        console.log('Starting updatePostViews...');
         // 等待不蒜子初始化完成
         await waitForBusuanzi();
-        console.log('Busuanzi initialized');
+        console.log('Busuanzi initialization completed');
 
         // 获取所有浏览量元素
         const viewElements = document.querySelectorAll('.post-views');
         console.log('Found view elements:', viewElements.length);
         
-        if (viewElements.length === 0) return;
+        if (viewElements.length === 0) {
+            console.log('No view elements found');
+            return;
+        }
 
         // 收集所有文章的浏览量数据
         const articles = [];
@@ -115,6 +131,8 @@ async function updatePostViews() {
                 if (viewsSpan) {
                     viewsSpan.textContent = formattedViews;
                     console.log('Updated views for:', article.url, formattedViews);
+                    // 保存到localStorage
+                    localStorage.setItem(`views_${article.url}`, article.views.toString());
                 }
             }
         });
