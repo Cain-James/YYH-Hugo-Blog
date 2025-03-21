@@ -25,51 +25,78 @@ async function fetchPostAnalytics() {
     }
 }
 
-// 加载不蒜子统计脚本
-function loadBusuanzi() {
+// 等待不蒜子初始化完成
+function waitForBusuanzi() {
     return new Promise((resolve) => {
         if (window.busuanzi) {
             resolve();
             return;
         }
 
-        const script = document.createElement('script');
-        script.src = '//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
-        script.async = true;
-        script.onload = () => {
-            // 等待不蒜子脚本完全加载
-            setTimeout(() => {
+        const checkBusuanzi = setInterval(() => {
+            if (window.busuanzi) {
+                clearInterval(checkBusuanzi);
                 resolve();
-            }, 1000);
-        };
-        document.head.appendChild(script);
+            }
+        }, 100);
+
+        // 设置超时
+        setTimeout(() => {
+            clearInterval(checkBusuanzi);
+            resolve();
+        }, 5000);
     });
+}
+
+// 获取文章浏览量
+async function getPostViews(url) {
+    try {
+        // 检查是否是本地开发环境
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            // 本地开发环境使用模拟数据
+            const mockViews = Math.floor(Math.random() * 1000) + 100;
+            console.log('Using mock views for local development:', mockViews);
+            return mockViews;
+        }
+
+        // 生产环境使用不蒜子
+        if (window.busuanzi) {
+            const views = parseInt(window.busuanzi.getPagePV(url)) || 0;
+            console.log('Using Busuanzi views:', views);
+            return views;
+        }
+
+        // 如果都不行，返回0
+        return 0;
+    } catch (error) {
+        console.error('Error getting views:', error);
+        return 0;
+    }
 }
 
 // 更新文章浏览量
 async function updatePostViews() {
     try {
+        // 等待不蒜子初始化完成
+        await waitForBusuanzi();
+        console.log('Busuanzi initialized');
+
         // 获取所有浏览量元素
         const viewElements = document.querySelectorAll('.post-views');
         console.log('Found view elements:', viewElements.length);
         
         if (viewElements.length === 0) return;
 
-        // 获取文章数据
-        const analyticsData = await fetchPostAnalytics();
-        if (!analyticsData) return;
-
         // 收集所有文章的浏览量数据
         const articles = [];
         const processedUrls = new Set(); // 用于防止重复处理同一URL
 
-        viewElements.forEach((el) => {
+        for (const el of viewElements) {
             const url = el.getAttribute('data-url');
             console.log('Processing URL:', url);
             if (url && !processedUrls.has(url)) {
                 processedUrls.add(url);
-                // 从 analyticsData 中获取浏览量
-                const views = analyticsData[url]?.views || 0;
+                const views = await getPostViews(url);
                 console.log('Views for URL:', url, views);
                 articles.push({
                     url: url,
@@ -78,15 +105,15 @@ async function updatePostViews() {
                     title: el.closest('article')?.querySelector('h2')?.textContent || ''
                 });
             }
-        });
+        }
 
         // 更新浏览量显示
         articles.forEach(article => {
             if (article.element) {
                 const formattedViews = formatNumber(article.views);
-                const viewsSpan = article.element.querySelector('span:last-child');
+                const viewsSpan = article.element.querySelector('.views-count');
                 if (viewsSpan) {
-                    viewsSpan.textContent = ` ${formattedViews}`;
+                    viewsSpan.textContent = formattedViews;
                     console.log('Updated views for:', article.url, formattedViews);
                 }
             }
@@ -130,7 +157,8 @@ function formatNumber(num) {
 // 页面加载完成后更新浏览量
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded, updating views...');
-    updatePostViews();
+    // 延迟执行以确保不蒜子脚本加载完成
+    setTimeout(updatePostViews, 2000);
 });
 
 // 定期刷新数据
