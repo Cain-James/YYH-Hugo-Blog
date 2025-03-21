@@ -1,5 +1,11 @@
 {{- define "main" }}
 
+<!-- 添加列表页标识，方便JavaScript识别 -->
+<script>
+  document.body.classList.add('list-page');
+  console.log('这是列表页 - 已添加list-page类');
+</script>
+
 {{- if (and site.Params.profileMode.enabled .IsHome) }}
 {{- partial "index_profile.html" . }}
 {{- else }} {{/* if not profileMode */}}
@@ -74,6 +80,7 @@
       {{- .Title }}
       {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[草稿]</span></sup>{{- end }}
     </h2>
+    <!-- 调试: {{ .Title }} | {{ .Permalink }} -->
     {{- if (ne (.Param "hideMeta") true) }}
     <div class="entry-meta">
       {{- partial "post_meta.html" . -}}
@@ -126,8 +133,5 @@
   color: var(--secondary);
 }
 </style>
-
-<!-- 添加脚本 -->
-<script src="/js/post-analytics.js"></script>
 
 {{- end }}{{- /* end main */ -}}
