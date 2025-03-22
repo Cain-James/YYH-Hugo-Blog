@@ -1,31 +1,100 @@
 {{- if not (.Param "hideFooter") }}
 <footer class="footer">
-    <span>全站文章统计: &nbsp;{{- partial "stat.html" (dict "Kind" "total") }}</span>
-    <br>
-    
-    {{- if site.Copyright }}
-    <span>{{ site.Copyright | markdownify }}</span>
-    {{- else }}
-    <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
-    {{- end }}
-    <span>
-        Powered by
-        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
-        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    <!-- 站点信息 -->
+    <div class="footer-content">
+        <!-- 文章统计 -->
+        <div class="footer-item">
+            <span>{{- partial "stat.html" (dict "Kind" "total") }}</span>
         </div>
-    </span>
-    <br>
-    <!-- busuanzi -->
-    {{ if .Site.Params.busuanzi -}}
-    <span id="busuanzi_container">
-        访问量: 
-        <span id="busuanzi_value_site_pv"></span>
-        | 访问人数: 
-        <span id="busuanzi_value_site_uv"></span>
-    </span>
-    {{- end -}}
-
+        
+        <!-- 技术支持和访问统计 -->
+        <div class="footer-item tech-stats">
+            <span class="powered-by">
+                Powered by
+                <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+                <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+            </span>
+            
+            {{ if .Site.Params.busuanzi -}}
+            <span class="stats-divider">|</span>
+            <span id="busuanzi_container" class="site-stats">
+                <span class="stat-item">PV <span id="busuanzi_value_site_pv" class="stat-value"></span></span>
+                <span class="stat-item">UV <span id="busuanzi_value_site_uv" class="stat-value"></span></span>
+            </span>
+            {{- end -}}
+        </div>
+        
+        <!-- 版权信息 -->
+        <div class="footer-item copyright">
+            {{- if site.Copyright }}
+            <span>{{ site.Copyright | markdownify }}</span>
+            {{- else }}
+            <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ site.Title }}</a></span>
+            {{- end }}
+        </div>
+    </div>
 </footer>
+
+<style>
+    .footer {
+        padding: 8px 20px;
+        font-size: 0.85rem;
+        color: var(--secondary);
+    }
+
+    .footer-content {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 3px;
+    }
+
+    .footer-item {
+        margin: 0;
+        padding: 0;
+        line-height: 1.2;
+    }
+    
+    .tech-stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 3px;
+    }
+    
+    .stats-divider {
+        margin: 0 4px;
+        color: var(--secondary);
+    }
+
+    .site-stats, .powered-by {
+        display: flex;
+        gap: 3px;
+        align-items: center;
+    }
+
+    .stat-item {
+        margin: 0 3px;
+    }
+
+    .stat-value {
+        font-weight: bold;
+        color: var(--primary);
+    }
+
+    .copyright, .powered-by {
+        font-size: 0.8rem;
+    }
+
+    .copyright a, .powered-by a {
+        color: var(--primary);
+    }
+</style>
+
 {{- end }}
 
 {{- if (not site.Params.disableScrollToTop) }}

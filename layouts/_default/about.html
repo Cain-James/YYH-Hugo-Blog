@@ -1,0 +1,306 @@
+{{- define "main" }}
+
+<article class="post-single">
+  <header class="post-header">
+    {{ partial "breadcrumbs.html" . }}
+    <h1 class="post-title">
+      {{ .Title }}
+      {{- if .Draft }}<sup><span class="entry-isdraft">&nbsp;&nbsp;[草稿]</span></sup>{{- end }}
+    </h1>
+    {{- if .Description }}
+    <div class="post-description">
+      {{ .Description }}
+    </div>
+    {{- end }}
+  </header>
+  
+  {{- if (.Param "ShowToc") }}
+  {{- partial "toc.html" . }}
+  {{- end }}
+  
+  {{- if .Content }}
+  <div class="post-content">
+    {{- if not (.Param "disableAnchoredHeadings") }}
+    {{- partial "anchored_headings.html" .Content -}}
+    {{- else }}{{ .Content }}{{ end }}
+    
+    {{- if and (.Param "ShowVisitorStats") (not (.Param "hideFooter")) }}
+    <!-- 网站流量统计部分 -->
+    <div class="site-analytics">
+      <div class="analytics-header">
+        <h2 class="analytics-title">本站流量</h2>
+      </div>
+      
+      <div class="analytics-content">
+        <!-- 访问统计信息行 -->
+        <div class="analytics-row visitor-stats">
+          <div class="stat-item">
+            <span class="stat-label">总访问量：</span>
+            <span id="cf-pageviews" class="stat-value">加载中...</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">总访问人数：</span>
+            <span id="cf-visitors" class="stat-value">加载中...</span>
+          </div>
+        </div>
+        
+        <!-- 日期选择器行 -->
+        <div class="analytics-row date-selector">
+          <div class="quick-ranges">
+            <button class="range-btn" data-days="7">7天</button>
+            <button class="range-btn active" data-days="30">30天</button>
+            <button class="range-btn" data-days="180">半年</button>
+            <button class="range-btn" data-days="365">1年</button>
+          </div>
+          <div class="custom-range">
+            <input type="date" id="startDate" class="date-input" disabled>
+            <span class="date-separator">至</span>
+            <input type="date" id="endDate" class="date-input" disabled>
+          </div>
+        </div>
+        
+        <!-- 图表容器 -->
+        <div class="analytics-row chart-wrapper">
+          <div id="chartContainer" class="chart-container">
+            <canvas id="cfChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{- end }}
+  </div>
+  {{- end }}
+
+  <footer class="post-footer">
+    {{- if not (.Param "hideMeta") }}
+    <ul class="post-tags">
+      {{- range (.GetTerms "tags") }}
+      <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+      {{- end }}
+    </ul>
+    {{- end }}
+  </footer>
+
+  {{- if not (.Param "hideComments") }}
+  {{- partial "comments.html" . }}
+  {{- end }}
+</article>
+
+<!-- 访问统计相关样式 -->
+<style>
+  .site-analytics {
+    margin: 30px 0;
+    padding: 20px;
+    background: var(--entry);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .analytics-header {
+    margin-bottom: 20px;
+  }
+  
+  .analytics-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary);
+    margin: 0;
+  }
+  
+  .analytics-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .analytics-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .visitor-stats {
+    justify-content: flex-start;
+  }
+  
+  .date-selector {
+    justify-content: space-between;
+  }
+  
+  .chart-wrapper {
+    width: 100%;
+  }
+  
+  .stat-item {
+    padding: 8px 15px;
+    background: var(--code-bg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .stat-label {
+    color: var(--secondary);
+    font-size: 0.9em;
+    white-space: nowrap;
+  }
+  
+  .stat-value {
+    color: var(--primary);
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-left: 8px;
+  }
+  
+  .quick-ranges {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .range-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    background: var(--entry);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+  }
+  
+  .range-btn:hover {
+    background: var(--border);
+  }
+  
+  .range-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  
+  .custom-range {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.7;
+  }
+  
+  .date-input {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--entry);
+    font-size: 0.9em;
+    color: var(--secondary);
+    cursor: not-allowed;
+  }
+  
+  .date-separator {
+    color: var(--secondary);
+  }
+  
+  .chart-container {
+    width: 100%;
+    height: 300px;
+  }
+  
+  /* 深色模式适配 */
+  .dark .date-input {
+    background: var(--entry);
+    color: var(--secondary);
+  }
+  
+  .dark .range-btn {
+    background: var(--entry);
+    color: var(--primary);
+  }
+  
+  .dark .range-btn:hover {
+    background: var(--border);
+  }
+  
+  .dark .range-btn.active {
+    background: var(--primary);
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .analytics-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .date-selector {
+      width: 100%;
+    }
+    
+    .custom-range {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<!-- 加载相关脚本 -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+<script src="/js/cf-analytics.js" defer></script>
+
+<!-- 页脚样式覆盖 -->
+<style>
+/* 主页脚样式覆盖 */
+.footer {
+  padding: 8px 20px !important;
+  font-size: 0.85rem;
+}
+
+.footer-content {
+  flex-direction: column !important;
+  gap: 5px !important;
+}
+
+/* 技术支持和访问统计行 */
+.tech-stats {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 !important;
+}
+
+.tech-stats .powered-by,
+.tech-stats .site-stats {
+  display: inline-flex !important;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.stats-divider {
+  display: inline-block !important;
+  margin: 0 5px !important;
+}
+
+.site-stats .stat-item {
+  display: inline-flex !important;
+  align-items: center;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 3px !important;
+}
+
+/* 确保在一行显示 */
+.footer-item {
+  line-height: 1.5 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.copyright {
+  font-size: 0.8rem;
+}
+</style>
+
+{{- end }}{{- /* end main */ -}} 

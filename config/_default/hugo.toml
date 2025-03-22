@@ -19,7 +19,7 @@ logFile = "Log"
 pluralizeListTitles = true
 relativeURLs = false
 # googleAnalytics = "G-KGBJNWLV3J"      # 谷歌统计，在运行 hugo server （测试）时不加载谷歌代码
-Copyright = "Copyright © 2021 - 2024 ChiAn Ye · [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) · [RSS](/index.xml) · Made with ♥ in 🇨🇦"
+Copyright = "Copyright © 2021 - 2024 ChiAn Ye · [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) · [RSS](/index.xml) · Made with ♥ in 🇨🇳"
 [minify]
 disableXML = true
 minifyOutput = false

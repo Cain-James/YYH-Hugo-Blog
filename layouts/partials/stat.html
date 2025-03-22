@@ -1,16 +1,32 @@
-{{- $scratch := newScratch -}}
-{{- $kind := .Kind }}
+{{/* 使用基本的全站统计方法，不使用.Kind参数 */}}
 {{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections -}}
 
-{{- if eq $kind "pages" -}}
-{{-   $pages = .pages -}}
-{{- else if or (eq $kind `term`) (eq $kind `section`) -}}
-{{-   $pages = union .RegularPages .Sections -}}
-{{- end -}}
-
+{{- $word_count := 0 -}}
 {{- range $pages -}}
-{{- $scratch.Add "words" .WordCount -}}
+    {{- $word_count = add $word_count .WordCount -}}
 {{- end -}}
 
-{{- $words := $scratch.Get "words" | default 0 }}
-{{- printf "%s 篇 %s 字" ((len $pages) | string) ($words | string) -}}
+{{- $pages_count := len $pages -}}
+
+<span class="stats-info">
+    <span class="stat-count">{{ $pages_count }} 篇</span>
+    <span class="stat-separator">·</span>
+    <span class="stat-count">{{ $word_count }} 字</span>
+</span>
+
+<style>
+    .stats-info {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.2rem;
+    }
+    .stat-count {
+        font-weight: 500;
+        color: var(--primary);
+    }
+    .stat-separator {
+        font-weight: 300;
+        color: var(--secondary);
+        padding: 0 0.1rem;
+    }
+</style>
