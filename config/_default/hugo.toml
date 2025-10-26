@@ -9,7 +9,7 @@ hasCJKLanguage = true
 buildDrafts = false
 buildFuture = false
 buildExpired = false
-paginate = 15
+pagination.pagerSize = 15
 summaryLength = 140
 defaultContentLanguage = 'zh-cn'
 ShowReadingTime = true
@@ -124,6 +124,9 @@ imageUrl = "img/head.jpg"
 imageTitle = "图片标题"
 imageWidth = 120
 imageHeight = 120
+[params.Site]
+social = true
+author = "ChiAn"
 [[params.profileMode.buttons]]
 name = "💻 技术"
 url = "./posts/tech"

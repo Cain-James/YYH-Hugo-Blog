@@ -36,6 +36,7 @@ choco install hugo-extended
 
 - 或从 [Hugo Releases](https://github.com/gohugoio/hugo/releases) 下载
 
+- Linux: 建议参考[官方指南](https://gohugo.io/installation/linux/) 安装Hugo Extended
 ## 本地开发
 
 1. 启动本地服务器

@@ -4,7 +4,7 @@ layout: "about"
 url: "/zh-cn/about/"
 summary: about
 # summary->在列表页展现的摘要内容，自动生成，内容默认前70个字符，可通过此参数自定义，一般无需专门设置
-summary: ""
+# summary: ""
 # description->需要自己编写的文章描述，是搜索引擎呈现在搜索结果链接下方的网页简介，建议设置
 description: ""
 weight: # 输入1可以顶置文章，用来给文章展示排序，不填就默认按时间排序
@@ -29,7 +29,7 @@ cover:
 
 ## 关于我
 
-我 2000 年出生于江西某小山村，2018 年开始在沈阳东北大学学习，本科期间专业为物联网工程，主要致力于 XCPC 竞赛，2022 年保研至东南大学（南京），硕士阶段无实质性产出，跟进某横向项目，2025.01 签约某互联网金融公司，base 上海，如果你有任何 C++/数据结构与算法等技术问题，高考/保研/求职等规划问题，你可以向我发邮件联系到我，我很乐意与你交流，希望能产生一些价值，邮箱地址：yuanyanghao2022@163.com
+我 2000 年出生于江西某小山村，2018 年开始在沈阳东北大学学习，本科期间专业为物联网工程，主要致力于 XCPC 竞赛，2022 年保研至东南大学（南京），硕士阶段无实质性产出，2025.01 签约某互联网金融公司，base 上海，现已入职，如果你有任何 C++、数据结构与算法等技术问题，高考/保研/求职等规划问题，你可以向我发邮件联系到我，我很乐意与你交流，希望能产生一些价值，邮箱地址：yuanyanghao2022@163.com
 
 ---
 
@@ -39,7 +39,8 @@ cover:
 
 本站基于 Go 语言的开源静态框架[Hugo](https://gohugo.io/)搭建，使用[PaperMod](https://github.com/adityatelange/hugo-PaperMod)主题，参考[sglv](https://www.sulvblog.cn/)的博客和教程进一步完善，过程中参考的博客、资料还有[Hugo 的官方文档](https://gohugo.io/getting-started/configuration/)、[Cloudflare: Deploy a Hugo site](https://developers.cloudflare.com/pages/framework-guides/deploy-a-hugo-site/)等等。过程中也遇到了一些问题，感谢各位乐于分享的网友，才使得本站得以顺利完成。
 
-得益于 AI 技术的飞快发展，我可以在较短的时间内以较低的学习成本完成以往同样量级的工作，本站基于 cursor(clude 3.5/3.7)进一步开发。
+得益于 AI 技术的飞快发展，我可以在较短的时间内以较低的学习成本完成以往同样量级的工作，本站基于 cursor(clude 3.5/3.7) 进一步开发。
+后来，cursor在大陆有许多困难，国产大模型也迅速发展，会考虑使用一些国产大模型来优化、开发。
 
 ### 本站流量
 
