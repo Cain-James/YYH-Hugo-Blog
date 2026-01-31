@@ -134,7 +134,10 @@
     // 加载busuanzi脚本
     function loadBusuanziScript() {
         return new Promise((resolve, reject) => {
-            if (window.busuanzi_value_site_pv !== undefined) {
+            // 注意：不能用 window.busuanzi_value_site_pv 来判断是否已加载，
+            // 因为浏览器可能会把 id="busuanzi_value_site_pv" 的 DOM 元素暴露为 window 同名属性。
+            const existing = document.querySelector('script[data-busuanzi="true"], script[src*="busuanzi.pure.mini.js"]');
+            if (window.__busuanzi_loaded || existing) {
                 console.log('不蒜子脚本已存在');
                 resolve();
                 return;
@@ -146,11 +149,13 @@
             const script = document.createElement('script');
             // 明确指定https协议，避免使用http
             script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
+            script.dataset.busuanzi = 'true';
             script.async = true;
             script.crossOrigin = 'anonymous';
             
             script.onload = () => {
                 console.log('不蒜子脚本加载完成');
+                window.__busuanzi_loaded = true;
                 resolve();
             };
             
