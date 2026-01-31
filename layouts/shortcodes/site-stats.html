@@ -2,14 +2,14 @@
 <div class="site-stats-container">
     <div class="site-stats-header">实时访问统计</div>
     <div class="site-stat-item">
-        <i class="fa fa-eye"></i>
+        <svg class="icon"><use href="#icon-eye"></use></svg>
         <span>总访问量：</span>
         <span id="busuanzi_container_site_pv">
             <span id="busuanzi_value_site_pv">0</span>
         </span>
     </div>
     <div class="site-stat-item">
-        <i class="fa fa-user"></i>
+        <svg class="icon"><use href="#icon-user"></use></svg>
         <span>访问人数：</span>
         <span id="busuanzi_container_site_uv">
             <span id="busuanzi_value_site_uv">0</span>
@@ -47,11 +47,8 @@
         font-size: 1rem;
     }
 
-    .site-stat-item i {
-        display: inline-block !important;
-        width: auto !important;
-        height: auto !important;
-        font-size: 16px !important;
+    .site-stat-item .icon {
+        font-size: 16px;
         color: var(--primary);
     }
 

@@ -1,5 +1,4 @@
-<!--如果单独复制这段代码，需要从 extend_head.html 中找到 font-awesome 引入，如下-->
-<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">-->
+<!--SVG 图标已经在 extend_head.html 中通过 svg-icons.html 引入-->
 <style>
     i[id*="post_meta_style"] {
         display: flex;
@@ -12,48 +11,45 @@
         flex-wrap: wrap;
         opacity: 0.8;
     }
-    
-    /* 确保图标正确显示 */
-    .fa {
-        display: inline-block !important;
-        width: auto !important;
-        height: auto !important;
-        font-size: 14px !important;
-        line-height: 1 !important;
+
+    /* 确保 SVG 图标正确显示 */
+    .parent-post-meta .icon {
+        font-size: 14px;
+        margin-right: 4px;
     }
 </style>
 
 <div class="parent-post-meta">
     <span id="post_meta_style_1">
-        <i class="fa fa-calendar-check-o"></i>
+        <svg class="icon"><use href="#icon-calendar-check"></use></svg>
         <span>
             &nbsp;创建:&nbsp;{{- (.Date.Format (default "January 2, 2006" .Site.Params.DateFormat)) }}
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_2">
-        <i class="fa fa-calendar-plus-o"></i>
+        <svg class="icon"><use href="#icon-calendar-plus"></use></svg>
         <span>
             &nbsp;更新:&nbsp;{{- (.Lastmod.Format (.Site.Params.dateFormat | default "2006-01-02")) }}
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_3">
-        <i class="fa fa-file-word-o"></i>
+        <svg class="icon"><use href="#icon-file"></use></svg>
         <span>
             {{- .WordCount }}字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
-        <i class="fa fa-clock-o"></i>
+        <svg class="icon"><use href="#icon-clock"></use></svg>
         <span>
             {{- .ReadingTime }}分钟
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_5">
-        <i class="fa fa-user-o"></i>
+        <svg class="icon"><use href="#icon-user-o"></use></svg>
         <span>
             {{- with (partial "author.html" .) }}
             {{- . }}
@@ -62,7 +58,7 @@
         </span>
     </span>
     <span id="post_meta_style_6">
-        <i class="fa fa-tags" style="opacity: 0.8"></i>
+        <svg class="icon"><use href="#icon-tags"></use></svg>
         <span>
             {{- if .Params.tags }}
             <span class="post-tags-meta">
@@ -81,7 +77,7 @@
     {{ if eq .Kind "page" }}
     <!-- 只在文章详情页显示浏览量 -->
     <span class="post-views" data-is-single="true">
-        <i class="fa fa-eye"></i>
+        <svg class="icon"><use href="#icon-eye"></use></svg>
         <span id="busuanzi_container_page_pv">
             <span id="busuanzi_value_page_pv">0</span>
         </span>

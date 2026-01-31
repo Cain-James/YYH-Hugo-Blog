@@ -127,5 +127,13 @@ function updateMetrics() {
     }
 }
 
-// 每 5 秒更新一次数据
-setInterval(updateMetrics, 5000); 
+// 页面加载完成后执行一次（移除定时轮询，避免持续后台消耗）
+if (document.readyState === 'complete') {
+    updateMetrics();
+} else {
+    window.addEventListener('load', () => {
+        updateMetrics();
+        // 可选：如果需要，可以在3秒后再更新一次以获取更完整的 metrics
+        setTimeout(updateMetrics, 3000);
+    });
+} 

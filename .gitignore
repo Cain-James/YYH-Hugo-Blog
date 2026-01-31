@@ -5,6 +5,10 @@
 # Hugo生成的文件
 .hugo_build.lock
 
+# 图片备份目录
+.image-backups/
+static/img/backup_*/
+
 # macOS系统文件
 .DS_Store
 

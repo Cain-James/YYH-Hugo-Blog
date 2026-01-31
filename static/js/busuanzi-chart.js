@@ -1,3 +1,17 @@
+/**
+ * 【已弃用 / DEPRECATED】
+ *
+ * 此文件仅在配合 Node.js server.js 使用时有效。
+ * 静态站点无法提供 /api/ga4-stats 端点，会导致 404。
+ *
+ * 如果需要使用图表功能，请：
+ * 1. 部署 Cloudflare Worker 提供 GA4 数据接口
+ * 2. 更新 fetchGA4Data() 中的 API 地址
+ * 3. 在需要的页面引入此脚本
+ *
+ * 当前状态：未被项目引用
+ */
+
 // 初始化图表
 let busuanziChart = null;
 let pvData = [];

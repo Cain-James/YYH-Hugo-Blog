@@ -68,7 +68,7 @@ page = ['HTML']
 [author]
 name = "ChiAn Ye"
 [params]
-env = "production"
+env = "development"  # 本地开发环境，部署时通过环境变量覆盖为 "production"
 description = "ChiAn Ye的博客,基于Hugo搭建的博客网站，关于Hugo、Papermod、c++、golang、ICPC、CCPC、ACM，刷题主要在leetcode,codeforces,atcoder等"
 draft = "flase"
 defaultTheme = "auto"

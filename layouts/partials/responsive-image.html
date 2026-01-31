@@ -1,0 +1,45 @@
+{{/*
+  WebP 图片支持模板
+
+  用法:
+  {{ partial "responsive-image.html" (dict "src" "img/logo.png" "alt" "Logo" "class" "logo-img") }}
+
+  参数:
+  - src: 图片路径（相对于 static 目录或绝对 URL）
+  - alt: 图片替代文本
+  - class: CSS 类名（可选）
+  - title: 图片标题（可选）
+  - width: 图片宽度（可选）
+  - height: 图片高度（可选）
+  - loading: 加载方式，默认 "lazy"（可选）
+*/}}
+
+{{- $src := .src -}}
+{{- $alt := .alt | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $class := .class | default "" -}}
+{{- $width := .width -}}
+{{- $height := .height -}}
+{{- $loading := .loading | default "lazy" -}}
+
+{{/* 获取文件扩展名和基础路径 */}}
+{{- $ext := path.Ext $src -}}
+{{- $base := strings.TrimSuffix $ext $src -}}
+{{- $webpSrc := printf "%s.webp" $base -}}
+
+<picture>
+  {{/* WebP 版本（浏览器会自动跳过 404 的 source）*/}}
+  <source srcset="{{ $webpSrc | absURL }}" type="image/webp">
+
+  {{/* 原始格式作为后备 */}}
+  <img
+    src="{{ $src | absURL }}"
+    alt="{{ $alt }}"
+    {{- with $title }} title="{{ . }}"{{ end }}
+    {{- with $class }} class="{{ . }}"{{ end }}
+    {{- with $width }} width="{{ . }}"{{ end }}
+    {{- with $height }} height="{{ . }}"{{ end }}
+    {{- with $loading }} loading="{{ . }}"{{ end }}
+  >
+</picture>
+

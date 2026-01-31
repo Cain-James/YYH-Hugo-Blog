@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-{{- if hugo.IsProduction | or (eq site.Params.env "production") | and (ne .Params.robotsNoIndex true) }}
+{{- if (eq site.Params.env "production") | and (ne .Params.robotsNoIndex true) }}
 <meta name="robots" content="index, follow">
 {{- else }}
 <meta name="robots" content="noindex, nofollow">
@@ -44,17 +44,11 @@
 {{- end }}
 
 <!-- 预加载关键资源 -->
-<link rel="preload" href="{{ "assets/css/stylesheet.css" | absURL }}" as="style">
+<!-- stylesheet.css 预加载已移除（后面会有指纹版本的正确预加载） -->
 <link rel="preload" href="{{ "js/busuanzi-view-counter.js" | absURL }}" as="script">
 
-<!-- 预加载字体 -->
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/fonts/fontawesome-webfont.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{{ "fonts/noto-serif-sc-v22-chinese-simplified-regular.woff2" | absURL }}" as="font" type="font/woff2" crossorigin>
-
-<!-- busuanzi -->
-{{- if .Site.Params.busuanzi -}}
-<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-{{- end -}}
+<!-- 字体和图标预加载已禁用 -->
+<!-- Font Awesome 已用 SVG 替换，中文字体等待完整子集化 -->
 
 {{- /* Styles */}}
 
@@ -181,9 +175,10 @@
 
 {{- partial "extend_head.html" . -}}
 
-{{- /* Misc */}}
-{{- if hugo.IsProduction | or (eq site.Params.env "production") }}
-{{- template "_internal/google_analytics.html" . }}
+{{- /* Misc - 仅在生产环境加载 */}}
+{{- if (eq site.Params.env "production") }}
+{{- /* 使用自定义 GA 代码，移除内置模板避免重复 */}}
+{{- /* template "_internal/google_analytics.html" . */}}
 {{- template "partials/templates/opengraph.html" . }}
 {{- template "partials/templates/twitter_cards.html" . }}
 {{- template "partials/templates/schema_json.html" . }}
@@ -216,7 +211,8 @@ body:not(.page) #busuanzi_value_page_pv {
 <!-- 性能监控脚本 -->
 <script src="{{ "js/performance.js" | absURL }}" defer></script>
 
-<!-- Google Analytics 异步加载 -->
+<!-- Google Analytics - 仅在生产环境加载 -->
+{{- if (eq site.Params.env "production") }}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-KGBJNWLV3J"></script>
 <script>
 window.dataLayer = window.dataLayer || [];
@@ -228,3 +224,4 @@ setTimeout(function() {
     gtag('event', 'page_view');
 }, 2000);
 </script>
+{{- end }}

@@ -1,3 +1,13 @@
+/* 全局底部空间修复 - 确保所有页面底部内容不被截断 */
+body {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    min-height: 100vh;
+}
+
+.main {
+    padding-bottom: 40px; /* 确保主内容区底部有足够空间 */
+}
+
 /* 修复导航栏滚动条问题 */
 .nav {
     overflow: visible !important;
@@ -44,9 +54,9 @@
 }
 
 .logo svg, .logo img {
-    max-height: 30px !important;
-    width: auto !important;
-    vertical-align: middle !important;
+    max-height: 30px;
+    width: auto;
+    vertical-align: middle;
 }
 
 .entry-meta {
@@ -75,54 +85,31 @@
     white-space: nowrap;
 }
 
-/* 完全修复Font Awesome图标显示问题 */
-.fa {
-    display: inline-block !important;
-    font-family: FontAwesome !important;
-    font-style: normal !important;
-    font-weight: normal !important;
-    line-height: 1 !important;
-    -webkit-font-smoothing: antialiased !important;
-    -moz-osx-font-smoothing: grayscale !important;
-    text-rendering: auto !important;
-    width: auto !important;
-    height: auto !important;
-    font-size: inherit !important;
+/* 完全修复 SVG 图标显示问题 */
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    vertical-align: -0.125em;
 }
 
 /* 文章元数据中的图标样式 */
-.parent-post-meta .fa {
+.parent-post-meta .icon {
     opacity: 0.8;
-    font-size: 14px !important;
+    font-size: 14px;
     margin-right: 4px;
 }
 
 /* 站点统计中的图标 */
-.site-stats-container .fa,
-.site-stat-item .fa {
-    display: inline-block !important;
-    font-size: 16px !important;
+.site-stats-container .icon,
+.site-stat-item .icon {
+    display: inline-block;
+    font-size: 16px;
     color: var(--primary);
-    width: auto !important;
-    height: auto !important;
+    width: 1em;
+    height: 1em;
     margin-right: 4px;
-}
-
-/* 针对特定图标的修复 */
-.fa-calendar-check-o,
-.fa-calendar-plus-o,
-.fa-file-word-o,
-.fa-clock-o,
-.fa-user-o,
-.fa-tags,
-.fa-eye,
-.fa-user {
-    font-family: FontAwesome !important;
-    font-style: normal !important;
-    font-weight: normal !important;
-    font-size: 14px !important;
-    line-height: 1 !important;
-    display: inline-block !important;
 }
 
 /* 只在详情页显示浏览量，在列表页隐藏 */
@@ -256,11 +243,12 @@ img.lazyloaded {
 }
 
 /* 优化滚动性能 */
-.list, .post-content {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
+html {
     scroll-behavior: smooth;
+}
+
+body {
+    -webkit-overflow-scrolling: touch;
 }
 
 /* 提升按钮交互体验 */

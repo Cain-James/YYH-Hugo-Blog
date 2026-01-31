@@ -39,8 +39,14 @@ class PerformanceMonitor {
         // 计算页面加载性能指标
         this.calculatePageLoadMetrics();
 
-        // 定期更新性能指标
-        setInterval(() => this.updateMetrics(), 5000);
+        // 页面加载完成后执行一次性能指标更新
+        if (document.readyState === 'complete') {
+            this.updateMetrics();
+        } else {
+            window.addEventListener('load', () => {
+                this.updateMetrics();
+            });
+        }
     }
 
     observePageLoad() {
@@ -179,7 +185,7 @@ class PerformanceMonitor {
         }
     }
 
-    // 更新性能指标显示
+    // 更新性能指标显示（仅执行一次）
     updateMetrics() {
         // 更新页面上的指标显示
         const updateElement = (id, value) => {

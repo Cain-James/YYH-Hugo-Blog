@@ -72,8 +72,9 @@ categories: ["分类"]
 
 ### 图片管理
 
-- 将图片放在 `static/images/` 目录下
-- 在文章中使用相对路径引用：`![图片描述](/images/图片名称.jpg)`
+- 将图片放在 `static/img/` 目录下
+- 在文章中使用相对路径引用：`![图片描述](/img/图片名称.jpg)`
+- 支持 WebP 格式，可运行 `./scripts/optimize-images.sh` 自动优化
 
 ## 部署
 

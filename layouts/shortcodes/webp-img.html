@@ -1,0 +1,22 @@
+{{/*
+  WebP 图片 Shortcode
+
+  在 Markdown 中使用：
+  {{< webp-img src="img/example.png" alt="示例图片" class="my-image" >}}
+*/}}
+
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $class := .Get "class" | default "" -}}
+{{- $width := .Get "width" -}}
+{{- $height := .Get "height" -}}
+{{- $loading := .Get "loading" | default "lazy" -}}
+
+{{- partial "responsive-image.html" (dict
+  "src" $src
+  "alt" $alt
+  "class" $class
+  "width" $width
+  "height" $height
+  "loading" $loading
+) -}}

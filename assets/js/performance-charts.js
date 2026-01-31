@@ -197,5 +197,11 @@ function updateMetrics() {
     }
 }
 
-// 每 5 秒更新一次数据
-setInterval(updateMetrics, 5000); 
+// 页面加载完成后执行一次（而非每 5 秒轮询）
+if (document.readyState === 'complete') {
+    updateMetrics();
+} else {
+    window.addEventListener('load', () => {
+        updateMetrics();
+    });
+} 

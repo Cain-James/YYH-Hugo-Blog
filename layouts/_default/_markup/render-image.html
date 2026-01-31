@@ -1,1 +1,7 @@
-<img loading="lazy" src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}" loading="lazy" {{ end }} />
+{{- /* 使用 responsive-image partial 自动支持 WebP */ -}}
+{{- partial "responsive-image.html" (dict
+  "src" (.Destination | safeURL)
+  "alt" .Text
+  "title" .Title
+  "loading" "lazy"
+) -}}
