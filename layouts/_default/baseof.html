@@ -12,6 +12,9 @@
 {{- if .IsHome -}}
 {{- print " home" -}}
 {{- end -}}
+{{- if eq .Kind `page` -}}
+{{- print " page" -}}
+{{- end -}}
 {{- if eq site.Params.defaultTheme `dark` -}}
 {{- print " dark" }}
 {{- end -}}
