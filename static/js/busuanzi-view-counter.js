@@ -8,8 +8,11 @@
     
     // 将loadBusuanziScript暴露为全局函数，以便其他脚本调用
     window.loadBusuanziScript = loadBusuanziScript;
-    // 将mockSiteStats暴露为全局函数
-    window.mockSiteStats = mockSiteStats;
+
+    function isLocalHost() {
+        return window.location.hostname === 'localhost' ||
+               window.location.hostname === '127.0.0.1';
+    }
 
     function initBusuanziCounter() {
         console.log('不蒜子计数器初始化');
@@ -29,8 +32,7 @@
         }
 
         // 检查是否为测试环境
-        const isLocalTest = window.location.hostname === 'localhost' || 
-                           window.location.hostname === '127.0.0.1';
+        const isLocalTest = isLocalHost();
 
         if (isLocalTest) {
             console.log('本地环境，使用模拟数据');
@@ -54,8 +56,8 @@
             })
             .catch(error => {
                 console.error('Busuanzi加载失败', error);
-                if (isDetail) mockLocalViewCount(); // 详情页出错时显示模拟数据
-                if (needSiteStats) mockSiteStats(); // 站点统计出错时显示模拟数据
+                // 生产环境不要展示伪造数据：被拦截/不可用时给出占位符
+                setStatsUnavailable({ isDetail, needSiteStats });
             });
     }
 
@@ -162,9 +164,6 @@
             
             script.onerror = (error) => {
                 console.error('不蒜子脚本加载失败:', error);
-                // 加载失败时使用模拟数据
-                mockSiteStats();
-                mockLocalViewCount();
                 reject(error);
             };
             
@@ -172,9 +171,36 @@
         });
     }
 
+    function setStatsUnavailable({ isDetail, needSiteStats }) {
+        const unavailable = '--';
+
+        if (needSiteStats) {
+            document.querySelectorAll('#busuanzi_value_site_pv, #busuanzi_value_site_uv').forEach(el => {
+                el.textContent = unavailable;
+                el.style.display = 'inline';
+                el.style.visibility = 'visible';
+            });
+            document.querySelectorAll('#busuanzi_container_site_pv, #busuanzi_container_site_uv').forEach(el => {
+                el.style.display = 'inline';
+                el.style.visibility = 'visible';
+            });
+        }
+
+        if (isDetail) {
+            document.querySelectorAll('#busuanzi_value_page_pv').forEach(el => {
+                el.textContent = unavailable;
+            });
+            showViewCounters();
+        }
+    }
+
     // 等待busuanzi脚本初始化完成
     function waitForBusuanzi() {
         return new Promise((resolve) => {
+            let done = false;
+            let pollTimer = null;
+            let timeoutTimer = null;
+
             const checkBusuanzi = () => {
                 // 检查是否存在任何不蒜子的值
                 const busuanziElements = document.querySelectorAll('[id^="busuanzi_value_"]');
@@ -188,15 +214,19 @@
                 
                 if (initialized) {
                     console.log('不蒜子已初始化完成');
+                    done = true;
+                    if (pollTimer) clearTimeout(pollTimer);
+                    if (timeoutTimer) clearTimeout(timeoutTimer);
                     resolve();
                 } else {
-                    setTimeout(checkBusuanzi, 100);
+                    pollTimer = setTimeout(checkBusuanzi, 100);
                 }
             };
             
             checkBusuanzi();
             // 最多等待5秒
-            setTimeout(() => {
+            timeoutTimer = setTimeout(() => {
+                if (done) return;
                 console.log('不蒜子初始化超时，强制继续');
                 resolve();
             }, 5000);
@@ -226,8 +256,10 @@
     
     // 模拟站点统计数据
     function mockSiteStats() {
-        // 生成随机但稳定的站点统计数据
-        const sitePV = Math.floor(Math.random() * 50000) + 5000;
+        // 本地开发用：生成稳定的站点统计数据（避免每次刷新都变）
+        const host = window.location.host || 'local';
+        const base = generateViewCountFromPath(host) * 100;
+        const sitePV = base + 5000;
         const siteUV = Math.floor(sitePV * 0.3);
         
         // 更新站点PV

@@ -3,5 +3,5 @@
 ID = 'G-KGBJNWLV3J'
 
 [params]
-# Used by templates to gate production-only scripts (GA/Umami/CSP allowances).
+# Used by templates to gate production-only scripts (GA, etc.).
 env = "production"
