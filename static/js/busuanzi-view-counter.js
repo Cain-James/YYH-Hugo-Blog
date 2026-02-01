@@ -151,7 +151,8 @@
             script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
             script.dataset.busuanzi = 'true';
             script.async = true;
-            script.crossOrigin = 'anonymous';
+            // Do NOT set crossorigin here: busuanzi does not provide CORS headers,
+            // and enabling CORS will cause the browser to block the script load.
             
             script.onload = () => {
                 console.log('不蒜子脚本加载完成');
