@@ -12,6 +12,7 @@
     https://cdn.jsdelivr.net
     https://giscus.app
     https://unpkg.com
+    https://cloud.umami.is
     https://static.cloudflareinsights.com;
   style-src 'self' 'unsafe-inline'
     https://fonts.googleapis.com
@@ -27,6 +28,7 @@
     https://www.google-analytics.com
     https://blog-analytics.finderyyh.workers.dev
     https://cdn.jsdelivr.net
+    https://cloud.umami.is
     https://cloudflareinsights.com;
   frame-src
     https://giscus.app;
@@ -35,6 +37,11 @@
   form-action 'self';
   upgrade-insecure-requests;
 ">
+
+{{- /* Umami analytics (production only) */ -}}
+{{- if eq site.Params.env "production" }}
+<script defer src="https://cloud.umami.is/script.js" data-website-id="db0e1bed-ba82-495c-b416-83069bfb71db"></script>
+{{- end }}
 
 <!-- 字体优化：暂时移除不完整的字体文件引用，使用系统字体 -->
 <!-- 字体预加载已禁用，等待完整的字体子集化 -->
