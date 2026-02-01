@@ -1,3 +1,7 @@
 [services]
 [services.googleAnalytics]
 ID = 'G-KGBJNWLV3J'
+
+[params]
+# Used by templates to gate production-only scripts (GA/Umami/CSP allowances).
+env = "production"
