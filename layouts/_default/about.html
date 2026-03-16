@@ -25,26 +25,44 @@
     {{- else }}{{ .Content }}{{ end }}
     
     {{- if and (.Param "ShowVisitorStats") (not (.Param "hideFooter")) }}
-    <!-- 网站流量统计部分 -->
     <div class="site-analytics">
       <div class="analytics-header">
-        <h2 class="analytics-title">本站流量</h2>
+        <h2 class="analytics-title">累计访问</h2>
+        <p class="analytics-subtitle">累计值来自 Busuanzi，用于保留历史沉淀下来的总访问数据。</p>
+      </div>
+
+      <div class="analytics-content">
+        <div class="analytics-row visitor-stats">
+          <div class="stat-item">
+            <span class="stat-label">全站累计访问量：</span>
+            <span data-busuanzi-site-pv class="stat-value">--</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">累计访客数：</span>
+            <span data-busuanzi-site-uv class="stat-value">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-analytics">
+      <div class="analytics-header">
+        <h2 class="analytics-title">访问趋势</h2>
+        <p class="analytics-subtitle">趋势数据来自 Cloudflare Worker，展示所选时间范围内的访问变化。</p>
       </div>
       
       <div class="analytics-content">
-        <!-- 访问统计信息行 -->
         <div class="analytics-row visitor-stats">
           <div class="stat-item">
-            <span class="stat-label">总访问量：</span>
+            <span class="stat-label">区间访问量：</span>
             <span id="cf-pageviews" class="stat-value">加载中...</span>
           </div>
           <div class="stat-item">
-            <span class="stat-label">总访问人数：</span>
+            <span class="stat-label">区间访客数：</span>
             <span id="cf-visitors" class="stat-value">加载中...</span>
           </div>
         </div>
         
-        <!-- 日期选择器行 -->
         <div class="analytics-row date-selector">
           <div class="quick-ranges">
             <button class="range-btn" data-days="7">7天</button>
@@ -59,7 +77,6 @@
           </div>
         </div>
         
-        <!-- 图表容器 -->
         <div class="analytics-row chart-wrapper">
           <div id="chartContainer" class="chart-container">
             <canvas id="cfChart"></canvas>
@@ -105,6 +122,13 @@
     font-weight: bold;
     color: var(--primary);
     margin: 0;
+  }
+
+  .analytics-subtitle {
+    margin: 8px 0 0;
+    color: var(--secondary);
+    font-size: 0.95em;
+    line-height: 1.5;
   }
   
   .analytics-content {

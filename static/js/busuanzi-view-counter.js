@@ -1,300 +1,265 @@
-/**
- * 优化版浏览量计数脚本
- * 性能改进和响应速度优化
- */
-(function() {
-    // 在DOMContentLoaded后执行，优化首屏加载速度
-    document.addEventListener('DOMContentLoaded', initBusuanziCounter);
-    
-    // 将loadBusuanziScript暴露为全局函数，以便其他脚本调用
+(function () {
+    document.addEventListener("DOMContentLoaded", initBusuanziCounter);
     window.loadBusuanziScript = loadBusuanziScript;
 
-    function isLocalHost() {
-        return window.location.hostname === 'localhost' ||
-               window.location.hostname === '127.0.0.1';
-    }
-
     function initBusuanziCounter() {
-        console.log('不蒜子计数器初始化');
-        
-        // 快速检查，如果不是详情页则不加载浏览量计数
-        const isDetail = isDetailPage();
-        
-        // 检查是否需要显示站点统计（在关于页面显示）
-        const needSiteStats = document.getElementById('busuanzi_value_site_pv') || 
-                             document.getElementById('busuanzi_value_site_uv');
-        
-        // 如果既不是详情页也没有站点统计需求，则隐藏相关元素并退出
-        if (!isDetail && !needSiteStats) {
-            hideViewCounters();
-            console.log('不需要显示计数器，退出');
+        const needPagePv = hasPagePvTarget();
+        const needSiteStats = hasSiteStatTargets();
+
+        if (!needPagePv && !needSiteStats) {
             return;
         }
 
-        // 检查是否为测试环境
-        const isLocalTest = isLocalHost();
-
-        if (isLocalTest) {
-            console.log('本地环境，使用模拟数据');
-            if (isDetail) mockLocalViewCount();
-            if (needSiteStats) mockSiteStats();
+        if (isLocalHost()) {
+            if (needPagePv) {
+                mockLocalViewCount();
+            }
+            if (needSiteStats) {
+                mockSiteStats();
+            }
+            syncSiteStatMirrors();
             return;
         }
 
-        // 仅在需要时加载统计脚本
         loadBusuanziScript()
-            .then(() => {
-                console.log('不蒜子脚本加载成功');
-                // 等待busuanzi脚本初始化完成
-                return waitForBusuanzi();
+            .then(waitForBusuanzi)
+            .then(function () {
+                if (needPagePv) {
+                    showPagePv();
+                }
+                if (needSiteStats) {
+                    showSiteStats();
+                }
+                syncSiteStatMirrors();
             })
-            .then(() => {
-                console.log('不蒜子脚本初始化完成');
-                // 确保view counters显示正确
-                if (isDetail) showViewCounters();
-                if (needSiteStats) showSiteStats();
-            })
-            .catch(error => {
-                console.error('Busuanzi加载失败', error);
-                // 生产环境不要展示伪造数据：被拦截/不可用时给出占位符
-                setStatsUnavailable({ isDetail, needSiteStats });
+            .catch(function (error) {
+                console.error("Busuanzi load failed", error);
+                setStatsUnavailable({
+                    needPagePv: needPagePv,
+                    needSiteStats: needSiteStats
+                });
             });
     }
 
-    // 快速检查当前页面是否是文章详情页
-    function isDetailPage() {
-        // 方法1：检查body类名
-        if (document.body.classList.contains('page')) {
-            return true;
-        }
-        
-        // 方法2：检查URL特征（文章详情页通常有具体的路径）
-        const path = window.location.pathname;
-        // 如果路径包含具体的文章名称目录，视为详情页
-        if (path.split('/').length > 2 && !path.includes('/tags/') && 
-            !path.includes('/categories/') && !path.includes('/page/')) {
-            return true;
-        }
-        
-        // 方法3：检查特定元素
-        return !!document.querySelector('.post-content');
+    function isLocalHost() {
+        return window.location.hostname === "localhost" ||
+               window.location.hostname === "127.0.0.1";
     }
 
-    // 隐藏所有浏览量计数器
-    function hideViewCounters() {
-        // CSS已经处理了隐藏，此处添加额外的DOM处理
-        const containers = document.querySelectorAll('#busuanzi_container_page_pv, .post-views');
-        containers.forEach(container => {
-            container.style.display = 'none';
-            container.style.visibility = 'hidden';
-        });
+    function hasPagePvTarget() {
+        return !!document.getElementById("busuanzi_value_page_pv");
     }
 
-    // 显示浏览量计数器
-    function showViewCounters() {
-        const containers = document.querySelectorAll('#busuanzi_container_page_pv');
-        containers.forEach(container => {
-            if (isDetailPage()) {
-                container.style.display = 'inline';
-                container.style.visibility = 'visible';
-            }
-        });
-    }
-    
-    // 显示站点统计
-    function showSiteStats() {
-        // 显示站点PV统计
-        const sitePvContainers = document.querySelectorAll('#busuanzi_container_site_pv');
-        sitePvContainers.forEach(container => {
-            container.style.display = 'inline';
-            container.style.visibility = 'visible';
-        });
-        
-        // 显示站点UV统计
-        const siteUvContainers = document.querySelectorAll('#busuanzi_container_site_uv');
-        siteUvContainers.forEach(container => {
-            container.style.display = 'inline';
-            container.style.visibility = 'visible';
-        });
-        
-        // 显示值元素
-        const sitePvValues = document.querySelectorAll('#busuanzi_value_site_pv');
-        sitePvValues.forEach(element => {
-            element.style.display = 'inline';
-            element.style.visibility = 'visible';
-        });
-        
-        const siteUvValues = document.querySelectorAll('#busuanzi_value_site_uv');
-        siteUvValues.forEach(element => {
-            element.style.display = 'inline';
-            element.style.visibility = 'visible';
-        });
-        
-        console.log('显示站点统计:', sitePvContainers.length, siteUvContainers.length);
+    function hasSiteStatTargets() {
+        return !!document.getElementById("busuanzi_value_site_pv") ||
+               !!document.getElementById("busuanzi_value_site_uv") ||
+               !!document.querySelector("[data-busuanzi-site-pv]") ||
+               !!document.querySelector("[data-busuanzi-site-uv]");
     }
 
-    // 加载busuanzi脚本
     function loadBusuanziScript() {
-        return new Promise((resolve, reject) => {
-            // 注意：不能用 window.busuanzi_value_site_pv 来判断是否已加载，
-            // 因为浏览器可能会把 id="busuanzi_value_site_pv" 的 DOM 元素暴露为 window 同名属性。
-            const existing = document.querySelector('script[data-busuanzi="true"], script[src*="busuanzi.pure.mini.js"]');
-            if (window.__busuanzi_loaded || existing) {
-                console.log('不蒜子脚本已存在');
+        return new Promise(function (resolve, reject) {
+            if (window.__busuanzi_loaded || window.bszCaller || window.bszTag) {
+                window.__busuanzi_loaded = true;
                 resolve();
                 return;
             }
 
-            console.log('加载不蒜子脚本');
-            
-            // 创建不蒜子脚本元素
-            const script = document.createElement('script');
-            // 明确指定https协议，避免使用http
-            script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js';
-            script.dataset.busuanzi = 'true';
+            const existing = document.querySelector('script[data-busuanzi="true"], script[src*="busuanzi.pure.mini.js"]');
+            if (existing) {
+                waitForExistingScript(existing, resolve, reject);
+                return;
+            }
+
+            const script = document.createElement("script");
+            script.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+            script.dataset.busuanzi = "true";
             script.async = true;
-            // Do NOT set crossorigin here: busuanzi does not provide CORS headers,
-            // and enabling CORS will cause the browser to block the script load.
-            
-            script.onload = () => {
-                console.log('不蒜子脚本加载完成');
+
+            script.onload = function () {
+                script.dataset.busuanziLoaded = "true";
                 window.__busuanzi_loaded = true;
                 resolve();
             };
-            
-            script.onerror = (error) => {
-                console.error('不蒜子脚本加载失败:', error);
-                reject(error);
-            };
-            
+
+            script.onerror = reject;
             document.head.appendChild(script);
         });
     }
 
-    function setStatsUnavailable({ isDetail, needSiteStats }) {
-        const unavailable = '--';
-
-        if (needSiteStats) {
-            document.querySelectorAll('#busuanzi_value_site_pv, #busuanzi_value_site_uv').forEach(el => {
-                el.textContent = unavailable;
-                el.style.display = 'inline';
-                el.style.visibility = 'visible';
-            });
-            document.querySelectorAll('#busuanzi_container_site_pv, #busuanzi_container_site_uv').forEach(el => {
-                el.style.display = 'inline';
-                el.style.visibility = 'visible';
-            });
+    function waitForExistingScript(script, resolve, reject) {
+        if (script.dataset.busuanziLoaded === "true" || window.bszCaller || window.bszTag) {
+            window.__busuanzi_loaded = true;
+            resolve();
+            return;
         }
 
-        if (isDetail) {
-            document.querySelectorAll('#busuanzi_value_page_pv').forEach(el => {
-                el.textContent = unavailable;
-            });
-            showViewCounters();
+        const onLoad = function () {
+            cleanup();
+            script.dataset.busuanziLoaded = "true";
+            window.__busuanzi_loaded = true;
+            resolve();
+        };
+
+        const onError = function (error) {
+            cleanup();
+            reject(error);
+        };
+
+        const timeout = window.setTimeout(function () {
+            cleanup();
+            if (window.bszCaller || window.bszTag) {
+                window.__busuanzi_loaded = true;
+                resolve();
+            } else {
+                reject(new Error("Timed out waiting for existing busuanzi script"));
+            }
+        }, 3000);
+
+        function cleanup() {
+            window.clearTimeout(timeout);
+            script.removeEventListener("load", onLoad);
+            script.removeEventListener("error", onError);
         }
+
+        script.addEventListener("load", onLoad);
+        script.addEventListener("error", onError);
     }
 
-    // 等待busuanzi脚本初始化完成
     function waitForBusuanzi() {
-        return new Promise((resolve) => {
-            let done = false;
-            let pollTimer = null;
-            let timeoutTimer = null;
+        return new Promise(function (resolve, reject) {
+            let elapsed = 0;
+            const interval = 100;
+            const timeout = 5000;
 
-            const checkBusuanzi = () => {
-                // 检查是否存在任何不蒜子的值
-                const busuanziElements = document.querySelectorAll('[id^="busuanzi_value_"]');
-                let initialized = false;
-                
-                busuanziElements.forEach(element => {
-                    if (element.textContent && element.textContent !== '0') {
-                        initialized = true;
-                    }
-                });
-                
-                if (initialized) {
-                    console.log('不蒜子已初始化完成');
-                    done = true;
-                    if (pollTimer) clearTimeout(pollTimer);
-                    if (timeoutTimer) clearTimeout(timeoutTimer);
+            const timer = window.setInterval(function () {
+                if (hasResolvedValue()) {
+                    window.clearInterval(timer);
                     resolve();
-                } else {
-                    pollTimer = setTimeout(checkBusuanzi, 100);
+                    return;
                 }
-            };
-            
-            checkBusuanzi();
-            // 最多等待5秒
-            timeoutTimer = setTimeout(() => {
-                if (done) return;
-                console.log('不蒜子初始化超时，强制继续');
-                resolve();
-            }, 5000);
+
+                elapsed += interval;
+                if (elapsed >= timeout) {
+                    window.clearInterval(timer);
+                    reject(new Error("Timed out waiting for busuanzi values"));
+                }
+            }, interval);
         });
     }
 
-    // 本地测试环境使用模拟数据
+    function hasResolvedValue() {
+        const selectors = [
+            "#busuanzi_value_site_pv",
+            "#busuanzi_value_site_uv",
+            "#busuanzi_value_page_pv"
+        ];
+
+        return selectors.some(function (selector) {
+            const node = document.querySelector(selector);
+            if (!node) {
+                return false;
+            }
+
+            const value = (node.textContent || "").trim();
+            return value !== "" && value !== "0" && value !== "--";
+        });
+    }
+
+    function showPagePv() {
+        document.querySelectorAll(".post-views").forEach(function (element) {
+            element.style.display = "inline-flex";
+            element.style.visibility = "visible";
+        });
+
+        document.querySelectorAll("#busuanzi_container_page_pv, #busuanzi_value_page_pv").forEach(function (element) {
+            element.style.display = "inline";
+            element.style.visibility = "visible";
+        });
+    }
+
+    function showSiteStats() {
+        document.querySelectorAll("#busuanzi_container_site_pv, #busuanzi_container_site_uv, #busuanzi_value_site_pv, #busuanzi_value_site_uv").forEach(function (element) {
+            element.style.display = "inline";
+            element.style.visibility = "visible";
+        });
+    }
+
+    function syncSiteStatMirrors() {
+        syncMirror("[data-busuanzi-site-pv]", "#busuanzi_value_site_pv");
+        syncMirror("[data-busuanzi-site-uv]", "#busuanzi_value_site_uv");
+    }
+
+    function syncMirror(targetSelector, sourceSelector) {
+        const source = document.querySelector(sourceSelector);
+        const value = source ? (source.textContent || "").trim() : "";
+        if (!value) {
+            return;
+        }
+
+        document.querySelectorAll(targetSelector).forEach(function (element) {
+            element.textContent = value;
+        });
+    }
+
+    function setStatsUnavailable(options) {
+        const unavailable = "--";
+
+        if (options.needPagePv) {
+            document.querySelectorAll("#busuanzi_value_page_pv").forEach(function (element) {
+                element.textContent = unavailable;
+            });
+            showPagePv();
+        }
+
+        if (options.needSiteStats) {
+            document.querySelectorAll("#busuanzi_value_site_pv, #busuanzi_value_site_uv").forEach(function (element) {
+                element.textContent = unavailable;
+                element.style.display = "inline";
+                element.style.visibility = "visible";
+            });
+            document.querySelectorAll("[data-busuanzi-site-pv], [data-busuanzi-site-uv]").forEach(function (element) {
+                element.textContent = unavailable;
+            });
+            showSiteStats();
+        }
+    }
+
     function mockLocalViewCount() {
-        // 从URL生成稳定的模拟访问量
         const path = window.location.pathname;
         const viewCount = generateViewCountFromPath(path);
 
-        const countElements = document.querySelectorAll('#busuanzi_value_page_pv');
-        countElements.forEach(element => {
-            element.textContent = viewCount;
+        document.querySelectorAll("#busuanzi_value_page_pv").forEach(function (element) {
+            element.textContent = String(viewCount);
         });
 
-        // 显示容器
-        const containers = document.querySelectorAll('#busuanzi_container_page_pv');
-        containers.forEach(container => {
-            if (isDetailPage()) {
-                container.style.display = 'inline';
-                container.style.visibility = 'visible';
-            }
-        });
+        showPagePv();
     }
-    
-    // 模拟站点统计数据
+
     function mockSiteStats() {
-        // 本地开发用：生成稳定的站点统计数据（避免每次刷新都变）
-        const host = window.location.host || 'local';
+        const host = window.location.host || "local";
         const base = generateViewCountFromPath(host) * 100;
         const sitePV = base + 5000;
         const siteUV = Math.floor(sitePV * 0.3);
-        
-        // 更新站点PV
-        const sitePvElements = document.querySelectorAll('#busuanzi_value_site_pv');
-        sitePvElements.forEach(element => {
-            element.textContent = sitePV;
-            element.style.display = 'inline';
-            element.style.visibility = 'visible';
+
+        document.querySelectorAll("#busuanzi_value_site_pv").forEach(function (element) {
+            element.textContent = String(sitePV);
         });
-        
-        // 更新站点UV
-        const siteUvElements = document.querySelectorAll('#busuanzi_value_site_uv');
-        siteUvElements.forEach(element => {
-            element.textContent = siteUV;
-            element.style.display = 'inline';
-            element.style.visibility = 'visible';
+
+        document.querySelectorAll("#busuanzi_value_site_uv").forEach(function (element) {
+            element.textContent = String(siteUV);
         });
-        
-        // 显示容器
-        document.querySelectorAll('#busuanzi_container_site_pv, #busuanzi_container_site_uv').forEach(container => {
-            container.style.display = 'inline';
-            container.style.visibility = 'visible';
-        });
-        
-        console.log('模拟站点统计:', sitePV, siteUV);
+
+        showSiteStats();
+        syncSiteStatMirrors();
     }
 
-    // 从路径生成一个稳定的浏览量数字（本地测试用）
     function generateViewCountFromPath(path) {
         let hash = 0;
-        for (let i = 0; i < path.length; i++) {
+        for (let i = 0; i < path.length; i += 1) {
             hash = ((hash << 5) - hash) + path.charCodeAt(i);
-            hash = hash & hash; // 转换为32位整数
+            hash &= hash;
         }
-        // 生成100-1000之间的数字
         return Math.abs(hash % 900) + 100;
     }
-})(); 
+})();

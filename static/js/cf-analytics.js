@@ -520,10 +520,6 @@ async function fetchCFData(startDate = null, endDate = null) {
         console.error('获取数据失败:', error);
         document.getElementById('cf-pageviews').textContent = '获取失败';
         document.getElementById('cf-visitors').textContent = '获取失败';
-        
-        // 如果失败则使用模拟数据（在本地开发和生产环境）
-        useMockData(startDate, endDate);
-        
         throw error;
     }
 }
