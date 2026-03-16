@@ -40,3 +40,6 @@ Desktop.ini
 *.bak
 *.tmp
 *.temp
+
+# 本地文档
+docs/
