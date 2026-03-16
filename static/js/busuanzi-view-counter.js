@@ -22,7 +22,6 @@
         }
 
         loadBusuanziScript()
-            .then(waitForBusuanzi)
             .then(function () {
                 if (needPagePv) {
                     showPagePv();
@@ -59,110 +58,101 @@
 
     function loadBusuanziScript() {
         return new Promise(function (resolve, reject) {
-            if (window.__busuanzi_loaded || window.bszCaller || window.bszTag) {
+            if (window.__busuanzi_data) {
+                applyBusuanziData(window.__busuanzi_data);
                 window.__busuanzi_loaded = true;
-                resolve();
+                resolve(window.__busuanzi_data);
                 return;
             }
 
-            const existing = document.querySelector('script[data-busuanzi="true"], script[src*="busuanzi.pure.mini.js"]');
-            if (existing) {
-                waitForExistingScript(existing, resolve, reject);
+            if (window.__busuanzi_pending) {
+                window.__busuanzi_pending.push({ resolve: resolve, reject: reject });
                 return;
             }
 
+            window.__busuanzi_pending = [{ resolve: resolve, reject: reject }];
+
+            const callbackName = "BusuanziCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
             const script = document.createElement("script");
-            script.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+            script.src = "https://busuanzi.ibruce.info/busuanzi?jsonpCallback=" + callbackName;
             script.dataset.busuanzi = "true";
             script.async = true;
+            script.referrerPolicy = "no-referrer-when-downgrade";
 
-            script.onload = function () {
-                script.dataset.busuanziLoaded = "true";
+            const timeout = window.setTimeout(function () {
+                cleanup();
+                rejectAll(new Error("Timed out waiting for busuanzi response"));
+            }, 8000);
+
+            function cleanup() {
+                window.clearTimeout(timeout);
+                delete window[callbackName];
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            }
+
+            function rejectAll(error) {
+                const pending = window.__busuanzi_pending || [];
+                window.__busuanzi_pending = null;
+                pending.forEach(function (entry) {
+                    entry.reject(error);
+                });
+            }
+
+            function resolveAll(data) {
+                const pending = window.__busuanzi_pending || [];
+                window.__busuanzi_pending = null;
+                pending.forEach(function (entry) {
+                    entry.resolve(data);
+                });
+            }
+
+            window[callbackName] = function (data) {
+                cleanup();
+                window.__busuanzi_data = normalizeBusuanziData(data);
                 window.__busuanzi_loaded = true;
-                resolve();
+                applyBusuanziData(window.__busuanzi_data);
+                resolveAll(window.__busuanzi_data);
             };
 
-            script.onerror = reject;
+            script.onerror = function () {
+                cleanup();
+                rejectAll(new Error("Failed to load busuanzi jsonp"));
+            };
+
             document.head.appendChild(script);
         });
     }
 
-    function waitForExistingScript(script, resolve, reject) {
-        if (script.dataset.busuanziLoaded === "true" || window.bszCaller || window.bszTag) {
-            window.__busuanzi_loaded = true;
-            resolve();
+    function normalizeBusuanziData(data) {
+        return {
+            site_pv: getBusuanziValue(data, "site_pv"),
+            site_uv: getBusuanziValue(data, "site_uv"),
+            page_pv: getBusuanziValue(data, "page_pv")
+        };
+    }
+
+    function getBusuanziValue(data, key) {
+        if (!data || typeof data[key] === "undefined" || data[key] === null) {
+            return "";
+        }
+        return String(data[key]);
+    }
+
+    function applyBusuanziData(data) {
+        setText("#busuanzi_value_site_pv", data.site_pv);
+        setText("#busuanzi_value_site_uv", data.site_uv);
+        setText("#busuanzi_value_page_pv", data.page_pv);
+    }
+
+    function setText(selector, value) {
+        if (!value) {
             return;
         }
 
-        const onLoad = function () {
-            cleanup();
-            script.dataset.busuanziLoaded = "true";
-            window.__busuanzi_loaded = true;
-            resolve();
-        };
-
-        const onError = function (error) {
-            cleanup();
-            reject(error);
-        };
-
-        const timeout = window.setTimeout(function () {
-            cleanup();
-            if (window.bszCaller || window.bszTag) {
-                window.__busuanzi_loaded = true;
-                resolve();
-            } else {
-                reject(new Error("Timed out waiting for existing busuanzi script"));
-            }
-        }, 3000);
-
-        function cleanup() {
-            window.clearTimeout(timeout);
-            script.removeEventListener("load", onLoad);
-            script.removeEventListener("error", onError);
-        }
-
-        script.addEventListener("load", onLoad);
-        script.addEventListener("error", onError);
-    }
-
-    function waitForBusuanzi() {
-        return new Promise(function (resolve, reject) {
-            let elapsed = 0;
-            const interval = 100;
-            const timeout = 5000;
-
-            const timer = window.setInterval(function () {
-                if (hasResolvedValue()) {
-                    window.clearInterval(timer);
-                    resolve();
-                    return;
-                }
-
-                elapsed += interval;
-                if (elapsed >= timeout) {
-                    window.clearInterval(timer);
-                    reject(new Error("Timed out waiting for busuanzi values"));
-                }
-            }, interval);
-        });
-    }
-
-    function hasResolvedValue() {
-        const selectors = [
-            "#busuanzi_value_site_pv",
-            "#busuanzi_value_site_uv",
-            "#busuanzi_value_page_pv"
-        ];
-
-        return selectors.some(function (selector) {
-            const node = document.querySelector(selector);
-            if (!node) {
-                return false;
-            }
-
-            const value = (node.textContent || "").trim();
-            return value !== "" && value !== "0" && value !== "--";
+        document.querySelectorAll(selector).forEach(function (element) {
+            element.textContent = value;
         });
     }
 
