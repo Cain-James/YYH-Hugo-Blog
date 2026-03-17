@@ -123,8 +123,10 @@
     const codeBlocks = document.querySelectorAll('pre code');
     if (window.hljs && codeBlocks.length > 0) {
       codeBlocks.forEach(block => {
-        if (!block.classList.contains('hljs')) {
+        if (!block.classList.contains('hljs') && typeof hljs.highlightElement === 'function') {
           hljs.highlightElement(block);
+        } else if (!block.classList.contains('hljs') && typeof hljs.highlightBlock === 'function') {
+          hljs.highlightBlock(block);
         }
       });
     }

@@ -108,7 +108,17 @@
                     resolveAll(window.__busuanzi_data);
                 })
                 .catch(function (error) {
-                    rejectAll(error);
+                    console.warn("Busuanzi proxy failed, falling back to direct loader", error);
+                    loadBusuanziDirect()
+                        .then(function (data) {
+                            window.__busuanzi_data = normalizeBusuanziData(data);
+                            window.__busuanzi_loaded = true;
+                            applyBusuanziData(window.__busuanzi_data);
+                            resolveAll(window.__busuanzi_data);
+                        })
+                        .catch(function (fallbackError) {
+                            rejectAll(fallbackError);
+                        });
                 });
         });
     }
@@ -117,6 +127,40 @@
         const url = new URL("/api/busuanzi", window.location.origin);
         url.searchParams.set("path", window.location.pathname);
         return url.toString();
+    }
+
+    function loadBusuanziDirect() {
+        return new Promise(function (resolve, reject) {
+            const callbackName = "BusuanziCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+            const script = document.createElement("script");
+            const timeout = window.setTimeout(function () {
+                cleanup();
+                reject(new Error("Timed out waiting for direct busuanzi response"));
+            }, 8000);
+
+            function cleanup() {
+                window.clearTimeout(timeout);
+                delete window[callbackName];
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            }
+
+            window[callbackName] = function (data) {
+                cleanup();
+                resolve(data);
+            };
+
+            script.src = "https://busuanzi.ibruce.info/busuanzi?jsonpCallback=" + callbackName;
+            script.async = true;
+            script.referrerPolicy = "no-referrer-when-downgrade";
+            script.onerror = function () {
+                cleanup();
+                reject(new Error("Failed to load direct busuanzi jsonp"));
+            };
+
+            document.head.appendChild(script);
+        });
     }
 
     function normalizeBusuanziData(data) {
