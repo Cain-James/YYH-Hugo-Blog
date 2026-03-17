@@ -72,26 +72,6 @@
 
             window.__busuanzi_pending = [{ resolve: resolve, reject: reject }];
 
-            const callbackName = "BusuanziCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-            const script = document.createElement("script");
-            script.src = "https://busuanzi.ibruce.info/busuanzi?jsonpCallback=" + callbackName;
-            script.dataset.busuanzi = "true";
-            script.async = true;
-            script.referrerPolicy = "no-referrer-when-downgrade";
-
-            const timeout = window.setTimeout(function () {
-                cleanup();
-                rejectAll(new Error("Timed out waiting for busuanzi response"));
-            }, 8000);
-
-            function cleanup() {
-                window.clearTimeout(timeout);
-                delete window[callbackName];
-                if (script.parentNode) {
-                    script.parentNode.removeChild(script);
-                }
-            }
-
             function rejectAll(error) {
                 const pending = window.__busuanzi_pending || [];
                 window.__busuanzi_pending = null;
@@ -108,21 +88,35 @@
                 });
             }
 
-            window[callbackName] = function (data) {
-                cleanup();
-                window.__busuanzi_data = normalizeBusuanziData(data);
-                window.__busuanzi_loaded = true;
-                applyBusuanziData(window.__busuanzi_data);
-                resolveAll(window.__busuanzi_data);
-            };
-
-            script.onerror = function () {
-                cleanup();
-                rejectAll(new Error("Failed to load busuanzi jsonp"));
-            };
-
-            document.head.appendChild(script);
+            fetch(buildProxyUrl(), {
+                method: "GET",
+                headers: {
+                    Accept: "application/json"
+                },
+                credentials: "same-origin"
+            })
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error("Proxy request failed with status " + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function (data) {
+                    window.__busuanzi_data = normalizeBusuanziData(data);
+                    window.__busuanzi_loaded = true;
+                    applyBusuanziData(window.__busuanzi_data);
+                    resolveAll(window.__busuanzi_data);
+                })
+                .catch(function (error) {
+                    rejectAll(error);
+                });
         });
+    }
+
+    function buildProxyUrl() {
+        const url = new URL("/api/busuanzi", window.location.origin);
+        url.searchParams.set("path", window.location.pathname);
+        return url.toString();
     }
 
     function normalizeBusuanziData(data) {
