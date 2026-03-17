@@ -7,7 +7,7 @@ export async function onRequestGet(context) {
     let pageUrl;
     try {
       pageUrl = new URL(rawPath, siteOrigin);
-    } catch {
+    } catch (error) {
       return json({ error: "Invalid path" }, 400);
     }
 
@@ -48,7 +48,7 @@ export async function onRequestGet(context) {
         site_pv: normalizeNumber(data.site_pv),
         site_uv: normalizeNumber(data.site_uv),
         page_pv: normalizeNumber(data.page_pv),
-        version: data.version ?? null
+        version: typeof data.version === "undefined" ? null : data.version
       },
       200,
       {
@@ -76,7 +76,7 @@ function extractBusuanziPayload(text) {
 
   try {
     return JSON.parse(text.slice(start, end + 1));
-  } catch {
+  } catch (error) {
     return null;
   }
 }
