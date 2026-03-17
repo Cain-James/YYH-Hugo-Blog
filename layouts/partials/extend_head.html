@@ -164,6 +164,9 @@ img {
 <meta name="referrer" content="no-referrer-when-downgrade">
 
 <!-- 不蒜子视图计数器 -->
+{{- if site.Params.busuanzi }}
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+{{- end }}
 <script defer src="{{ "js/busuanzi-view-counter.js" | absURL }}"></script>
 
 <!-- 百度分析 -->
