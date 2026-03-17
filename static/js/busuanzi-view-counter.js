@@ -124,7 +124,7 @@
     }
 
     function buildProxyUrl() {
-        const url = new URL("/api/busuanzi", window.location.origin);
+        const url = new URL("/api/bz", window.location.origin);
         url.searchParams.set("path", window.location.pathname);
         return url.toString();
     }
