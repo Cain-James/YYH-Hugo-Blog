@@ -7,13 +7,6 @@
 <meta name="robots" content="noindex, nofollow">
 {{- end }}
 
-<!-- 性能优化：预连接和DNS预取 -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://busuanzi.ibruce.info">
-<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="dns-prefetch" href="https://www.googletagmanager.com">
-
 {{- /* Title */}}
 <title>{{ if .IsHome }}{{ else }}{{ if .Title }}{{ .Title }} | {{ end }}{{ end }}{{ site.Title }}</title>
 
@@ -206,14 +199,6 @@ body:not(.page) #busuanzi_container_page_pv,
 body:not(.page) #busuanzi_value_page_pv {
     display: none !important;
     visibility: hidden !important;
-}
-/* 延迟加载图片和非关键内容的淡入效果 */
-.lazyload {
-    opacity: 0;
-    transition: opacity 0.5s;
-}
-.lazyloaded {
-    opacity: 1;
 }
 </style>
 

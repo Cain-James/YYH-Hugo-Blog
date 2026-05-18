@@ -96,41 +96,7 @@
   {{- end }}
 </article>
 
-<!-- 优化文章图片延迟加载 -->
 <script>
-  // 检查是否支持IntersectionObserver API
-  if ('IntersectionObserver' in window) {
-    // 设置图片懒加载
-    const imgObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          const src = img.getAttribute('data-src');
-          if (src) {
-            img.src = src;
-            img.classList.add('lazyloaded');
-            observer.unobserve(img);
-          }
-        }
-      });
-    });
-
-    // 选择所有文章内的图片
-    const postImages = document.querySelectorAll('.post-content img');
-    postImages.forEach(img => {
-      // 保存原始src到data-src属性
-      if (!img.classList.contains('no-lazy') && !img.dataset.src) {
-        const src = img.getAttribute('src');
-        if (src) {
-          img.setAttribute('data-src', src);
-          img.setAttribute('src', 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2"%3E%3C/svg%3E');
-          img.classList.add('lazyload');
-          imgObserver.observe(img);
-        }
-      }
-    });
-  }
-
   // 优化代码块高亮渲染
   document.addEventListener('DOMContentLoaded', function() {
     const codeBlocks = document.querySelectorAll('pre code');

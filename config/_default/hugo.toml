@@ -19,10 +19,10 @@ logFile = "Log"
 pluralizeListTitles = true
 relativeURLs = false
 # googleAnalytics = "G-KGBJNWLV3J"      # 谷歌统计，在运行 hugo server （测试）时不加载谷歌代码
-Copyright = "Copyright © 2021 - 2024 ChiAn Ye · [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) · [RSS](/index.xml) · Made with ♥ in 🇨🇳"
+Copyright = "Copyright © 2021 - 2026 ChiAn Ye · [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) · [RSS](/index.xml) · Made with ♥ in 🇨🇳"
 [minify]
 disableXML = true
-minifyOutput = false
+minifyOutput = true
 
 [languages]
 # 一些可能用到的图标，便于取用
@@ -70,7 +70,7 @@ name = "ChiAn Ye"
 [params]
 env = "development"  # 本地开发环境，部署时通过环境变量覆盖为 "production"
 description = "ChiAn Ye的博客,基于Hugo搭建的博客网站，关于Hugo、Papermod、c++、golang、ICPC、CCPC、ACM，刷题主要在leetcode,codeforces,atcoder等"
-draft = "flase"
+draft = false
 defaultTheme = "auto"
 disableThemeToggle = false
 DateFormat = "2006-01-02"

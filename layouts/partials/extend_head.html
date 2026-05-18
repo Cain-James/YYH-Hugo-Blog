@@ -91,14 +91,22 @@ if (sessionStorage.getItem('fontsLoaded')) {
 </script>
 -->
 
-<!-- 设置资源提示，加速资源发现和加载 -->
-<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<!-- 设置资源提示，加速实际启用的第三方资源 -->
+{{- if site.Params.busuanzi }}
 <link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
 <link rel="preconnect" href="https://busuanzi.ibruce.info" crossorigin>
+{{- end }}
+{{- if and (.Param "comments") site.Params.giscus.enable }}
 <link rel="dns-prefetch" href="https://giscus.app">
 <link rel="preconnect" href="https://giscus.app" crossorigin>
+{{- end }}
+{{- if .Params.mermaid }}
 <link rel="dns-prefetch" href="https://unpkg.com">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+{{- end }}
+{{- if eq site.Params.env "production" }}
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+{{- end }}
 
 <!-- 页面渲染优化 -->
 <meta name="renderer" content="webkit">
