@@ -26,10 +26,14 @@
 {{- $ext := path.Ext $src -}}
 {{- $base := strings.TrimSuffix $ext $src -}}
 {{- $webpSrc := printf "%s.webp" $base -}}
+{{- $isRemote := or (strings.HasPrefix $src "http://") (strings.HasPrefix $src "https://") (strings.HasPrefix $src "//") -}}
+{{- $webpPath := printf "static/%s" (strings.TrimPrefix "/" $webpSrc) -}}
+{{- $hasWebp := and (not $isRemote) (fileExists $webpPath) -}}
 
 <picture>
-  {{/* WebP 版本（浏览器会自动跳过 404 的 source）*/}}
+  {{- if $hasWebp }}
   <source srcset="{{ $webpSrc | absURL }}" type="image/webp">
+  {{- end }}
 
   {{/* 原始格式作为后备 */}}
   <img
@@ -42,4 +46,3 @@
     {{- with $loading }} loading="{{ . }}"{{ end }}
   >
 </picture>
-

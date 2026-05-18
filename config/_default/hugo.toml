@@ -162,18 +162,18 @@ url = "index.xml"
 
 [params.label] # 顶部左侧的文字图片
 text = "Ye's Blog"
-icon = "img/logo.gif"
+icon = "img/logo.webp"
 iconHeight = 35
 
 [params.analytics.google]
 SiteVerificationTag = ""
 
 [params.assets]
-favicon = "img/logo.gif"
-favicon16x16 = "img/logo.gif"
-favicon32x32 = "img/logo.gif"
-apple_touch_icon = "img/logo.gif"
-safari_pinned_tab = "img/logo.gif"
+favicon = "img/magic32.ico"
+favicon16x16 = "img/magic16.ico"
+favicon32x32 = "img/magic32.ico"
+apple_touch_icon = "img/logo.png"
+safari_pinned_tab = "img/logo.png"
 
 [params.cover]
 hidden = false
