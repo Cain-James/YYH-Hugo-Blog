@@ -23,17 +23,28 @@
 }
 
 .logo a {
+    display: inline-flex;
+    align-items: center;
     font-size: 24px;
     font-weight: 700;
 }
 
-.logo a img, .logo a svg {
-    display: inline;
+.logo > a > img,
+.logo > a > svg {
+    display: inline-block;
     vertical-align: middle;
     pointer-events: none;
     transform: translate(0, -10%);
     border-radius: 6px;
     margin-inline-end: 8px;
+    max-height: 30px;
+    width: auto;
+    height: auto;
+}
+
+.logo > a > svg {
+    width: 30px;
+    height: 30px;
 }
 
 button#theme-toggle {
