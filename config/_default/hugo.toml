@@ -97,7 +97,7 @@ Reward = true
 ShowStatInSectionTermList = false # 列表页统计文章篇数和字数
 ShowStatInArchive = false
 hideMeta = false                  # 归档页统计文章篇数和字数
-Alipay = "img/alipay.png"
+Alipay = "img/alipay.webp"
 busuanzi = true                   # 启用不蒜子统计
 
 # Giscus 评论系统配置
@@ -120,7 +120,7 @@ loading = "lazy"
 enabled = true
 title = "百叶沉秋"
 # subtitle = "🧨学而时习之，不亦说乎？有朋自远方来，不亦乐乎？</br>👏🏼欢迎来到我的博客</br>👇联系方式"
-imageUrl = "img/head.jpg"
+imageUrl = "img/head.webp"
 imageTitle = "图片标题"
 imageWidth = 120
 imageHeight = 120
