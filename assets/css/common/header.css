@@ -63,11 +63,61 @@ body:not(.dark) #sun {
 
 #menu a {
     font-size: 16px;
+    color: var(--secondary);
+    outline: 0;
+    transition: color 0.2s ease;
+}
+
+#menu a span {
+    position: relative;
+    display: inline-block;
+}
+
+#menu a span::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: -3px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 #menu .active {
+    color: var(--primary);
     font-weight: 500;
     border-bottom: 2px solid currentColor;
+}
+
+@media (hover: hover) {
+    #menu a:hover {
+        color: var(--primary);
+    }
+
+    #menu a:hover span:not(.active)::after {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+#menu a:focus-visible {
+    color: var(--primary);
+}
+
+#menu a:focus-visible span:not(.active)::after {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #menu a,
+    #menu a span::after {
+        transition: none;
+    }
 }
 
 .lang-switch li,
