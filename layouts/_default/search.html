@@ -26,4 +26,23 @@
     <ul id="searchResults" aria-label="search results"></ul>
 </div>
 
+<aside class="popular-posts-section search-popular-posts">
+    {{- if eq .Lang "zh-cn" }}
+    <h2>热门文章</h2>
+    <p class="popular-posts-description">也可以先看看最近被读得最多的内容。</p>
+    {{- else }}
+    <h2>Popular Posts</h2>
+    <p class="popular-posts-description">You can also start with what readers visit most.</p>
+    {{- end }}
+    <div
+        id="popular-posts"
+        data-current-lang="{{ .Lang }}"
+        data-track-view="false"
+        data-limit="5">
+        <p class="popular-posts-empty">加载中...</p>
+    </div>
+</aside>
+
+<script defer src="{{ "js/popular-posts.js" | absURL }}"></script>
+
 {{- end }}{{/* end main */}}

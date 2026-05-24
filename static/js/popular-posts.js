@@ -9,9 +9,13 @@
         var permalink = container.getAttribute("data-current-permalink") || "";
         var title = container.getAttribute("data-current-title") || "";
         var lang = container.getAttribute("data-current-lang") || "default";
+        var trackView = container.getAttribute("data-track-view") !== "false";
+        var limit = container.getAttribute("data-limit") || "5";
 
-        sendView(path, permalink, title, lang);
-        loadPopularPosts(container, path, lang);
+        if (trackView) {
+            sendView(path, permalink, title, lang);
+        }
+        loadPopularPosts(container, path, lang, limit);
     });
 
     function sendView(path, permalink, title, lang) {
@@ -56,10 +60,12 @@
             });
     }
 
-    function loadPopularPosts(container, currentPath, lang) {
+    function loadPopularPosts(container, currentPath, lang, limit) {
         var url = new URL("/api/popular-posts", window.location.origin);
-        url.searchParams.set("limit", "5");
-        url.searchParams.set("exclude", currentPath);
+        url.searchParams.set("limit", normalizeLimit(limit));
+        if (currentPath) {
+            url.searchParams.set("exclude", currentPath);
+        }
         url.searchParams.set("lang", lang);
 
         fetch(url.toString(), {
@@ -142,6 +148,14 @@
             return (views / 10000).toFixed(1) + "w";
         }
         return String(views);
+    }
+
+    function normalizeLimit(value) {
+        var limit = parseInt(value, 10);
+        if (!isFinite(limit) || limit <= 0) {
+            return "5";
+        }
+        return String(Math.min(limit, 10));
     }
 
     function escapeHtml(value) {
