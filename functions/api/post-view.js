@@ -1,5 +1,5 @@
 var VIEW_TTL_MS = 6 * 60 * 60 * 1000;
-var KV_BINDING = "POST_VIEWS";
+var KV_BINDING = "HUGO_BLOG_KV";
 
 export async function onRequestPost(context) {
   var namespace = context.env[KV_BINDING];

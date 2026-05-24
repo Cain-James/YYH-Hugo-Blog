@@ -1,4 +1,4 @@
-var KV_BINDING = "POST_VIEWS";
+var KV_BINDING = "HUGO_BLOG_KV";
 var DEFAULT_LIMIT = 5;
 var MAX_LIMIT = 10;
 
