@@ -1,168 +1,168 @@
 /**
- * 性能监控与优化脚本
- * 收集性能指标并应用页面加载优化
+ * Performance page metrics collector.
+ *
+ * This script is intentionally loaded only by the performance page. It exposes
+ * window.performanceMonitor for performance-charts.js.
  */
-(function() {
-    // 性能监控
-    function collectPerformanceMetrics() {
-        if (performance && performance.timing) {
-            // 页面完全加载后收集指标
-            window.addEventListener('load', function() {
-                // 给浏览器一点时间完成所有计算
-                setTimeout(function() {
-                    const t = performance.timing;
-                    const interactive = t.domInteractive - t.navigationStart;
-                    const dcl = t.domContentLoadedEventEnd - t.navigationStart;
-                    const complete = t.domComplete - t.navigationStart;
-                    
-                    // 仅在开发环境或测试模式记录到控制台
-                    const isDebug = localStorage.getItem('debug_mode') === 'true' || 
-                                  window.location.hostname === 'localhost';
-                    
-                    if (isDebug) {
-                        console.log('性能指标:', {
-                            '首次可交互 (ms)': interactive,
-                            'DOM内容加载完成 (ms)': dcl,
-                            '页面完全加载 (ms)': complete
-                        });
-                    }
+(function () {
+    const metrics = {
+        fcp: null,
+        lcp: null,
+        fid: null,
+        cls: null,
+        dnsTime: null,
+        tcpTime: null,
+        responseTime: null,
+        domLoadTime: null,
+        loadTime: null,
+        resources: [],
+        errors: []
+    };
 
-                    // 发送到 Google Analytics 进行监控
-                    if (typeof gtag === 'function') {
-                        gtag('event', 'performance', {
-                            'event_category': 'timing',
-                            'event_label': '首次可交互',
-                            'value': interactive,
-                            'non_interaction': true
-                        });
-                        
-                        gtag('event', 'performance', {
-                            'event_category': 'timing',
-                            'event_label': '页面完全加载',
-                            'value': complete,
-                            'non_interaction': true
-                        });
-                    }
-                }, 0);
-            });
+    function sendToGA(eventName, params) {
+        if (typeof gtag !== "function") {
+            return;
+        }
+
+        gtag("event", eventName, Object.assign({
+            page_location: window.location.href,
+            page_title: document.title
+        }, params));
+    }
+
+    function updateNavigationMetrics() {
+        const navigation = performance.getEntriesByType("navigation")[0];
+
+        if (navigation) {
+            metrics.dnsTime = navigation.domainLookupEnd - navigation.domainLookupStart;
+            metrics.tcpTime = navigation.connectEnd - navigation.connectStart;
+            metrics.responseTime = navigation.responseEnd - navigation.responseStart;
+            metrics.domLoadTime = navigation.domContentLoadedEventEnd - navigation.navigationStart;
+            metrics.loadTime = navigation.loadEventEnd - navigation.navigationStart;
+            return;
+        }
+
+        if (performance.timing) {
+            const timing = performance.timing;
+            metrics.dnsTime = timing.domainLookupEnd - timing.domainLookupStart;
+            metrics.tcpTime = timing.connectEnd - timing.connectStart;
+            metrics.responseTime = timing.responseEnd - timing.requestStart;
+            metrics.domLoadTime = timing.domContentLoadedEventEnd - timing.navigationStart;
+            metrics.loadTime = timing.loadEventEnd - timing.navigationStart;
         }
     }
 
-    // 图片延迟加载
-    function setupLazyLoading() {
-        if ('loading' in HTMLImageElement.prototype) {
-            // 浏览器原生支持延迟加载
-            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-                img.classList.add('lazyload');
-                img.onload = function() {
-                    this.classList.add('lazyloaded');
-                };
-            });
-        } else {
-            // 对于不支持原生延迟加载的浏览器，可以添加自定义实现或加载库
-            // 这里简化处理，仅添加类
-            document.querySelectorAll('img').forEach(img => {
-                if (!img.hasAttribute('loading')) {
-                    img.setAttribute('loading', 'lazy');
+    function observePaintMetrics() {
+        if (!("PerformanceObserver" in window)) {
+            return;
+        }
+
+        try {
+            new PerformanceObserver(function (entryList) {
+                entryList.getEntries().forEach(function (entry) {
+                    if (entry.name === "first-contentful-paint") {
+                        metrics.fcp = entry.startTime;
+                        sendToGA("web_vital", { metric_name: "FCP", value: metrics.fcp });
+                    }
+                });
+            }).observe({ type: "paint", buffered: true });
+        } catch (error) {
+            metrics.errors.push(buildError("PerformanceObserver Error", error));
+        }
+
+        try {
+            new PerformanceObserver(function (entryList) {
+                const entries = entryList.getEntries();
+                const lastEntry = entries[entries.length - 1];
+                if (lastEntry) {
+                    metrics.lcp = lastEntry.startTime;
+                    sendToGA("web_vital", { metric_name: "LCP", value: metrics.lcp });
                 }
-                img.classList.add('lazyload');
-                img.onload = function() {
-                    this.classList.add('lazyloaded');
-                };
-            });
+            }).observe({ type: "largest-contentful-paint", buffered: true });
+        } catch (error) {
+            metrics.errors.push(buildError("PerformanceObserver Error", error));
         }
-    }
 
-    // 优化页面资源加载
-    function optimizePageLoad() {
-        // 延迟加载非关键JavaScript
-        const deferScripts = document.querySelectorAll('script[defer-load]');
-        if (deferScripts.length > 0) {
-            // 页面交互后延迟加载非关键脚本
-            const loadDeferredScripts = function() {
-                deferScripts.forEach(script => {
-                    const src = script.getAttribute('defer-load');
-                    if (src) {
-                        const newScript = document.createElement('script');
-                        newScript.src = src;
-                        document.body.appendChild(newScript);
+        try {
+            new PerformanceObserver(function (entryList) {
+                const firstInput = entryList.getEntries()[0];
+                if (firstInput) {
+                    metrics.fid = firstInput.processingStart - firstInput.startTime;
+                    sendToGA("web_vital", { metric_name: "FID", value: metrics.fid });
+                }
+            }).observe({ type: "first-input", buffered: true });
+        } catch (error) {
+            metrics.errors.push(buildError("PerformanceObserver Error", error));
+        }
+
+        try {
+            let clsValue = 0;
+            new PerformanceObserver(function (entryList) {
+                entryList.getEntries().forEach(function (entry) {
+                    if (!entry.hadRecentInput) {
+                        clsValue += entry.value;
                     }
                 });
-                
-                // 移除事件监听器
-                document.removeEventListener('mousemove', loadDeferredScripts);
-                document.removeEventListener('scroll', loadDeferredScripts);
-                document.removeEventListener('keydown', loadDeferredScripts);
-                document.removeEventListener('click', loadDeferredScripts);
+                metrics.cls = clsValue;
+                sendToGA("web_vital", { metric_name: "CLS", value: metrics.cls });
+            }).observe({ type: "layout-shift", buffered: true });
+        } catch (error) {
+            metrics.errors.push(buildError("PerformanceObserver Error", error));
+        }
+    }
+
+    function collectResourceMetrics() {
+        metrics.resources = performance.getEntriesByType("resource").map(function (entry) {
+            return {
+                name: entry.name,
+                size: (entry.transferSize || entry.encodedBodySize || 0) / 1024,
+                loadTime: entry.duration
             };
-            
-            // 用户交互时加载
-            document.addEventListener('mousemove', loadDeferredScripts, {once: true});
-            document.addEventListener('scroll', loadDeferredScripts, {once: true});
-            document.addEventListener('keydown', loadDeferredScripts, {once: true});
-            document.addEventListener('click', loadDeferredScripts, {once: true});
-            
-            // 如果用户没有交互，30秒后也加载
-            setTimeout(loadDeferredScripts, 30000);
-        }
-        
-        // 预渲染可能会被访问的页面（仅对首页起作用）
-        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    const links = Array.from(document.querySelectorAll('.first-entry a[href], .post-entry a[href]'))
-                        .slice(0, 3); // 只预处理前3个链接
-                    
-                    links.forEach(link => {
-                        const href = link.getAttribute('href');
-                        if (href && href.startsWith('/') && !href.includes('#')) {
-                            const prerender = document.createElement('link');
-                            prerender.rel = 'prerender';
-                            prerender.href = href;
-                            document.head.appendChild(prerender);
-                        }
-                    });
-                }, 5000); // 主页加载5秒后预加载
+        });
+    }
+
+    function buildError(type, error) {
+        return {
+            type: type,
+            message: error && error.message ? error.message : String(error),
+            timestamp: Date.now()
+        };
+    }
+
+    function observeErrors() {
+        window.addEventListener("error", function (event) {
+            metrics.errors.push({
+                type: "JavaScript Error",
+                message: event.message,
+                timestamp: Date.now()
             });
-        }
-    }
-    
-    // 优化字体加载
-    function optimizeFontLoading() {
-        // 检测是否是重复访问
-        const fontLoadedBefore = localStorage.getItem('fonts-loaded') === 'true';
-        
-        if (fontLoadedBefore) {
-            // 字体已经缓存，直接使用字体
-            document.documentElement.classList.add('fonts-loaded');
-        } else {
-            // 首次访问，使用系统字体，字体加载完成后再切换
-            if ('fonts' in document) {
-                Promise.all([
-                    document.fonts.load('1em noto_serif'),
-                    document.fonts.load('700 1em noto_serif'),
-                    document.fonts.load('italic 1em noto_serif'),
-                    document.fonts.load('italic 700 1em noto_serif')
-                ]).then(function () {
-                    document.documentElement.classList.add('fonts-loaded');
-                    localStorage.setItem('fonts-loaded', 'true');
-                });
-            }
-        }
+        });
+
+        window.addEventListener("unhandledrejection", function (event) {
+            metrics.errors.push({
+                type: "Promise Error",
+                message: event.reason ? String(event.reason) : "Unhandled rejection",
+                timestamp: Date.now()
+            });
+        });
     }
 
-    // 初始化
-    function init() {
-        collectPerformanceMetrics();
-        setupLazyLoading();
-        optimizePageLoad();
-        optimizeFontLoading();
+    function refresh() {
+        updateNavigationMetrics();
+        collectResourceMetrics();
     }
 
-    // 当DOM准备就绪时运行
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+    window.performanceMonitor = {
+        metrics: metrics,
+        refresh: refresh
+    };
+
+    observeErrors();
+    observePaintMetrics();
+
+    if (document.readyState === "complete") {
+        refresh();
     } else {
-        init();
+        window.addEventListener("load", refresh);
     }
-})(); 
+})();

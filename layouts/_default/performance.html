@@ -29,4 +29,7 @@
         {{ end }}
     </footer>
 </article>
-{{ end }} 
+{{ with .Params.head }}
+{{ . | safeHTML }}
+{{ end }}
+{{ end }}
