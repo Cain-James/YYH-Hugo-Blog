@@ -1,6 +1,6 @@
 # YYH Hugo Blog
 
-这是一个基于 Hugo + PaperMod 的个人博客项目，当前站点地址为 <https://seu-yuan.top/>。项目使用 Hugo 多语言目录组织内容，并通过 Cloudflare Pages 部署，部分动态能力由 Cloudflare Pages Functions 提供。
+这是一个基于 Hugo + PaperMod 的个人博客项目，当前站点地址为 <https://yyhblog.top/>。项目使用 Hugo 多语言目录组织内容，并通过 Cloudflare Pages 部署，部分动态能力由 Cloudflare Pages Functions 提供。
 
 ## 功能概览
 
