@@ -1,0 +1,379 @@
+/* Final design-system layer. Keep this file last alphabetically. */
+
+:root {
+    --accent: #0f766e;
+    --accent-bright: #0d9488;
+    --accent-contrast: #ffffff;
+    --accent-soft: rgba(15, 118, 110, 0.1);
+    --accent-glow: rgba(13, 148, 136, 0.22);
+    --background-elevated: #ffffff;
+    --surface-hover: #f4fbf9;
+    --foreground-muted: #9aa4a0;
+    --border-soft: rgba(17, 24, 39, 0.1);
+    --border-default: rgba(17, 24, 39, 0.14);
+    --border-hover: rgba(15, 118, 110, 0.32);
+    --border-accent: rgba(15, 118, 110, 0.38);
+    --focus-ring: #0d9488;
+    --card-radius: 8px;
+    --control-radius: 8px;
+    --button-radius: 8px;
+    --shadow-soft: 0 10px 30px rgba(17, 24, 39, 0.06);
+    --shadow-hover: 0 18px 44px rgba(17, 24, 39, 0.1);
+    --shadow-accent: 0 10px 26px rgba(15, 118, 110, 0.16);
+    --page-texture:
+        linear-gradient(180deg, rgba(15, 118, 110, 0.035), transparent 280px),
+        radial-gradient(circle at 1px 1px, rgba(17, 24, 39, 0.055) 1px, transparent 0);
+    --page-texture-size: auto, 22px 22px;
+}
+
+.dark {
+    --accent: #2dd4bf;
+    --accent-bright: #5eead4;
+    --accent-contrast: #06201d;
+    --accent-soft: rgba(45, 212, 191, 0.12);
+    --accent-glow: rgba(45, 212, 191, 0.26);
+    --background-elevated: #24262a;
+    --surface-hover: #263532;
+    --foreground-muted: #747b80;
+    --border-soft: rgba(255, 255, 255, 0.08);
+    --border-default: rgba(255, 255, 255, 0.12);
+    --border-hover: rgba(94, 234, 212, 0.35);
+    --border-accent: rgba(94, 234, 212, 0.42);
+    --focus-ring: #5eead4;
+    --shadow-soft: 0 12px 34px rgba(0, 0, 0, 0.24);
+    --shadow-hover: 0 18px 48px rgba(0, 0, 0, 0.34);
+    --shadow-accent: 0 12px 30px rgba(45, 212, 191, 0.12);
+    --page-texture:
+        linear-gradient(180deg, rgba(45, 212, 191, 0.045), transparent 300px),
+        radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.055) 1px, transparent 0);
+}
+
+body {
+    color: var(--primary);
+    background-color: var(--theme);
+    background-image: var(--page-texture);
+    background-size: var(--page-texture-size);
+    background-attachment: fixed;
+}
+
+.header {
+    background: color-mix(in srgb, var(--theme) 94%, transparent);
+    border-bottom: 1px solid var(--border-soft);
+    backdrop-filter: saturate(130%) blur(14px);
+}
+
+.dark .header {
+    background: rgb(18 19 21 / 82%);
+    border-bottom-color: var(--border-default);
+}
+
+.logo a {
+    letter-spacing: 0;
+}
+
+#menu a {
+    letter-spacing: 0;
+    text-underline-offset: 6px;
+}
+
+#menu .active {
+    border-bottom-color: var(--accent);
+}
+
+.main {
+    max-width: calc(var(--main-width) + var(--gap) * 2);
+}
+
+.home .main {
+    max-width: min(1120px, calc(100vw - var(--gap) * 2));
+}
+
+.post-entry,
+.first-entry,
+.pag-item,
+.popular-posts-section,
+.toc,
+.share-buttons,
+.paginav,
+#searchResults li {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--card-radius);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.94)),
+        var(--entry);
+    box-shadow: var(--shadow-soft);
+}
+
+.dark .post-entry,
+.dark .first-entry,
+.dark .toc,
+.dark .popular-posts-section,
+.dark .share-buttons,
+.dark .paginav,
+.dark #searchResults li {
+    background:
+        linear-gradient(180deg, rgb(255 255 255 / 6%), rgb(255 255 255 / 2%)),
+        var(--background-elevated);
+}
+
+.post-entry:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-hover);
+}
+
+.dark .post-entry:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.entry-header h2,
+.first-entry .entry-header h1 {
+    letter-spacing: 0;
+}
+
+.entry-header h2 {
+    font-size: clamp(1.22rem, 2.4vw, 1.55rem);
+}
+
+.entry-content {
+    color: var(--secondary);
+}
+
+.entry-footer,
+.post-meta,
+.breadcrumbs {
+    color: var(--secondary);
+}
+
+.profile img {
+    border-radius: var(--card-radius);
+    border: 1px solid var(--border-default);
+}
+
+.dark .profile img {
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-accent);
+}
+
+.button,
+.pagination a,
+.post-tags a,
+.paginav a,
+.terms-tags a,
+button#theme-toggle {
+    border-radius: var(--button-radius);
+}
+
+.button {
+    margin: 0;
+    padding: 9px 14px;
+    color: var(--accent-contrast);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    box-shadow: var(--shadow-accent);
+}
+
+.button:hover,
+.pagination a:hover,
+.post-tags a:hover,
+.paginav a:hover,
+.terms-tags a:hover {
+    color: var(--accent-contrast);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.dark .button:hover,
+.dark .pagination a:hover,
+.dark .post-tags a:hover,
+.dark .paginav a:hover,
+.dark .terms-tags a:hover {
+    background: var(--accent-bright);
+    box-shadow: var(--shadow-accent);
+}
+
+.post-header {
+    margin-top: clamp(22px, 5vw, 42px);
+    margin-bottom: clamp(24px, 5vw, 40px);
+}
+
+.post-single .post-title {
+    font-size: clamp(2rem, 4.2vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: 0;
+    max-width: 18em;
+}
+
+.post-title::after {
+    width: clamp(72px, 16vw, 160px);
+    height: 3px;
+    background: var(--accent);
+}
+
+.dark .post-title::after {
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    box-shadow: 0 0 22px var(--accent-glow);
+}
+
+.post-description {
+    color: var(--secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+.post-content {
+    color: var(--content);
+    line-height: 1.86;
+}
+
+.post-content h2 {
+    padding-bottom: 0.35em;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
+    letter-spacing: 0;
+}
+
+.post-content h3 {
+    font-size: clamp(1.18rem, 2.2vw, 1.45rem);
+    letter-spacing: 0;
+}
+
+.post-content blockquote {
+    border-inline-start-color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 0 var(--card-radius) var(--card-radius) 0;
+}
+
+.post-content code {
+    border-radius: 6px;
+}
+
+.post-content pre {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.post-content img {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+.toc {
+    border-color: var(--border-soft);
+    background: var(--entry);
+}
+
+.toc a:hover {
+    color: var(--primary);
+    transform: none;
+}
+
+.dark .toc a:hover {
+    color: var(--accent-bright);
+}
+
+.toc summary,
+.toc .details {
+    letter-spacing: 0;
+}
+
+#searchbox {
+    background: color-mix(in srgb, var(--theme) 94%, transparent);
+    border-bottom: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: saturate(130%) blur(14px);
+}
+
+#searchbox input,
+#searchInput {
+    min-height: 48px;
+    color: var(--primary);
+    background: var(--entry);
+    border: 2px solid var(--border-default);
+    border-radius: var(--control-radius);
+    box-shadow: none;
+}
+
+#searchbox input:focus,
+#searchInput:focus {
+    border-color: var(--focus-ring);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+#searchResults li:hover,
+#searchResults .focus {
+    border-color: var(--border-hover);
+    background: var(--surface-hover);
+    color: var(--accent-contrast);
+    box-shadow: var(--shadow-hover);
+}
+
+.dark #searchResults li:hover,
+.dark #searchResults .focus {
+    color: var(--primary);
+}
+
+table {
+    border-radius: var(--card-radius);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+}
+
+th {
+    background: var(--accent-soft);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--foreground-muted);
+    border-radius: var(--button-radius);
+}
+
+.top-link {
+    border-radius: var(--button-radius);
+    color: var(--primary);
+    background: var(--entry);
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-soft);
+}
+
+.top-link:hover {
+    border-color: var(--border-hover);
+    color: var(--accent);
+}
+
+@media (max-width: 768px) {
+    .post-entry,
+    .first-entry,
+    .pag-item,
+    .popular-posts-section,
+    .toc,
+    .share-buttons,
+    .paginav,
+    #searchResults li {
+        box-shadow: none;
+    }
+
+    .post-single .post-title {
+        font-size: clamp(1.75rem, 8vw, 2.35rem);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-entry,
+    .button,
+    .pagination a,
+    .post-tags a,
+    .paginav a,
+    .terms-tags a {
+        transition: none;
+    }
+
+    .post-entry:hover,
+    .dark .post-entry:hover {
+        transform: none;
+    }
+}

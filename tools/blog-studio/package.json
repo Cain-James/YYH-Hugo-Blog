@@ -1,0 +1,14 @@
+{
+  "name": "blog-studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local Hugo blog writing, preview, and publishing studio.",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
