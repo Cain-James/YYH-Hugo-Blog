@@ -193,6 +193,23 @@ button#theme-toggle {
     box-shadow: var(--shadow-accent);
 }
 
+.main .profile .buttons .button {
+    margin: 8px;
+    padding: 6px;
+    color: var(--primary);
+    background: var(--tertiary);
+    border: 0;
+    box-shadow: none;
+}
+
+.main .profile .buttons .button:hover,
+.dark .main .profile .buttons .button:hover {
+    color: var(--primary);
+    background: var(--tertiary);
+    border: 0;
+    box-shadow: none;
+}
+
 .post-header {
     margin-top: clamp(22px, 5vw, 42px);
     margin-bottom: clamp(24px, 5vw, 40px);
