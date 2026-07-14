@@ -8,6 +8,7 @@ const state = {
   dirty: false,
   editorMode: 'split',
   previewUrl: '',
+  focusMetaOpen: false,
   selectedFiles: new Set(),
   gitStatus: null,
   commitMessage: 'post: update blog content',
@@ -86,6 +87,12 @@ function setDirty(dirty) {
   }
 }
 
+function teardownEditor() {
+  if (!state.editor) return;
+  state.editor.toTextArea();
+  state.editor = null;
+}
+
 function route() {
   const hash = location.hash || '#/posts';
   const [view, id] = hash.slice(2).split('/');
@@ -114,6 +121,47 @@ function navigate(hash) {
     return;
   }
   location.hash = hash;
+}
+
+function preserveCurrentDraftFromDom() {
+  if (!state.currentPost || !document.querySelector('#post-body')) return;
+  try {
+    const payload = readPostForm();
+    state.currentPost = {
+      ...state.currentPost,
+      frontMatter: payload.frontMatter,
+      body: payload.body,
+    };
+  } catch {
+    // Best-effort preservation while switching between edit surfaces.
+  }
+}
+
+function replaceHashWithoutDirtyPrompt(hash) {
+  preserveCurrentDraftFromDom();
+  if (location.hash === hash) {
+    runAction(render);
+    return;
+  }
+  location.hash = hash;
+}
+
+function enterFocusMode() {
+  if (!state.currentPost) return;
+  replaceHashWithoutDirtyPrompt(`#/focus/${state.currentPost.id}`);
+}
+
+function exitFocusMode() {
+  if (!state.currentPost) return;
+  state.focusMetaOpen = false;
+  replaceHashWithoutDirtyPrompt(`#/edit/${state.currentPost.id}`);
+}
+
+function toggleFocusMode() {
+  const { view } = route();
+  if (!state.currentPost || !['edit', 'focus'].includes(view)) return;
+  if (view === 'focus') exitFocusMode();
+  else enterFocusMode();
 }
 
 async function loadConfig() {
@@ -149,10 +197,7 @@ function bodyMetrics(body = '') {
 }
 
 function shell(content) {
-  if (state.editor) {
-    state.editor.toTextArea();
-    state.editor = null;
-  }
+  teardownEditor();
   const active = route().view;
   const hugo = state.config?.hugo || {};
   const metrics = postMetrics();
@@ -543,6 +588,8 @@ async function initCodeEditor() {
       'Enter': 'newlineAndIndentContinueMarkdownList',
       'Ctrl-S': () => runAction(saveCurrentPost),
       'Cmd-S': () => runAction(saveCurrentPost),
+      'Ctrl-Shift-F': () => toggleFocusMode(),
+      'Cmd-Shift-F': () => toggleFocusMode(),
     },
   });
 
@@ -553,12 +600,14 @@ async function initCodeEditor() {
   refreshEditor();
 }
 
-function postForm(post, mode) {
+function postForm(post, mode, options = {}) {
   const fm = post.frontMatter || {};
   const metrics = bodyMetrics(post.body || '');
   const previewUrl = state.previewUrl;
+  const layoutClass = options.focus ? 'editor-layout focus-editor-layout' : 'editor-layout';
+  const writingTitle = options.focus ? '正文' : (mode === 'new' ? '正文模板' : escapeHtml(post.path));
   return `
-    <div class="editor-layout">
+    <div class="${layoutClass}">
       <section class="panel meta-panel">
         <div class="panel-header">
           <h3>元数据</h3>
@@ -603,7 +652,7 @@ function postForm(post, mode) {
       </section>
       <section class="panel writing-panel">
         <div class="panel-header">
-          <h3>${mode === 'new' ? '正文模板' : escapeHtml(post.path)}</h3>
+          <h3>${writingTitle}</h3>
           <div class="writing-metrics">
             <span id="body-chars">${metrics.chars} 字符</span>
             <span id="body-words">${metrics.words} 词</span>
@@ -654,7 +703,8 @@ async function startPreviewForCurrentPost() {
   state.previewUrl = previewUrl;
   state.editorMode = 'split';
   showToast('Hugo 预览已启动');
-  renderEdit(state.currentPost.id, previewUrl);
+  if (route().view === 'focus') renderFocus(state.currentPost.id, previewUrl);
+  else renderEdit(state.currentPost.id, previewUrl);
 }
 
 function setEditorMode(mode) {
@@ -679,6 +729,7 @@ async function renderEdit(id, previewUrl = state.previewUrl) {
   const post = state.currentPost;
   const actions = `
     <button id="back-posts" class="button-with-icon" data-icon="<">返回列表</button>
+    <button id="focus-post" class="button-with-icon" data-icon="F">专注写作</button>
     <button id="save-post" class="button-primary button-with-icon" data-icon="S">保存</button>
     <button id="preview-post" class="button-with-icon" data-icon="P">渲染预览</button>
     <button id="build-post" class="button-with-icon" data-icon="B">构建检查</button>
@@ -689,9 +740,73 @@ async function renderEdit(id, previewUrl = state.previewUrl) {
     ${previewUrl ? `<div class="preview-open-link"><a href="${escapeHtml(previewUrl)}" target="_blank" rel="noreferrer">在新标签打开 Hugo 预览</a></div>` : ''}
   `);
   document.querySelector('#back-posts').addEventListener('click', () => navigate('#/posts'));
+  document.querySelector('#focus-post').addEventListener('click', enterFocusMode);
   document.querySelector('#save-post').addEventListener('click', (event) => runAction(saveCurrentPost, event.currentTarget));
   document.querySelector('#preview-post').addEventListener('click', (event) => runAction(startPreviewForCurrentPost, event.currentTarget));
   document.querySelector('#build-post').addEventListener('click', (event) => runAction(async () => {
+    await saveCurrentPost();
+    const result = await api.build();
+    showToast(result.ok ? '构建检查通过' : '构建检查失败', result.ok ? 'info' : 'error');
+  }, event.currentTarget));
+  initCodeEditor();
+  document.querySelectorAll('[data-editor-mode]').forEach((button) => {
+    button.addEventListener('click', () => setEditorMode(button.dataset.editorMode));
+  });
+  document.querySelectorAll('#fm-title, #fm-date, #fm-lastmod, #fm-tags, #fm-summary, #fm-description, #fm-slug, #fm-draft, #fm-comments, #fm-toc, #fm-toc-open').forEach((input) => {
+    input.addEventListener('input', () => setDirty(true));
+    input.addEventListener('change', () => setDirty(true));
+  });
+}
+
+async function renderFocus(id, previewUrl = state.previewUrl) {
+  teardownEditor();
+  if (!state.currentPost || state.currentPost.id !== id) {
+    state.currentPost = (await api.post(id)).post;
+    state.previewUrl = '';
+    setDirty(false);
+  }
+
+  const post = state.currentPost;
+  const fm = post.frontMatter || {};
+  const metrics = bodyMetrics(post.body || '');
+  app.innerHTML = `
+    <div class="focus-shell ${state.focusMetaOpen ? 'meta-open' : ''}">
+      <header class="focus-rail">
+        <div class="focus-title">
+          <span>Focus Writing</span>
+          <strong>${escapeHtml(fm.title || post.path)}</strong>
+          <small>${metrics.chars} 字符 · ${metrics.words} 词 · ${metrics.minutes} 分钟</small>
+        </div>
+        <div class="focus-actions">
+          <button id="focus-exit" class="button-with-icon" data-icon="F">退出专注</button>
+          <button id="focus-meta-toggle" class="button-with-icon" data-icon="M">元数据</button>
+          <button id="focus-save" class="button-primary button-with-icon" data-icon="S">保存</button>
+          <button id="focus-preview" class="button-with-icon" data-icon="P">渲染预览</button>
+          <button id="focus-build" class="button-with-icon" data-icon="B">构建检查</button>
+          ${previewUrl ? `<a class="focus-open-preview" href="${escapeHtml(previewUrl)}" target="_blank" rel="noreferrer">新标签预览</a>` : ''}
+        </div>
+        <div class="focus-shortcuts">Ctrl/⌘ + Shift + F 进出 · Ctrl/⌘ + S 保存</div>
+      </header>
+      <main class="focus-main">
+        ${postForm(post, 'edit', { focus: true })}
+      </main>
+      <button class="focus-meta-fab button-with-icon" id="focus-meta-fab" type="button" data-icon="M">元数据</button>
+      <button class="focus-scrim" id="focus-scrim" type="button" aria-label="关闭元数据"></button>
+    </div>
+  `;
+
+  const toggleMeta = (open = !state.focusMetaOpen) => {
+    state.focusMetaOpen = open;
+    document.querySelector('.focus-shell')?.classList.toggle('meta-open', open);
+  };
+
+  document.querySelector('#focus-exit').addEventListener('click', exitFocusMode);
+  document.querySelector('#focus-meta-toggle').addEventListener('click', () => toggleMeta());
+  document.querySelector('#focus-meta-fab').addEventListener('click', () => toggleMeta(true));
+  document.querySelector('#focus-scrim').addEventListener('click', () => toggleMeta(false));
+  document.querySelector('#focus-save').addEventListener('click', (event) => runAction(saveCurrentPost, event.currentTarget));
+  document.querySelector('#focus-preview').addEventListener('click', (event) => runAction(startPreviewForCurrentPost, event.currentTarget));
+  document.querySelector('#focus-build').addEventListener('click', (event) => runAction(async () => {
     await saveCurrentPost();
     const result = await api.build();
     showToast(result.ok ? '构建检查通过' : '构建检查失败', result.ok ? 'info' : 'error');
@@ -1056,11 +1171,19 @@ async function render() {
   const { view, id } = route();
   if (view === 'new') return renderNew();
   if (view === 'edit' && id) return renderEdit(id);
+  if (view === 'focus' && id) return renderFocus(id);
   if (view === 'publish') return renderPublish();
   return renderPosts();
 }
 
 window.addEventListener('hashchange', () => runAction(render));
+
+window.addEventListener('keydown', (event) => {
+  if (!(event.ctrlKey || event.metaKey) || !event.shiftKey || event.key.toLowerCase() !== 'f') return;
+  if (!['edit', 'focus'].includes(route().view)) return;
+  event.preventDefault();
+  toggleFocusMode();
+});
 
 window.addEventListener('beforeunload', (event) => {
   if (!state.dirty) return;
