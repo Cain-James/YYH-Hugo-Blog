@@ -38,21 +38,23 @@ http://localhost:1313
 打开本地写作、预览、发布工作台：
 
 ```bash
-npm run studio:open
+./scripts/studio_manage.sh -start
 ```
 
 关闭工作台：
 
 ```bash
-npm run studio:stop
+./scripts/studio_manage.sh -stop
 ```
 
 常用辅助命令：
 
 ```bash
-npm run studio:status
-npm run studio:restart
+./scripts/studio_manage.sh -status
+./scripts/studio_manage.sh -restart
 ```
+
+也可以继续使用 npm 别名：`npm run studio:start`、`npm run studio:stop`、`npm run studio:status`、`npm run studio:restart`。
 
 默认地址是 `http://127.0.0.1:4177/`。运行状态和日志保存在本地 `.blog-studio/` 目录，该目录不会提交到 Git。
 
