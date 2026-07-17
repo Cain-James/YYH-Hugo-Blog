@@ -37,16 +37,15 @@
 {{- if ne .Key "0001" }}
 <div class="archive-year">
   <h2 class="archive-year-header">
-    {{- replace .Key "0001" "" }}<sup class="archive-count">&nbsp;&nbsp;{{ len .Pages }}</sup>
-    {{- if (site.Params.ShowStatInArchive | default true) }}
-    <sup class="archive-count">&nbsp;&nbsp;{{- partial "stat.html" (dict "Kind" "pages" "pages" .Pages) }}</sup>
-    {{- else }}
-    <sup class="archive-count">&nbsp;&nbsp;{{ len .Pages }}</sup>
-    {{- end }}
+    <span class="archive-year-label">{{- replace .Key "0001" "" }}</span>
+    <span class="archive-count">{{ len .Pages }} 篇文章</span>
   </h2>
-  {{- range .Pages.GroupByDate "January" }}
+  {{- range .Pages.GroupByDate "Jan." }}
   <div class="archive-month">
-    <h3 class="archive-month-header">{{- .Key }}<sup class="archive-count">&nbsp;&nbsp;{{ len .Pages }}</sup></h3>
+    <h3 class="archive-month-header">
+      <span>{{- .Key }}</span>
+      <span class="archive-count">{{ len .Pages }} 篇</span>
+    </h3>
     <div class="archive-posts">
       {{- range .Pages }}
       {{- if eq .Kind "page" }}

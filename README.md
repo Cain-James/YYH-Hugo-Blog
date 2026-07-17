@@ -33,6 +33,29 @@ hugo server -D
 http://localhost:1313
 ```
 
+## 本地博客工作台
+
+打开本地写作、预览、发布工作台：
+
+```bash
+npm run studio:open
+```
+
+关闭工作台：
+
+```bash
+npm run studio:stop
+```
+
+常用辅助命令：
+
+```bash
+npm run studio:status
+npm run studio:restart
+```
+
+默认地址是 `http://127.0.0.1:4177/`。运行状态和日志保存在本地 `.blog-studio/` 目录，该目录不会提交到 Git。
+
 生产构建检查：
 
 ```bash

@@ -7,6 +7,13 @@
     margin-top: 40px;
 }
 
+.archive-year-header {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
 .archive-year:not(:last-of-type) {
     border-bottom: 2px solid var(--border);
 }
@@ -18,6 +25,10 @@
 }
 
 .archive-month-header {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
     margin: 25px 0;
     width: 200px;
 }
@@ -41,4 +52,8 @@
 .archive-meta {
     color: var(--secondary);
     font-size: 14px;
+}
+
+.archive-count {
+    font-weight: 500;
 }

@@ -1,0 +1,131 @@
+<figure class="daily-poem" aria-label="今日诗词">
+  <blockquote id="daily-poem-sentence" class="daily-poem-sentence">正在加载今日诗词...</blockquote>
+  <figcaption id="daily-poem-origin" class="daily-poem-origin"></figcaption>
+</figure>
+
+<script>
+  (function () {
+    var CACHE_KEY = "yyh:daily-poem:v1";
+    var SDK_URL = "https://sdk.jinrishici.com/v2/browser/jinrishici.js";
+    var FALLBACK_POEM = {
+      date: getTodayKey(),
+      content: "山中何事？松花酿酒，春水煎茶。",
+      origin: "〔元〕张可久《人月圆·山中书事》"
+    };
+
+    var sentence = document.getElementById("daily-poem-sentence");
+    var origin = document.getElementById("daily-poem-origin");
+
+    if (!sentence || !origin) {
+      return;
+    }
+
+    // Cloudflare Pages 是纯静态部署：先读浏览器缓存，命中时不加载第三方 SDK。
+    var cachedPoem = readCachedPoem();
+    if (cachedPoem) {
+      renderPoem(cachedPoem);
+      return;
+    }
+
+    loadRemotePoem();
+
+    function loadRemotePoem() {
+      loadSdk(function () {
+        if (!window.jinrishici || typeof window.jinrishici.load !== "function") {
+          renderPoem(FALLBACK_POEM);
+          return;
+        }
+
+        window.jinrishici.load(function (result) {
+          var poem = normalizePoem(result && result.data);
+          if (!poem) {
+            renderPoem(FALLBACK_POEM);
+            return;
+          }
+
+          writeCachedPoem(poem);
+          renderPoem(poem);
+        });
+      }, function () {
+        renderPoem(FALLBACK_POEM);
+      });
+    }
+
+    function loadSdk(onLoad, onError) {
+      var script = document.createElement("script");
+      script.src = SDK_URL;
+      script.charset = "utf-8";
+      script.async = true;
+      script.onload = onLoad;
+      script.onerror = onError;
+      document.head.appendChild(script);
+    }
+
+    function normalizePoem(poem) {
+      if (!poem || !poem.content) {
+        return null;
+      }
+
+      return {
+        date: getTodayKey(),
+        content: poem.content,
+        origin: formatOrigin(poem.origin)
+      };
+    }
+
+    function formatOrigin(poemOrigin) {
+      if (!poemOrigin) {
+        return "";
+      }
+
+      var source = [];
+      if (poemOrigin.dynasty) source.push("〔" + poemOrigin.dynasty + "〕");
+      if (poemOrigin.author) source.push(poemOrigin.author);
+      if (poemOrigin.title) source.push("《" + poemOrigin.title + "》");
+      return source.join(" ");
+    }
+
+    function renderPoem(poem) {
+      sentence.textContent = poem.content;
+      origin.textContent = poem.origin || "";
+    }
+
+    function readCachedPoem() {
+      try {
+        var raw = window.localStorage.getItem(CACHE_KEY);
+        if (!raw) {
+          return null;
+        }
+
+        var poem = JSON.parse(raw);
+        if (!poem || poem.date !== getTodayKey() || !poem.content) {
+          return null;
+        }
+
+        return poem;
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function writeCachedPoem(poem) {
+      try {
+        window.localStorage.setItem(CACHE_KEY, JSON.stringify(poem));
+      } catch (error) {
+        // localStorage 不可用时忽略缓存失败，页面仍可正常展示远程结果。
+        return;
+      }
+    }
+
+    function getTodayKey() {
+      var now = new Date();
+      var month = String(now.getMonth() + 1);
+      var day = String(now.getDate());
+      return [
+        now.getFullYear(),
+        month.length === 1 ? "0" + month : month,
+        day.length === 1 ? "0" + day : day
+      ].join("-");
+    }
+  }());
+</script>

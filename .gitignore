@@ -4,6 +4,7 @@
 
 # Hugo生成的文件
 .hugo_build.lock
+.blog-studio/
 
 # 图片备份目录
 .image-backups/

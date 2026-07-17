@@ -6,7 +6,12 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "studio": "node tools/blog-studio/server.mjs"
+    "studio": "node tools/blog-studio/server.mjs",
+    "studio:open": "node scripts/blog-studio.mjs open",
+    "studio:start": "node scripts/blog-studio.mjs start",
+    "studio:stop": "node scripts/blog-studio.mjs stop",
+    "studio:restart": "node scripts/blog-studio.mjs restart",
+    "studio:status": "node scripts/blog-studio.mjs status"
   },
   "dependencies": {
     "@google-analytics/data": "^3.0.0",
