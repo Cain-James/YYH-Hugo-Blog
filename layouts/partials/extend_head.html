@@ -6,8 +6,6 @@
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
 	  script-src 'self' 'unsafe-inline'
-	    https://busuanzi.ibruce.info
-	    http://busuanzi.ibruce.info
 	    https://www.googletagmanager.com
 	    https://cdn.jsdelivr.net
 	    https://giscus.app
@@ -23,10 +21,7 @@
     https://fonts.gstatic.com
     https://cdn.jsdelivr.net;
 	  connect-src 'self'
-	    https://busuanzi.ibruce.info
-	    http://busuanzi.ibruce.info
 	    https://www.google-analytics.com
-	    https://blog-analytics.finderyyh.workers.dev
 	    https://cdn.jsdelivr.net
 	    https://sdk.jinrishici.com
 	    https://v2.jinrishici.com
@@ -95,10 +90,6 @@ if (sessionStorage.getItem('fontsLoaded')) {
 -->
 
 <!-- 设置资源提示，加速实际启用的第三方资源 -->
-{{- if site.Params.busuanzi }}
-<link rel="dns-prefetch" href="https://busuanzi.ibruce.info">
-<link rel="preconnect" href="https://busuanzi.ibruce.info" crossorigin>
-{{- end }}
 {{- if and (.Param "comments") site.Params.giscus.enable }}
 <link rel="dns-prefetch" href="https://giscus.app">
 <link rel="preconnect" href="https://giscus.app" crossorigin>
@@ -174,8 +165,5 @@ img {
 {{ end }}
 <meta name="referrer" content="no-referrer-when-downgrade">
 
-<!-- 不蒜子视图计数器 -->
-{{- if site.Params.busuanzi }}
-<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-{{- end }}
+<!-- 不蒜子视图计数器通过同源 Pages Function 获取，避免第三方 JSONP 被拦截 -->
 <script defer src="{{ "js/busuanzi-view-counter.js" | absURL }}"></script>

@@ -475,19 +475,13 @@ async function fetchCFData(startDate = null, endDate = null) {
         }
         
         // 构建 API URL
-        const apiUrl = new URL('https://blog-analytics.finderyyh.workers.dev');
+        const apiUrl = new URL('/api/analytics', window.location.origin);
         apiUrl.searchParams.append('start', formatDate(startDate));
         apiUrl.searchParams.append('end', formatDate(endDate));
         
         console.log('请求URL:', apiUrl.toString());
         
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            mode: 'cors'
-        });
+        const response = await fetch(apiUrl);
 
         console.log('收到响应:', response.status);
         
